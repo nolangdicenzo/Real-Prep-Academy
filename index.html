@@ -5,982 +5,613 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RealPrep Academy — License Exam Study Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f1117;
-    --surface: #161b27;
-    --surface2: #1e2535;
-    --border: #2a3248;
-    --gold: #c9a84c;
-    --gold-light: #e4c97a;
-    --gold-dim: rgba(201,168,76,0.15);
-    --text: #e8e4d9;
-    --text-muted: #8b92a5;
-    --text-dim: #5a6178;
-    --correct: #4caf7d;
-    --correct-bg: rgba(76,175,125,0.12);
-    --wrong: #e05c5c;
-    --wrong-bg: rgba(224,92,92,0.12);
-    --accent: #7eb8d4;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Crimson Pro', Georgia, serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    line-height: 1.6;
-  }
-
-  /* Subtle texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ── Header ── */
-  header {
-    position: relative;
-    z-index: 10;
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(180deg, rgba(15,17,23,0.98) 0%, rgba(22,27,39,0.95) 100%);
-    backdrop-filter: blur(10px);
-    padding: 0 2rem;
-  }
-
-  .header-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 72px;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .logo-mark {
-    width: 38px; height: 38px;
-    background: linear-gradient(135deg, var(--gold), #8a6820);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-size: 18px;
-    color: #0f1117;
-    flex-shrink: 0;
-  }
-
-  .logo-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: 0.02em;
-  }
-
-  .logo-sub {
-    font-family: 'Crimson Pro', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-top: 1px;
-  }
-
-  .header-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-    padding: 4px 10px;
-    border-radius: 20px;
-  }
-
-  /* ── Main Layout ── */
-  main {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2.5rem 2rem 4rem;
-  }
-
-  /* ── Views ── */
-  .view { display: none; }
-  .view.active { display: block; }
-
-  /* ── Home / Module Select ── */
-  .home-hero {
-    text-align: center;
-    padding: 3rem 0 2.5rem;
-  }
-
-  .home-hero .overline {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 1rem;
-  }
-
-  .home-hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 700;
-    line-height: 1.15;
-    color: var(--text);
-    margin-bottom: 1rem;
-  }
-
-  .home-hero h1 em {
-    font-style: italic;
-    color: var(--gold-light);
-  }
-
-  .home-hero p {
-    font-size: 1.15rem;
-    color: var(--text-muted);
-    max-width: 520px;
-    margin: 0 auto 2.5rem;
-    font-weight: 300;
-  }
-
-  /* ── Divider ── */
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 2rem 0;
-  }
-  .divider-line { flex: 1; height: 1px; background: var(--border); }
-  .divider-text {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  /* ── Module Card ── */
-  .module-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-  }
-
-  .module-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.75rem;
-    cursor: pointer;
-    transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .module-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--gold), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .module-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-  }
-
-  .module-card:hover::before { opacity: 1; }
-
-  .module-card.locked {
-    opacity: 0.45;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  .module-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.6rem;
-  }
-
-  .module-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--text);
-  }
-
-  .topic-list {
-    list-style: none;
-    margin-bottom: 1.25rem;
-  }
-
-  .topic-list li {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    padding: 3px 0;
-    padding-left: 16px;
-    position: relative;
-    font-weight: 300;
-  }
-
-  .topic-list li::before {
-    content: '›';
-    position: absolute;
-    left: 0;
-    color: var(--gold);
-  }
-
-  .module-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    margin-top: 0.5rem;
-  }
-
-  .module-stat {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--text-dim);
-  }
-
-  .module-stat span { color: var(--text-muted); }
-
-  .btn {
-    font-family: 'Crimson Pro', serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    padding: 8px 20px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-gold {
-    background: linear-gradient(135deg, var(--gold), #a87c2a);
-    color: #0f1117;
-  }
-
-  .btn-gold:hover {
-    background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    transform: translateY(-1px);
-  }
-
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-  }
-
-  .btn-outline:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-
-  .lock-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-    padding: 4px 10px;
-    border-radius: 20px;
-  }
-
-  /* ── Topic Select ── */
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin-bottom: 2rem;
-    transition: color 0.2s;
-  }
-
-  .back-btn:hover { color: var(--gold); }
-
-  .section-header {
-    margin-bottom: 2rem;
-  }
-
-  .section-header .overline {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-  }
-
-  .section-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .section-header p {
-    color: var(--text-muted);
-    font-size: 1rem;
-    margin-top: 0.5rem;
-    font-weight: 300;
-  }
-
-  .config-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .config-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 1.25rem;
-    color: var(--text);
-  }
-
-  .config-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-
-  .config-row:last-child { margin-bottom: 0; }
-
-  .config-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    min-width: 110px;
-  }
-
-  .pill-group {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .pill {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    padding: 5px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .pill:hover { border-color: var(--gold); color: var(--gold); }
-  .pill.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
-
-  .topic-select-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 10px;
-    margin-bottom: 1.5rem;
-  }
-
-  .topic-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-  }
-
-  .topic-checkbox:hover { border-color: var(--gold); }
-  .topic-checkbox.checked { border-color: var(--gold); background: var(--gold-dim); }
-
-  .topic-checkbox input { display: none; }
-
-  .check-box {
-    width: 18px; height: 18px;
-    border: 1.5px solid var(--border);
-    border-radius: 4px;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-  }
-
-  .topic-checkbox.checked .check-box {
-    background: var(--gold);
-    border-color: var(--gold);
-  }
-
-  .check-box svg { display: none; }
-  .topic-checkbox.checked .check-box svg { display: block; }
-
-  .topic-label {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    font-weight: 300;
-    line-height: 1.3;
-  }
-
-  .topic-checkbox.checked .topic-label { color: var(--text); }
-
-  .action-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .select-all-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-
-  .select-all-btn:hover { color: var(--gold); }
-
-  /* ── Exam View ── */
-  .exam-topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .progress-wrap {
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .progress-meta {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-  }
-
-  .progress-meta span {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-  }
-
-  .progress-bar {
-    height: 4px;
-    background: var(--surface2);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--gold-light));
-    border-radius: 2px;
-    transition: width 0.4s ease;
-  }
-
-  .exam-stats {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .stat-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    padding: 4px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
-
-  .stat-badge.correct { color: var(--correct); border-color: rgba(76,175,125,0.3); }
-  .stat-badge.wrong { color: var(--wrong); border-color: rgba(224,92,92,0.3); }
-
-  /* ── Question Card ── */
-  .question-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
-    animation: fadeSlideIn 0.35s ease;
-  }
-
-  @keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .q-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.25rem;
-  }
-
-  .q-number {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-
-  .q-topic-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    background: var(--surface2);
-    padding: 3px 10px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
-
-  .question-text {
-    font-size: 1.15rem;
-    font-weight: 400;
-    color: var(--text);
-    line-height: 1.7;
-    margin-bottom: 1.75rem;
-  }
-
-  .options-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .option-btn {
-    width: 100%;
-    text-align: left;
-    background: var(--surface2);
-    border: 1.5px solid var(--border);
-    border-radius: 9px;
-    padding: 14px 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    transition: all 0.2s;
-    font-family: 'Crimson Pro', serif;
-    font-size: 1rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-
-  .option-btn:hover:not(:disabled) {
-    border-color: var(--gold);
-    color: var(--text);
-    background: var(--gold-dim);
-  }
-
-  .option-letter {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: var(--text-dim);
-    min-width: 20px;
-    padding-top: 2px;
-    transition: color 0.2s;
-  }
-
-  .option-btn:hover:not(:disabled) .option-letter { color: var(--gold); }
-
-  .option-btn.selected {
-    border-color: var(--accent);
-    color: var(--text);
-    background: rgba(126,184,212,0.1);
-  }
-
-  .option-btn.correct {
-    border-color: var(--correct);
-    background: var(--correct-bg);
-    color: var(--text);
-  }
-
-  .option-btn.correct .option-letter { color: var(--correct); }
-
-  .option-btn.wrong {
-    border-color: var(--wrong);
-    background: var(--wrong-bg);
-    color: var(--text);
-  }
-
-  .option-btn.wrong .option-letter { color: var(--wrong); }
-
-  .option-btn:disabled { cursor: default; }
-
-  /* ── Explanation ── */
-  .explanation-box {
-    margin-top: 1.25rem;
-    background: rgba(201,168,76,0.06);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-left: 3px solid var(--gold);
-    border-radius: 0 8px 8px 0;
-    padding: 1rem 1.25rem;
-    animation: fadeIn 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .explanation-box .expl-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-  }
-
-  .explanation-box p {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    font-weight: 300;
-    line-height: 1.65;
-  }
-
-  .exam-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-
-  /* ── Results ── */
-  .results-panel {
-    text-align: center;
-    padding: 2rem 0;
-  }
-
-  .score-ring {
-    width: 160px; height: 160px;
-    margin: 0 auto 1.5rem;
-    position: relative;
-  }
-
-  .score-ring svg {
-    transform: rotate(-90deg);
-    width: 100%; height: 100%;
-  }
-
-  .score-ring .ring-bg { fill: none; stroke: var(--surface2); stroke-width: 10; }
-  .score-ring .ring-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1.2s ease; }
-
-  .score-center {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .score-pct {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1;
-  }
-
-  .score-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
-
-  .results-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-
-  .results-sub {
-    color: var(--text-muted);
-    font-size: 1rem;
-    font-weight: 300;
-    margin-bottom: 2rem;
-  }
-
-  .results-breakdown {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    max-width: 480px;
-    margin: 0 auto 2rem;
-  }
-
-  .breakdown-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1rem;
-  }
-
-  .breakdown-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .breakdown-num.c { color: var(--correct); }
-  .breakdown-num.w { color: var(--wrong); }
-  .breakdown-num.t { color: var(--gold); }
-
-  .breakdown-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  .results-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  /* ── Review table ── */
-  .review-section {
-    margin-top: 2.5rem;
-    text-align: left;
-  }
-
-  .review-section h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--text);
-  }
-
-  .review-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.25rem;
-    margin-bottom: 10px;
-    border-left: 3px solid var(--border);
-  }
-
-  .review-item.ok { border-left-color: var(--correct); }
-  .review-item.no { border-left-color: var(--wrong); }
-
-  .review-q {
-    font-size: 0.95rem;
-    color: var(--text);
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
-  }
-
-  .review-detail {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    font-weight: 300;
-  }
-
-  .review-detail .your { color: var(--wrong); }
-  .review-detail .right { color: var(--correct); }
-
-  /* ── Responsive ── */
-  @media (max-width: 600px) {
-    .header-inner { padding: 0; }
-    main { padding: 1.5rem 1rem 3rem; }
-    .results-breakdown { grid-template-columns: repeat(3,1fr); gap: 8px; }
-    .exam-topbar { flex-direction: column; align-items: stretch; }
-    .exam-stats { justify-content: flex-start; }
-  }
-
-  /* ── Tooltip ── */
-  .tooltip-wrap { position: relative; display: inline-block; }
-  .tooltip {
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    white-space: nowrap;
-    color: var(--text-muted);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .tooltip-wrap:hover .tooltip { opacity: 1; }
+:root {
+  --bg: #0d1018;
+  --surface: #141820;
+  --surface2: #1a2030;
+  --surface3: #202840;
+  --border: #252d42;
+  --border2: #2e3a54;
+  --gold: #c9a84c;
+  --gold-light: #e4c97a;
+  --gold-dim: rgba(201,168,76,0.12);
+  --gold-glow: rgba(201,168,76,0.25);
+  --text: #eae6db;
+  --text-muted: #8b93a8;
+  --text-dim: #505870;
+  --correct: #4caf7d;
+  --correct-bg: rgba(76,175,125,0.1);
+  --wrong: #e05c5c;
+  --wrong-bg: rgba(224,92,92,0.1);
+  --accent: #7eb8d4;
+  --xp-color: #a78bfa;
+  --xp-dim: rgba(167,139,250,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Crimson Pro',Georgia,serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  line-height:1.6;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid var(--border);
+  background:rgba(13,16,24,0.96);
+  backdrop-filter:blur(12px);
+}
+.header-inner{
+  max-width:1140px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:68px;padding:0 2rem;
+  gap:1rem;
+}
+.logo{display:flex;align-items:center;gap:12px;cursor:pointer;}
+.logo-mark{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--gold),#7a5510);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:#0d1018;
+  flex-shrink:0;
+}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;letter-spacing:.02em;}
+.logo-sub{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-top:1px;}
+
+/* XP bar in header */
+.header-xp{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.level-badge{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:8px;padding:6px 12px;cursor:pointer;
+  transition:border-color .2s;
+}
+.level-badge:hover{border-color:var(--gold);}
+.level-num{
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;
+  color:var(--gold);font-weight:500;
+}
+.level-title-small{font-family:'Crimson Pro',serif;font-size:.85rem;color:var(--text-muted);font-weight:300;}
+.xp-bar-wrap{display:flex;flex-direction:column;gap:3px;min-width:80px;}
+.xp-bar-mini{height:3px;background:var(--border2);border-radius:2px;overflow:hidden;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--xp-color),#c4b5fd);border-radius:2px;transition:width .6s ease;}
+.xp-label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--text-dim);letter-spacing:.06em;}
+.streak-display{
+  display:flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  color:var(--text-muted);
+}
+.streak-display .flame{color:#ff6b35;font-size:.85rem;}
+
+/* ── NAV TABS ── */
+.nav-tabs{
+  max-width:1140px;margin:0 auto;
+  display:flex;border-bottom:1px solid var(--border);
+  padding:0 2rem;gap:0;
+}
+.nav-tab{
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:14px 20px;border:none;background:none;color:var(--text-dim);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;
+}
+.nav-tab:hover{color:var(--text-muted);}
+.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── VIEWS ── */
+.view{display:none;position:relative;z-index:1;}
+.view.active{display:block;}
+main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+
+/* ── HOME HERO ── */
+.home-hero{text-align:center;padding:2.5rem 0 2rem;}
+.home-hero .overline{
+  font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1rem;
+}
+.home-hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;line-height:1.15;
+  margin-bottom:.75rem;
+}
+.home-hero h1 em{font-style:italic;color:var(--gold-light);}
+.home-hero p{font-size:1.1rem;color:var(--text-muted);max-width:480px;margin:0 auto 2rem;font-weight:300;}
+
+/* readiness banner */
+.readiness-banner{
+  background:var(--surface);border:1px solid var(--border2);border-radius:14px;
+  padding:1.5rem 2rem;margin-bottom:2rem;
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
+}
+.readiness-left{flex:1;min-width:220px;}
+.readiness-label{
+  font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:.4rem;
+}
+.readiness-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600;margin-bottom:.25rem;}
+.readiness-sub{font-size:.9rem;color:var(--text-muted);font-weight:300;}
+.readiness-meter-wrap{flex:2;min-width:260px;}
+.readiness-track{
+  position:relative;height:12px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;overflow:hidden;margin-bottom:.5rem;
+}
+.readiness-fill{
+  height:100%;border-radius:6px;
+  transition:width 1s ease;
+  position:relative;
+}
+.readiness-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.15) 50%,transparent 100%);
+  animation:shimmer 2s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.readiness-ticks{display:flex;justify-content:space-between;padding:0 2px;}
+.readiness-tick{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--text-dim);letter-spacing:.06em;}
+.readiness-tick.active{color:var(--gold);}
+.readiness-pct{
+  font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;
+  color:var(--text);line-height:1;
+}
+.readiness-pct span{font-size:1rem;font-weight:400;color:var(--text-muted);margin-left:2px;}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-text{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);}
+
+/* ── MODULE CARDS ── */
+.module-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;margin-top:1.25rem;}
+.module-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.6rem;cursor:pointer;
+  transition:border-color .25s,transform .2s,box-shadow .25s;
+  position:relative;overflow:hidden;
+}
+.module-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.module-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.45);}
+.module-card:hover::before{opacity:1;}
+.module-card.locked{opacity:.4;cursor:not-allowed;pointer-events:none;}
+.module-tag{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.module-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:600;margin-bottom:.7rem;}
+.topic-list{list-style:none;margin-bottom:1.1rem;}
+.topic-list li{font-size:.86rem;color:var(--text-muted);padding:2px 0 2px 15px;position:relative;font-weight:300;}
+.topic-list li::before{content:'›';position:absolute;left:0;color:var(--gold);}
+.module-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;border-top:1px solid var(--border);margin-top:.4rem;}
+.module-stat{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text-dim);}
+.module-stat span{color:var(--text-muted);}
+.lock-badge{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);border:1px solid var(--border);padding:4px 10px;border-radius:20px;}
+
+/* ── BUTTONS ── */
+.btn{
+  font-family:'Crimson Pro',serif;font-size:.9rem;font-weight:600;
+  letter-spacing:.04em;padding:8px 20px;border-radius:6px;border:none;cursor:pointer;
+  transition:all .2s;
+}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#9a6a18);color:#0d1018;}
+.btn-gold:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold));transform:translateY(-1px);}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text-muted);}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+
+/* ── TOPIC SELECT ── */
+.back-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);background:none;border:none;cursor:pointer;padding:0;
+  margin-bottom:1.75rem;transition:color .2s;
+}
+.back-btn:hover{color:var(--gold);}
+.section-header{margin-bottom:1.75rem;}
+.section-header .overline{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.section-header h2{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;}
+.section-header p{color:var(--text-muted);font-size:1rem;margin-top:.4rem;font-weight:300;}
+.config-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.6rem;margin-bottom:1.4rem;}
+.config-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;margin-bottom:1.1rem;}
+.config-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem;}
+.config-row:last-child{margin-bottom:0;}
+.config-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);min-width:100px;}
+.pill-group{display:flex;gap:7px;flex-wrap:wrap;}
+.pill{
+  font-family:'DM Mono',monospace;font-size:.7rem;padding:5px 13px;
+  border-radius:20px;border:1px solid var(--border);background:transparent;
+  color:var(--text-muted);cursor:pointer;transition:all .2s;
+}
+.pill:hover{border-color:var(--gold);color:var(--gold);}
+.pill.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
+.topic-select-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:9px;margin-bottom:1.4rem;}
+.topic-checkbox{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:11px 13px;cursor:pointer;transition:border-color .2s,background .2s;
+}
+.topic-checkbox:hover{border-color:var(--gold);}
+.topic-checkbox.checked{border-color:var(--gold);background:var(--gold-dim);}
+.check-box{
+  width:17px;height:17px;border:1.5px solid var(--border2);border-radius:4px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.topic-checkbox.checked .check-box{background:var(--gold);border-color:var(--gold);}
+.check-box svg{display:none;}
+.topic-checkbox.checked .check-box svg{display:block;}
+.topic-label{font-size:.86rem;color:var(--text-muted);font-weight:300;line-height:1.3;}
+.topic-checkbox.checked .topic-label{color:var(--text);}
+.action-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.select-all-btn{
+  font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-dim);background:none;border:none;cursor:pointer;transition:color .2s;
+}
+.select-all-btn:hover{color:var(--gold);}
+
+/* ── EXAM VIEW ── */
+.exam-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem;}
+.progress-wrap{flex:1;min-width:180px;}
+.progress-meta{display:flex;justify-content:space-between;margin-bottom:5px;}
+.progress-meta span{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--text-muted);letter-spacing:.07em;}
+.progress-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px;transition:width .4s ease;}
+.exam-stats{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.stat-badge{
+  font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.07em;
+  padding:4px 11px;border-radius:20px;border:1px solid var(--border);
+}
+.stat-badge.correct{color:var(--correct);border-color:rgba(76,175,125,.3);}
+.stat-badge.wrong{color:var(--wrong);border-color:rgba(224,92,92,.3);}
+.stat-badge.streak{color:#ff6b35;border-color:rgba(255,107,53,.3);}
+.stat-badge.xp{color:var(--xp-color);border-color:rgba(167,139,250,.3);}
+
+/* ── QUESTION ── */
+.question-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:2rem;margin-bottom:1.4rem;
+  animation:fadeSlideIn .3s ease;
+}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;}
+.q-number{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);}
+.q-topic-tag{
+  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-dim);background:var(--surface2);padding:3px 9px;border-radius:20px;border:1px solid var(--border);
+}
+.question-text{font-size:1.12rem;color:var(--text);line-height:1.7;margin-bottom:1.6rem;}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.option-btn{
+  width:100%;text-align:left;background:var(--surface2);
+  border:1.5px solid var(--border);border-radius:9px;padding:13px 17px;cursor:pointer;
+  display:flex;align-items:flex-start;gap:13px;transition:all .2s;
+  font-family:'Crimson Pro',serif;font-size:1rem;color:var(--text-muted);line-height:1.5;
+}
+.option-btn:hover:not(:disabled){border-color:var(--gold);color:var(--text);background:var(--gold-dim);}
+.option-letter{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;color:var(--text-dim);min-width:18px;padding-top:2px;transition:color .2s;flex-shrink:0;}
+.option-btn:hover:not(:disabled) .option-letter{color:var(--gold);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);color:var(--text);}
+.option-btn.correct .option-letter{color:var(--correct);}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);color:var(--text);}
+.option-btn.wrong .option-letter{color:var(--wrong);}
+.option-btn:disabled{cursor:default;}
+.explanation-box{
+  margin-top:1.1rem;
+  background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.18);
+  border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.9rem 1.1rem;
+  animation:fadeIn .3s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.explanation-box .expl-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.explanation-box p{font-size:.93rem;color:var(--text-muted);font-weight:300;line-height:1.65;}
+
+/* xp gained toast */
+.xp-toast{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  color:var(--xp-color);margin-top:.7rem;
+  animation:xpPop .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes xpPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.exam-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:.5rem;}
+
+/* ── RESULTS ── */
+.results-wrap{max-width:680px;margin:0 auto;padding:1.5rem 0;}
+.results-top{display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center;margin-bottom:2rem;}
+.score-ring{width:140px;height:140px;flex-shrink:0;position:relative;}
+.score-ring svg{transform:rotate(-90deg);width:100%;height:100%;}
+.ring-bg{fill:none;stroke:var(--surface2);stroke-width:9;}
+.ring-fill{fill:none;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1.2s ease;}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-pct{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;line-height:1;}
+.score-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);margin-top:3px;}
+.results-info{}
+.results-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;margin-bottom:.3rem;}
+.results-sub{color:var(--text-muted);font-size:.98rem;font-weight:300;margin-bottom:1rem;}
+.results-breakdown{display:flex;gap:.75rem;flex-wrap:wrap;}
+.breakdown-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.75rem 1rem;text-align:center;min-width:70px;}
+.breakdown-num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:2px;}
+.breakdown-num.c{color:var(--correct);}
+.breakdown-num.w{color:var(--wrong);}
+.breakdown-num.x{color:var(--xp-color);}
+.breakdown-num.t{color:var(--gold);}
+.breakdown-label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+
+/* level up panel */
+.levelup-panel{
+  background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));
+  border:1px solid rgba(201,168,76,.35);border-radius:12px;
+  padding:1.25rem 1.5rem;margin-bottom:1.5rem;
+  display:none;animation:fadeSlideIn .5s ease;
+}
+.levelup-panel.show{display:block;}
+.levelup-inner{display:flex;align-items:center;gap:1rem;}
+.levelup-icon{font-size:1.8rem;}
+.levelup-text .lup-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.2rem;}
+.levelup-text .lup-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:600;}
+
+/* results actions */
+.results-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:1.5rem;}
+
+/* review section */
+.review-section{margin-top:2rem;}
+.review-section h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;margin-bottom:.9rem;}
+.review-item{
+  background:var(--surface);border:1px solid var(--border);border-radius:9px;
+  padding:1.1rem;margin-bottom:8px;border-left:3px solid var(--border);
+}
+.review-item.ok{border-left-color:var(--correct);}
+.review-item.no{border-left-color:var(--wrong);}
+.review-q{font-size:.93rem;color:var(--text);margin-bottom:.4rem;line-height:1.5;}
+.review-detail{font-size:.8rem;color:var(--text-muted);font-weight:300;}
+.review-detail .your{color:var(--wrong);}
+.review-detail .right{color:var(--correct);}
+
+/* ── STATS DASHBOARD ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-bottom:1.75rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;}
+.stat-card-title{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);margin-bottom:1rem;}
+
+/* XP / Level card */
+.level-display{display:flex;align-items:center;gap:1.25rem;margin-bottom:1rem;}
+.level-circle{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#7a5510);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.level-circle .lvl-num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#0d1018;line-height:1;}
+.level-circle .lvl-lbl{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(13,16,24,.7);}
+.level-info .lvl-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;margin-bottom:2px;}
+.level-info .lvl-xp{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text-muted);}
+.xp-bar-full{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:4px;}
+.xp-bar-full-fill{height:100%;background:linear-gradient(90deg,var(--xp-color),#c4b5fd);border-radius:3px;transition:width .8s ease;}
+.xp-to-next{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text-dim);}
+
+/* streak card */
+.streak-big{display:flex;gap:1.5rem;align-items:center;margin-bottom:1rem;}
+.streak-item{text-align:center;}
+.streak-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1;margin-bottom:2px;}
+.streak-val.flame-color{color:#ff6b35;}
+.streak-lbl2{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+.calendar-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:.5rem;}
+.cal-dot{width:22px;height:22px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);}
+.cal-dot.active{background:linear-gradient(135deg,#ff6b35,#ff9a35);border-color:#ff6b35;}
+.cal-dot.today{border-color:var(--gold);}
+
+/* topic breakdown */
+.topic-bars{display:flex;flex-direction:column;gap:8px;}
+.topic-bar-row{}
+.topic-bar-meta{display:flex;justify-content:space-between;margin-bottom:3px;}
+.topic-bar-name{font-size:.82rem;color:var(--text-muted);font-weight:300;}
+.topic-bar-pct{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text-dim);}
+.topic-bar-track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.topic-bar-fill{height:100%;border-radius:3px;transition:width .8s ease;}
+
+/* overall stats */
+.overall-stats{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.os-item{background:var(--surface2);border-radius:8px;padding:.75rem;}
+.os-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;line-height:1;margin-bottom:2px;}
+.os-lbl{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+
+/* personal best */
+.pb-list{display:flex;flex-direction:column;gap:8px;}
+.pb-item{display:flex;align-items:center;justify-content:space-between;padding:.6rem .75rem;background:var(--surface2);border-radius:7px;}
+.pb-label{font-size:.88rem;color:var(--text-muted);font-weight:300;}
+.pb-val{font-family:'DM Mono',monospace;font-size:.78rem;color:var(--gold);}
+
+/* badges */
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.75rem;margin-top:.5rem;}
+.badge-item{
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:.9rem .5rem;text-align:center;
+  transition:border-color .2s,transform .2s;
+}
+.badge-item.earned{border-color:var(--gold);background:var(--gold-dim);}
+.badge-item.earned:hover{transform:translateY(-2px);}
+.badge-icon{font-size:1.5rem;filter:grayscale(1);opacity:.3;}
+.badge-item.earned .badge-icon{filter:none;opacity:1;}
+.badge-name{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);line-height:1.3;}
+.badge-item.earned .badge-name{color:var(--gold);}
+.badge-desc{font-size:.72rem;color:var(--text-dim);font-weight:300;display:none;}
+.badge-item.earned .badge-desc{display:block;color:var(--text-muted);}
+
+/* history table */
+.history-table{width:100%;border-collapse:collapse;}
+.history-table th{
+  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-dim);text-align:left;padding:.5rem .75rem;
+  border-bottom:1px solid var(--border);
+}
+.history-table td{
+  font-size:.88rem;color:var(--text-muted);padding:.6rem .75rem;
+  border-bottom:1px solid var(--border);font-weight:300;
+}
+.history-table tr:last-child td{border-bottom:none;}
+.history-table .score-cell{font-family:'DM Mono',monospace;font-size:.78rem;}
+.score-cell.hi{color:var(--correct);}
+.score-cell.mid{color:var(--gold);}
+.score-cell.lo{color:var(--wrong);}
+
+/* empty state */
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-dim);}
+.empty-state p{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .header-inner{padding:0 1rem;}
+  main{padding:1.5rem 1rem 4rem;}
+  .readiness-banner{flex-direction:column;gap:1rem;}
+  .results-top{grid-template-columns:1fr;text-align:center;}
+  .score-ring{margin:0 auto;}
+  .results-breakdown{justify-content:center;}
+  .stats-grid{grid-template-columns:1fr;}
+  .overall-stats{grid-template-columns:1fr 1fr;}
+}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:1rem;animation:fadeIn .2s ease;
+}
+.modal-overlay.hidden{display:none;}
+.modal-box{
+  background:var(--surface);border:1px solid var(--border2);border-radius:14px;
+  padding:2rem;max-width:440px;width:100%;
+  animation:fadeSlideIn .3s ease;
+}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:600;margin-bottom:.5rem;}
+.modal-body{font-size:.95rem;color:var(--text-muted);font-weight:300;margin-bottom:1.5rem;}
+.modal-actions{display:flex;gap:.75rem;justify-content:flex-end;}
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-inner">
-    <div class="logo">
+    <div class="logo" onclick="goHome()">
       <div class="logo-mark">R</div>
       <div>
         <div class="logo-text">RealPrep Academy</div>
         <div class="logo-sub">License Exam Preparation</div>
       </div>
     </div>
-    <div class="header-badge">California RE License</div>
+    <div class="header-xp" id="header-xp">
+      <div class="streak-display" id="header-streak">
+        <span class="flame">🔥</span>
+        <span id="hdr-streak-val">0</span>
+      </div>
+      <div class="level-badge" onclick="goStats()">
+        <div class="level-num" id="hdr-level">LV 1</div>
+        <div class="level-title-small" id="hdr-title">Open House Visitor</div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar-mini"><div class="xp-bar-fill" id="hdr-xp-fill" style="width:0%"></div></div>
+          <div class="xp-label" id="hdr-xp-label">0 XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-tabs" id="nav-tabs">
+    <button class="nav-tab active" data-tab="home" onclick="switchTab('home')">Modules</button>
+    <button class="nav-tab" data-tab="stats" onclick="switchTab('stats')">Dashboard</button>
   </div>
 </header>
 
 <main>
 
-  <!-- ══ HOME VIEW ══ -->
+<!-- ══ HOME TAB ══ -->
+<div id="tab-home" class="view active">
+
+  <!-- ── Home: Module list ── -->
   <div id="view-home" class="view active">
     <div class="home-hero">
       <div class="overline">Study. Practice. Pass.</div>
       <h1>Your path to a<br><em>Real Estate License</em></h1>
-      <p>Professional-grade practice exams built around the official licensing curriculum. Master every concept before exam day.</p>
+      <p>Professional-grade practice exams built around the official licensing curriculum.</p>
     </div>
 
-    <div class="divider">
-      <div class="divider-line"></div>
-      <div class="divider-text">Available Modules</div>
-      <div class="divider-line"></div>
+    <!-- Readiness Banner -->
+    <div class="readiness-banner">
+      <div class="readiness-left">
+        <div class="readiness-label">Exam Readiness</div>
+        <div class="readiness-title" id="ready-title">Not Started</div>
+        <div class="readiness-sub" id="ready-sub">Complete practice tests to build your score.</div>
+      </div>
+      <div style="flex-shrink:0;text-align:right;">
+        <div class="readiness-pct" id="ready-pct">0<span>%</span></div>
+      </div>
+      <div class="readiness-meter-wrap" style="flex-basis:100%;">
+        <div class="readiness-track">
+          <div class="readiness-fill" id="ready-fill" style="width:0%;background:linear-gradient(90deg,var(--wrong),var(--gold));"></div>
+        </div>
+        <div class="readiness-ticks">
+          <span class="readiness-tick" id="rt0">Not Ready</span>
+          <span class="readiness-tick" id="rt1">Building</span>
+          <span class="readiness-tick" id="rt2">Almost There</span>
+          <span class="readiness-tick" id="rt3">Exam Ready</span>
+        </div>
+      </div>
     </div>
+
+    <div class="divider"><div class="divider-line"></div><div class="divider-text">Available Modules</div><div class="divider-line"></div></div>
 
     <div class="module-grid">
-      <!-- Module 1 — ACTIVE -->
       <div class="module-card" onclick="showTopicSelect()">
         <div class="module-tag">Module 01 · Available</div>
         <div class="module-title">Foundations of Real Estate</div>
         <ul class="topic-list">
-          <li>Nature of Real Property</li>
-          <li>Estates in Land &amp; Holding Title</li>
-          <li>Transfer of Real Property</li>
-          <li>Encumbrances</li>
-          <li>Public Restrictions on Land</li>
-          <li>Contract Law</li>
-          <li>Types of Real Estate Contracts</li>
-          <li>Real Estate Agency Law</li>
-          <li>Principles of RE Financing</li>
-          <li>Applying for a Residential Loan</li>
+          <li>Nature of Real Property</li><li>Estates in Land &amp; Holding Title</li>
+          <li>Transfer of Real Property</li><li>Encumbrances</li>
+          <li>Public Restrictions on Land</li><li>Contract Law</li>
+          <li>Types of Real Estate Contracts</li><li>Real Estate Agency Law</li>
+          <li>Principles of RE Financing</li><li>Applying for a Residential Loan</li>
         </ul>
         <div class="module-footer">
-          <div class="module-stat">
-            <span id="q-count-stat">100</span> questions available
-          </div>
+          <div class="module-stat"><span>100</span> questions available</div>
           <button class="btn btn-gold">Start Practice</button>
         </div>
       </div>
-
-      <!-- Module 2 — Locked -->
       <div class="module-card locked">
         <div class="module-tag">Module 02 · Coming Soon</div>
         <div class="module-title">Market &amp; Valuation</div>
         <ul class="topic-list">
-          <li>Property Valuation Methods</li>
-          <li>Real Estate Markets &amp; Analysis</li>
-          <li>Listing &amp; Selling Procedures</li>
-          <li>Investment &amp; Tax Concepts</li>
-          <li>Fair Housing Laws</li>
+          <li>Property Valuation Methods</li><li>Real Estate Markets &amp; Analysis</li>
+          <li>Listing &amp; Selling Procedures</li><li>Investment &amp; Tax Concepts</li><li>Fair Housing Laws</li>
         </ul>
-        <div class="module-footer">
-          <div class="module-stat">Topics: <span>5</span></div>
-          <div class="lock-badge">🔒 Locked</div>
-        </div>
+        <div class="module-footer"><div class="module-stat">Topics: <span>5</span></div><div class="lock-badge">Locked</div></div>
       </div>
-
-      <!-- Module 3 — Locked -->
       <div class="module-card locked">
         <div class="module-tag">Module 03 · Coming Soon</div>
         <div class="module-title">Advanced Practice</div>
         <ul class="topic-list">
-          <li>Escrow &amp; Title Insurance</li>
-          <li>Property Management</li>
-          <li>Commercial Real Estate</li>
-          <li>Ethics &amp; License Law</li>
-          <li>Final Exam Simulation</li>
+          <li>Escrow &amp; Title Insurance</li><li>Property Management</li>
+          <li>Commercial Real Estate</li><li>Ethics &amp; License Law</li><li>Final Exam Simulation</li>
         </ul>
-        <div class="module-footer">
-          <div class="module-stat">Topics: <span>5</span></div>
-          <div class="lock-badge">🔒 Locked</div>
-        </div>
+        <div class="module-footer"><div class="module-stat">Topics: <span>5</span></div><div class="lock-badge">Locked</div></div>
       </div>
     </div>
   </div>
 
-  <!-- ══ TOPIC SELECT VIEW ══ -->
+  <!-- ── Home: Topic Select ── -->
   <div id="view-topics" class="view">
-    <button class="back-btn" onclick="showHome()">← Back</button>
+    <button class="back-btn" onclick="showModules()">← Back</button>
     <div class="section-header">
       <div class="overline">Module 01</div>
       <h2>Configure Your Practice Test</h2>
       <p>Select topics, question count, and test mode.</p>
     </div>
-
     <div class="config-panel">
       <div class="config-title">Test Settings</div>
       <div class="config-row">
@@ -1007,21 +638,18 @@
         </div>
       </div>
     </div>
-
-    <div class="section-header" style="margin-bottom:1rem;">
-      <div class="overline" style="margin-bottom:0.25rem">Filter by Topic</div>
-      <p style="font-size:0.88rem;margin-top:0">Select specific topics or practice all 10.</p>
+    <div class="section-header" style="margin-bottom:.9rem;">
+      <div class="overline" style="margin-bottom:.2rem;">Filter by Topic</div>
+      <p style="font-size:.88rem;margin-top:0;">Select specific topics or practice all 10.</p>
     </div>
-
     <div class="topic-select-grid" id="topic-grid"></div>
-
     <div class="action-row">
       <button class="select-all-btn" onclick="toggleAll()">Toggle All</button>
       <button class="btn btn-gold" onclick="startExam()">Begin Practice Test →</button>
     </div>
   </div>
 
-  <!-- ══ EXAM VIEW ══ -->
+  <!-- ── Home: Exam ── -->
   <div id="view-exam" class="view">
     <div class="exam-topbar">
       <div class="progress-wrap">
@@ -1029,505 +657,923 @@
           <span id="q-progress">Question 1 of 20</span>
           <span id="q-pct">0%</span>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
       </div>
       <div class="exam-stats">
-        <div class="stat-badge correct" id="stat-correct">✓ 0</div>
-        <div class="stat-badge wrong" id="stat-wrong">✗ 0</div>
-        <button class="btn btn-outline" onclick="confirmQuit()" style="font-size:0.8rem;padding:6px 14px;">Quit</button>
+        <div class="stat-badge correct" id="stat-correct">+ 0</div>
+        <div class="stat-badge wrong" id="stat-wrong">- 0</div>
+        <div class="stat-badge streak" id="stat-streak">🔥 0</div>
+        <div class="stat-badge xp" id="stat-xp">0 XP</div>
+        <button class="btn btn-outline" onclick="confirmQuit()" style="font-size:.78rem;padding:5px 13px;">Quit</button>
       </div>
     </div>
-
     <div id="question-area"></div>
-
     <div class="exam-actions" id="exam-actions"></div>
   </div>
 
-  <!-- ══ RESULTS VIEW ══ -->
+  <!-- ── Home: Results ── -->
   <div id="view-results" class="view">
-    <div class="results-panel">
-      <div class="score-ring">
-        <svg viewBox="0 0 160 160">
-          <circle class="ring-bg" cx="80" cy="80" r="68"/>
-          <circle class="ring-fill" id="ring-fill" cx="80" cy="80" r="68"
-            stroke-dasharray="427.3"
-            stroke-dashoffset="427.3"/>
-        </svg>
-        <div class="score-center">
-          <div class="score-pct" id="score-pct">0%</div>
-          <div class="score-label">Score</div>
+    <div class="results-wrap">
+      <div id="levelup-panel" class="levelup-panel">
+        <div class="levelup-inner">
+          <div class="levelup-icon">★</div>
+          <div class="levelup-text">
+            <div class="lup-label">Level Up!</div>
+            <div class="lup-title" id="lup-title">You reached Level 2</div>
+          </div>
         </div>
       </div>
 
-      <div class="results-title" id="results-title">Great Work!</div>
-      <div class="results-sub" id="results-sub">Here's how you did on Module 1.</div>
-
-      <div class="results-breakdown">
-        <div class="breakdown-card">
-          <div class="breakdown-num c" id="res-correct">0</div>
-          <div class="breakdown-label">Correct</div>
+      <div class="results-top">
+        <div class="score-ring">
+          <svg viewBox="0 0 140 140"><circle class="ring-bg" cx="70" cy="70" r="58"/><circle class="ring-fill" id="ring-fill" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="364.4"/></svg>
+          <div class="score-center"><div class="score-pct" id="score-pct">0%</div><div class="score-lbl">Score</div></div>
         </div>
-        <div class="breakdown-card">
-          <div class="breakdown-num w" id="res-wrong">0</div>
-          <div class="breakdown-label">Wrong</div>
-        </div>
-        <div class="breakdown-card">
-          <div class="breakdown-num t" id="res-total">0</div>
-          <div class="breakdown-label">Total</div>
+        <div class="results-info">
+          <div class="results-title" id="results-title">Well done!</div>
+          <div class="results-sub" id="results-sub">Here's how you performed.</div>
+          <div class="results-breakdown">
+            <div class="breakdown-card"><div class="breakdown-num c" id="res-correct">0</div><div class="breakdown-label">Correct</div></div>
+            <div class="breakdown-card"><div class="breakdown-num w" id="res-wrong">0</div><div class="breakdown-label">Wrong</div></div>
+            <div class="breakdown-card"><div class="breakdown-num x" id="res-xp">+0</div><div class="breakdown-label">XP Earned</div></div>
+            <div class="breakdown-card"><div class="breakdown-num t" id="res-total">0</div><div class="breakdown-label">Total</div></div>
+          </div>
+          <div class="results-actions">
+            <button class="btn btn-outline" onclick="showModules()">← Modules</button>
+            <button class="btn btn-outline" onclick="showTopicSelect()">New Test</button>
+            <button class="btn btn-gold" id="retry-btn" onclick="retryWrong()">Retry Wrong</button>
+          </div>
         </div>
       </div>
 
-      <div class="results-actions">
-        <button class="btn btn-outline" onclick="showHome()">← All Modules</button>
-        <button class="btn btn-outline" onclick="showTopicSelect()">New Test</button>
-        <button class="btn btn-gold" onclick="retryWrong()" id="retry-btn">Retry Wrong Answers</button>
-      </div>
-
+      <div id="new-badges-section"></div>
       <div class="review-section" id="review-section"></div>
     </div>
   </div>
 
+</div><!-- end tab-home -->
+
+<!-- ══ STATS TAB ══ -->
+<div id="tab-stats" class="view">
+  <div class="section-header" style="margin-bottom:1.5rem;">
+    <div class="overline">Your Progress</div>
+    <h2>Study Dashboard</h2>
+  </div>
+
+  <div class="stats-grid" id="stats-grid-top">
+    <!-- Level & XP -->
+    <div class="stat-card">
+      <div class="stat-card-title">Level &amp; XP</div>
+      <div class="level-display">
+        <div class="level-circle"><div class="lvl-num" id="s-lvl-num">1</div><div class="lvl-lbl">Level</div></div>
+        <div class="level-info">
+          <div class="lvl-title" id="s-lvl-title">Open House Visitor</div>
+          <div class="lvl-xp" id="s-lvl-xp">0 / 150 XP</div>
+        </div>
+      </div>
+      <div class="xp-bar-full"><div class="xp-bar-full-fill" id="s-xp-fill" style="width:0%"></div></div>
+      <div class="xp-to-next" id="s-xp-next">150 XP to next level</div>
+    </div>
+
+    <!-- Streaks -->
+    <div class="stat-card">
+      <div class="stat-card-title">Streaks</div>
+      <div class="streak-big">
+        <div class="streak-item">
+          <div class="streak-val flame-color" id="s-daily-streak">0</div>
+          <div class="streak-lbl2">Day Streak 🔥</div>
+        </div>
+        <div class="streak-item">
+          <div class="streak-val" id="s-best-daily" style="color:var(--gold)">0</div>
+          <div class="streak-lbl2">Best Day Streak</div>
+        </div>
+        <div class="streak-item">
+          <div class="streak-val" id="s-best-ans" style="color:var(--accent)">0</div>
+          <div class="streak-lbl2">Best Answer Streak</div>
+        </div>
+      </div>
+      <div class="stat-card-title" style="margin-bottom:.5rem;">Last 14 Days</div>
+      <div class="calendar-row" id="cal-row"></div>
+    </div>
+
+    <!-- Overall Stats -->
+    <div class="stat-card">
+      <div class="stat-card-title">Overall Stats</div>
+      <div class="overall-stats">
+        <div class="os-item"><div class="os-val" id="s-total-q">0</div><div class="os-lbl">Questions</div></div>
+        <div class="os-item"><div class="os-val" id="s-accuracy" style="color:var(--correct)">—</div><div class="os-lbl">Accuracy</div></div>
+        <div class="os-item"><div class="os-val" id="s-tests">0</div><div class="os-lbl">Tests Taken</div></div>
+        <div class="os-item"><div class="os-val" id="s-total-xp" style="color:var(--xp-color)">0</div><div class="os-lbl">Total XP</div></div>
+      </div>
+    </div>
+
+    <!-- Personal Bests -->
+    <div class="stat-card">
+      <div class="stat-card-title">Personal Bests</div>
+      <div class="pb-list">
+        <div class="pb-item"><span class="pb-label">Best Test Score</span><span class="pb-val" id="pb-score">—</span></div>
+        <div class="pb-item"><span class="pb-label">Best Answer Streak</span><span class="pb-val" id="pb-ans">—</span></div>
+        <div class="pb-item"><span class="pb-label">Best Day Streak</span><span class="pb-val" id="pb-day">—</span></div>
+        <div class="pb-item"><span class="pb-label">Most XP in One Test</span><span class="pb-val" id="pb-xp">—</span></div>
+        <div class="pb-item"><span class="pb-label">Strongest Topic</span><span class="pb-val" id="pb-topic">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic breakdown — full width -->
+  <div class="stat-card" style="margin-bottom:1.25rem;">
+    <div class="stat-card-title">Topic Accuracy Breakdown</div>
+    <div class="topic-bars" id="topic-bars"></div>
+  </div>
+
+  <!-- Badges -->
+  <div class="stat-card" style="margin-bottom:1.25rem;">
+    <div class="stat-card-title">Badges</div>
+    <div class="badges-grid" id="badges-grid"></div>
+  </div>
+
+  <!-- Test History -->
+  <div class="stat-card">
+    <div class="stat-card-title">Test History</div>
+    <div id="history-wrap"></div>
+  </div>
+
+</div><!-- end tab-stats -->
+
 </main>
 
+<!-- Quit modal -->
+<div class="modal-overlay hidden" id="quit-modal">
+  <div class="modal-box">
+    <div class="modal-title">Quit this exam?</div>
+    <div class="modal-body">Your progress in this session will be lost. XP earned so far will not be saved.</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Keep Going</button>
+      <button class="btn btn-gold" onclick="doQuit()">Quit Exam</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ══════════════════════════════════════
-// QUESTION BANK — Module 1
-// ══════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
 const TOPICS = [
-  "Nature of Real Property",
-  "Estates in Land & Holding Title",
-  "Transfer of Real Property",
-  "Encumbrances",
-  "Public Restrictions on Land",
-  "Contract Law",
-  "Types of Real Estate Contracts",
-  "Real Estate Agency Law",
-  "Principles of RE Financing",
-  "Applying for a Residential Loan"
+  "Nature of Real Property","Estates in Land & Holding Title","Transfer of Real Property",
+  "Encumbrances","Public Restrictions on Land","Contract Law","Types of Real Estate Contracts",
+  "Real Estate Agency Law","Principles of RE Financing","Applying for a Residential Loan"
 ];
 
-const QUESTION_BANK = [
-  // ── Topic 0: Nature of Real Property ──
-  { topic: 0, q: "Which of the following is considered real property?", opts: ["A. A stock certificate", "B. A vehicle parked on land", "C. A building permanently attached to land", "D. A promissory note"], a: 2, exp: "Real property includes land and anything permanently attached to it, such as buildings and fixtures. Stocks, vehicles, and promissory notes are personal property." },
-  { topic: 0, q: "The term 'bundle of rights' in real property refers to:", opts: ["A. The physical boundaries of a parcel", "B. A collection of legal rights associated with property ownership", "C. The list of encumbrances on a title", "D. Federal zoning regulations"], a: 1, exp: "The 'bundle of rights' is a legal concept describing the rights a property owner holds — including the right to use, sell, lease, enter, or give away the property." },
-  { topic: 0, q: "Which of the following would be classified as a fixture?", opts: ["A. A portable air conditioner", "B. Built-in kitchen cabinetry", "C. A dining room table", "D. A rolled-up area rug"], a: 1, exp: "Fixtures are personal property that has been permanently attached to real property, such as built-in cabinets. The key test is method of attachment, adaptation, and intent." },
-  { topic: 0, q: "Air rights, mineral rights, and water rights are all examples of:", opts: ["A. Easements appurtenant", "B. Involuntary liens", "C. Components of real property ownership", "D. Servitudes"], a: 2, exp: "Real property ownership typically extends above (air rights), below (mineral rights), and along water (water rights) the surface of land, as part of the full bundle of rights." },
-  { topic: 0, q: "The concept that land is permanent and cannot be destroyed is known as:", opts: ["A. Scarcity", "B. Immobility", "C. Indestructibility", "D. Uniqueness"], a: 2, exp: "Indestructibility (also called permanence) is a characteristic of land stating that land itself cannot be destroyed, though improvements on it can be." },
-  { topic: 0, q: "Personal property that becomes real property through attachment is called a:", opts: ["A. Severance", "B. Chattel", "C. Fixture", "D. License"], a: 2, exp: "A fixture is an item of personal property (chattel) that has been affixed to land or a building in such a way that it becomes part of the real property." },
-  { topic: 0, q: "Which physical characteristic of land refers to its fixed geographic location?", opts: ["A. Indestructibility", "B. Immobility", "C. Non-homogeneity", "D. Scarcity"], a: 1, exp: "Immobility means land cannot be moved from its location — it is geographically fixed. This distinguishes real property from personal property." },
-  { topic: 0, q: "Under what test would a court most likely determine if an item is a fixture?", opts: ["A. The economic test", "B. The MARIA test (Method, Adaptation, Relationship, Intention, Agreement)", "C. The title insurance test", "D. The depreciation test"], a: 1, exp: "Courts typically use the MARIA test to determine fixture status: Method of annexation, Adaptation to the real estate, Relationship of the parties, Intention of the annexor, and Agreement of the parties." },
-  { topic: 0, q: "A tree growing on a property is considered:", opts: ["A. Personal property (chattel)", "B. A trade fixture", "C. Real property", "D. A license"], a: 2, exp: "Trees, shrubs, and other natural vegetation that are naturally growing on land are classified as real property, as they are permanently affixed to the land." },
-  { topic: 0, q: "Which of the following best describes 'riparian rights'?", opts: ["A. The right to mine minerals beneath the surface", "B. Rights of landowners whose property borders a stream or river", "C. The right to use air space above the property", "D. Governmental restrictions on land use"], a: 1, exp: "Riparian rights are water rights granted to landowners whose property is adjacent to a body of water, entitling them to reasonable use of the water." },
-
-  // ── Topic 1: Estates in Land & Holding Title ──
-  { topic: 1, q: "A fee simple absolute estate is best described as:", opts: ["A. An ownership interest that terminates upon the owner's death", "B. The most complete form of ownership with no conditions", "C. An ownership that reverts to the grantor upon a condition", "D. A leasehold interest for a fixed period"], a: 1, exp: "Fee simple absolute is the highest form of property ownership — it is unconditional, of potentially infinite duration, and freely transferable." },
-  { topic: 1, q: "Two unmarried individuals who own property with equal interests and the right of survivorship hold title as:", opts: ["A. Tenants in common", "B. Joint tenants", "C. Community property owners", "D. Tenants by the entirety"], a: 1, exp: "Joint tenancy is characterized by the four unities (time, title, interest, possession) and includes the right of survivorship. If one owner dies, their share passes to the surviving owner(s)." },
-  { topic: 1, q: "In a tenancy in common, each co-owner:", opts: ["A. Must sell their interest simultaneously with other owners", "B. Automatically inherits the other's share upon death", "C. May hold unequal ownership shares", "D. Must be married to the other co-owners"], a: 2, exp: "Tenants in common may hold unequal shares, have no right of survivorship, and can transfer their interest independently without consent of other co-owners." },
-  { topic: 1, q: "A life estate is an ownership interest that:", opts: ["A. Lasts indefinitely", "B. Is measured by the lifetime of a person", "C. Can be inherited by the owner's heirs", "D. Includes full bundle of rights without limitation"], a: 1, exp: "A life estate is a freehold estate limited to the duration of a specified person's life (usually the owner). It cannot be passed to heirs and terminates upon the measuring life's death." },
-  { topic: 1, q: "When a husband and wife hold title as community property, each spouse owns:", opts: ["A. The entire property jointly", "B. An undivided one-half interest", "C. A separate fee simple interest", "D. A tenancy by the entirety"], a: 1, exp: "In community property states (like California), each spouse holds an equal, undivided one-half interest in property acquired during marriage." },
-  { topic: 1, q: "A fee simple defeasible estate is one that:", opts: ["A. Has no conditions on ownership", "B. May be terminated if a condition is violated", "C. Exists only during the owner's lifetime", "D. Cannot be transferred without court approval"], a: 1, exp: "A fee simple defeasible (also called conditional or determinable) estate can be defeated or terminated if a specified condition occurs or fails to occur." },
-  { topic: 1, q: "The 'four unities' required for joint tenancy are:", opts: ["A. Time, Title, Interest, Possession", "B. Location, Value, Duration, Ownership", "C. Deed, Recording, Consideration, Acceptance", "D. Agency, Escrow, Financing, Closing"], a: 0, exp: "Joint tenancy requires four unities: Time (acquired at same time), Title (same instrument), Interest (equal shares), and Possession (same right to possess whole property)." },
-  { topic: 1, q: "A remainder interest in real property refers to:", opts: ["A. The balance owed on a mortgage", "B. The future interest that takes effect after a life estate ends", "C. The excess equity after all liens are paid", "D. An easement that remains after property is sold"], a: 1, exp: "A remainder is a future interest in property that becomes possessory after a preceding estate (typically a life estate) expires. The remainder person is the remainderman." },
-  { topic: 1, q: "Severalty ownership means:", opts: ["A. Ownership by several individuals together", "B. Ownership by one person alone", "C. Ownership split into several parts", "D. Ownership requiring severance to transfer"], a: 1, exp: "Ownership in severalty (sole ownership) means the property is owned by one person or entity alone, with no co-owners." },
-  { topic: 1, q: "Which type of co-ownership is only available to legally married couples?", opts: ["A. Tenancy in common", "B. Joint tenancy", "C. Tenancy by the entirety", "D. Community property"], a: 2, exp: "Tenancy by the entirety is a form of co-ownership available only to married couples. It carries the right of survivorship and neither spouse can convey their interest without the other's consent." },
-
-  // ── Topic 2: Transfer of Real Property ──
-  { topic: 2, q: "Which of the following is required for a deed to be valid?", opts: ["A. Acknowledgment by a notary public", "B. Recording with the county recorder", "C. Competent grantor and grantee identification", "D. Payment of transfer taxes"], a: 2, exp: "For a deed to be valid, it must identify competent parties (grantor and grantee), contain a legal description, include words of conveyance, and be signed by the grantor." },
-  { topic: 2, q: "A grant deed in California typically contains which implied warranty?", opts: ["A. The grantor guarantees against all future title claims", "B. The grantor has not previously conveyed the property to another party", "C. The property is free of all physical defects", "D. The grantee will have quiet enjoyment forever"], a: 1, exp: "A grant deed contains two implied covenants: (1) the grantor has not previously conveyed the property to someone else, and (2) the title is free from encumbrances made by the grantor." },
-  { topic: 2, q: "A quitclaim deed conveys:", opts: ["A. A warranty against all encumbrances", "B. Whatever interest the grantor may have, if any", "C. Fee simple absolute title", "D. A guaranteed marketable title"], a: 1, exp: "A quitclaim deed transfers only whatever interest the grantor currently holds — it makes no warranties. It is often used to clear title defects or transfer between family members." },
-  { topic: 2, q: "The process by which the government acquires private property for public use is called:", opts: ["A. Adverse possession", "B. Escheat", "C. Eminent domain", "D. Foreclosure"], a: 2, exp: "Eminent domain is the government's inherent power to take private property for public use, provided just compensation is paid to the owner. The actual taking process is called condemnation." },
-  { topic: 2, q: "Title to property is transferred by adverse possession when the claimant has occupied the land:", opts: ["A. With the owner's permission for any period", "B. Openly, notoriously, hostilely, continuously, and exclusively for the statutory period", "C. Under a recorded easement for five years", "D. After paying property taxes for two years"], a: 1, exp: "Adverse possession requires the occupation to be (1) actual, (2) open and notorious, (3) hostile/adverse, (4) exclusive, and (5) continuous for the statutory period (5 years in California with color of title and tax payments)." },
-  { topic: 2, q: "Delivery and acceptance of a deed is important because:", opts: ["A. It establishes the purchase price of the property", "B. Title does not pass until the deed is delivered and accepted", "C. It triggers the recording of the deed automatically", "D. It determines the priority of liens"], a: 1, exp: "Title to real property passes when a deed is delivered by the grantor and accepted by the grantee. Delivery requires intent to pass title, not just physical handing over of the document." },
-  { topic: 2, q: "Which document would provide the BEST protection of title for a buyer?", opts: ["A. Quitclaim deed", "B. Warranty deed", "C. Sheriff's deed", "D. Tax deed"], a: 1, exp: "A general warranty deed provides the broadest protection — the grantor warrants the title against all claims, even those arising before the grantor owned the property." },
-  { topic: 2, q: "When a person dies intestate, property passes to heirs through:", opts: ["A. A will", "B. The laws of succession (intestate succession)", "C. A living trust", "D. An inter vivos gift"], a: 1, exp: "Dying intestate means dying without a valid will. Property then passes according to the state's laws of intestate succession, which prescribe priority among surviving relatives." },
-  { topic: 2, q: "Recording a deed primarily serves to:", opts: ["A. Make the deed legally valid", "B. Provide constructive notice to the public", "C. Transfer title to the grantee", "D. Calculate transfer taxes"], a: 1, exp: "Recording a deed provides constructive notice to the world that a transfer has occurred. It does not create title but protects the grantee against subsequent purchasers." },
-  { topic: 2, q: "A deed of gift is a transfer of property:", opts: ["A. In exchange for a mortgage", "B. As compensation for services rendered", "C. Without monetary consideration", "D. Through a court order"], a: 2, exp: "A deed of gift conveys property without monetary consideration. Love and affection may serve as valid consideration, but no money changes hands." },
-
-  // ── Topic 3: Encumbrances ──
-  { topic: 3, q: "An encumbrance on real property is best defined as:", opts: ["A. Any claim, lien, charge, or liability that affects the title", "B. The recorded owner of a property", "C. The physical boundary of the property", "D. A government restriction on use"], a: 0, exp: "An encumbrance is any claim, lien, charge, or liability attached to and binding on real property that may diminish its value or restrict its use, but does not prevent title transfer." },
-  { topic: 3, q: "A mechanic's lien is:", opts: ["A. A voluntary lien created by a mortgage", "B. A lien filed by contractors or suppliers for unpaid work or materials", "C. A government lien for unpaid property taxes", "D. An easement allowing access across property"], a: 1, exp: "A mechanic's lien is a statutory lien that can be filed by contractors, subcontractors, or material suppliers who performed work or provided materials on a property and were not paid." },
-  { topic: 3, q: "A property tax lien is an example of:", opts: ["A. A specific voluntary lien", "B. A general involuntary lien", "C. A specific involuntary lien", "D. A general voluntary lien"], a: 2, exp: "A property tax lien is specific (attaches to a particular property) and involuntary (created by law without consent of the owner). It takes priority over most other liens." },
-  { topic: 3, q: "An easement appurtenant:", opts: ["A. Benefits a specific parcel of land and transfers with it", "B. Belongs to a specific person regardless of land ownership", "C. Is always created by express written agreement", "D. Gives the holder the right to permanently occupy the land"], a: 0, exp: "An easement appurtenant is attached to a particular parcel of land (the dominant estate) and passes with title. It burdens the servient estate and benefits the dominant estate." },
-  { topic: 3, q: "Which lien generally has the highest priority?", opts: ["A. A first mortgage recorded last year", "B. A mechanic's lien filed 6 months ago", "C. A property tax lien", "D. A judgment lien recorded 2 years ago"], a: 2, exp: "Property tax liens typically take priority over all other liens regardless of when recorded. Most states give super-priority status to property tax liens." },
-  { topic: 3, q: "A deed restriction (CC&R) is a type of encumbrance that:", opts: ["A. Can only be enforced by the government", "B. Is placed by private parties and runs with the land", "C. Automatically expires after 10 years", "D. Only applies to commercial properties"], a: 1, exp: "Deed restrictions (also called covenants, conditions, and restrictions or CC&Rs) are private limitations on use placed in the deed that run with the land and bind future owners." },
-  { topic: 3, q: "An easement in gross:", opts: ["A. Benefits an adjoining parcel of land", "B. Is a personal right that does not attach to land", "C. Is automatically extinguished when property is sold", "D. Requires court approval to create"], a: 1, exp: "An easement in gross is a personal right — it belongs to a specific person or entity (like a utility company), not to a parcel of land. It does not transfer with property ownership." },
-  { topic: 3, q: "A lis pendens is best described as:", opts: ["A. A final judgment creating a lien", "B. A notice that a lawsuit affecting a property's title is pending", "C. An involuntary transfer of property", "D. A government restriction on development"], a: 1, exp: "Lis pendens (Latin: 'suit pending') is a recorded notice warning prospective buyers and lenders that a legal action affecting title to the property is currently pending in court." },
-  { topic: 3, q: "A prescriptive easement is most similar to which property concept?", opts: ["A. Eminent domain", "B. Adverse possession", "C. Quiet title", "D. Escheat"], a: 1, exp: "A prescriptive easement is acquired through open, notorious, hostile, and continuous use of another's property for the statutory period — similar to adverse possession but results in a use right rather than ownership." },
-  { topic: 3, q: "When a court judgment is obtained against a property owner, it typically creates a:", opts: ["A. Specific voluntary lien only on the property mentioned in the lawsuit", "B. General lien on all real property the debtor owns in that county", "C. Prescriptive easement over the debtor's land", "D. Fee simple defeasible interest"], a: 1, exp: "A judgment lien is a general lien — once recorded (or docketed), it attaches to all real property the judgment debtor owns or later acquires in the county where recorded." },
-
-  // ── Topic 4: Public Restrictions on Land ──
-  { topic: 4, q: "Zoning is an example of which governmental power?", opts: ["A. Eminent domain", "B. Taxation", "C. Police power", "D. Escheat"], a: 2, exp: "Zoning is enacted under police power — the government's authority to regulate land use for public health, safety, morals, and general welfare. No compensation is required for zoning restrictions." },
-  { topic: 4, q: "A variance is:", opts: ["A. A change in the zoning map", "B. Permission to deviate from current zoning requirements for a specific property", "C. An illegal use of property", "D. A special use permit for commercial activity in a residential zone"], a: 1, exp: "A variance grants relief from specific zoning requirements due to unique physical characteristics of the property (area variance) or to prevent undue hardship (use variance)." },
-  { topic: 4, q: "A non-conforming use in zoning law refers to:", opts: ["A. Illegal construction on a property", "B. A use that was legal when established but no longer conforms to current zoning", "C. A use that requires a special permit each year", "D. Any commercial use in a residential zone"], a: 1, exp: "A non-conforming use (legal non-conforming use) is one that existed lawfully before a zoning ordinance was enacted or changed but now violates the current ordinance. It is typically allowed to continue." },
-  { topic: 4, q: "The purpose of a building permit is to:", opts: ["A. Record ownership of the property", "B. Ensure proposed construction complies with local codes", "C. Establish the assessed value for taxation", "D. Grant an easement to the municipality"], a: 1, exp: "Building permits are required to ensure that proposed construction or renovation complies with local building codes, zoning ordinances, and safety standards before work begins." },
-  { topic: 4, q: "Master plans (general plans) are used by local governments to:", opts: ["A. Establish individual property tax rates", "B. Guide long-term land use and development in a community", "C. Create deed restrictions on private land", "D. Set mortgage interest rates"], a: 1, exp: "A master plan (or general plan) is a long-range policy document guiding community development decisions about land use, transportation, housing, open space, and public services." },
-  { topic: 4, q: "Special use permits (conditional use permits) are required when:", opts: ["A. Any construction project begins", "B. A use is generally allowed in a zone but may have impacts requiring review", "C. Property is sold to a new owner", "D. A variance is denied"], a: 1, exp: "A conditional use permit (CUP) allows a use that is potentially compatible with a zone but may create negative impacts — requiring review and conditions to mitigate those impacts." },
-  { topic: 4, q: "The term 'highest and best use' in real estate refers to:", opts: ["A. The most profitable legal use for which the property is physically adaptable", "B. The use the zoning ordinance requires", "C. The historical use of the property", "D. The use the owner intends"], a: 0, exp: "Highest and best use is the reasonably probable use that is legally permissible, physically possible, financially feasible, and maximally productive — producing the highest property value." },
-  { topic: 4, q: "Subdivision regulations typically require developers to:", opts: ["A. Sell all lots within 12 months", "B. Provide infrastructure like streets, utilities, and drainage", "C. Pay impact fees directly to neighboring property owners", "D. Obtain a variance before subdividing"], a: 1, exp: "Subdivision regulations govern the division of land and typically require developers to provide public improvements (streets, sewers, drainage), submit a subdivision map, and comply with design standards." },
-  { topic: 4, q: "Spot zoning is generally considered illegal because:", opts: ["A. It creates uniform land use across a city", "B. It grants special privileges to one parcel inconsistent with the surrounding area's plan", "C. It allows agricultural uses in residential zones", "D. It prevents development in flood-prone areas"], a: 1, exp: "Spot zoning is the singling out of a small area for treatment inconsistent with surrounding zoning, typically for the benefit of a single owner — courts frequently strike it down as arbitrary." },
-  { topic: 4, q: "Environmental impact reports (EIRs) are required under CEQA (California Environmental Quality Act) to:", opts: ["A. Assess only the economic impact of a project", "B. Identify and mitigate significant environmental effects of proposed projects", "C. Determine if a property qualifies for agricultural zoning", "D. Set property tax assessments for new construction"], a: 1, exp: "Under CEQA, public agencies must evaluate the significant environmental effects of proposed projects through an environmental impact report (EIR) and adopt feasible mitigation measures." },
-
-  // ── Topic 5: Contract Law ──
-  { topic: 5, q: "For a contract to be legally enforceable, it must contain:", opts: ["A. Offer, acceptance, and notarization", "B. Offer, acceptance, consideration, and capacity", "C. Written terms, witnesses, and delivery", "D. Recording, signatures, and a purchase price"], a: 1, exp: "A valid contract requires: (1) mutual assent (offer and acceptance), (2) consideration, (3) legal capacity of parties, and (4) a lawful objective. Written form may also be required for real estate contracts." },
-  { topic: 5, q: "Consideration in a contract is:", opts: ["A. Always a sum of money", "B. Something of value exchanged between parties", "C. The physical act of signing the contract", "D. The legal description of the property"], a: 1, exp: "Consideration is something of legal value given in exchange for a promise. It can be money, services, a promise to act or refrain from acting — but each party must give and receive something of value." },
-  { topic: 5, q: "A voidable contract is one that:", opts: ["A. Has no legal effect whatsoever from inception", "B. Can be disaffirmed by one party due to a legal deficiency", "C. Requires court approval to enforce", "D. Is missing an essential element like consideration"], a: 1, exp: "A voidable contract is a valid contract that can be canceled or affirmed at the election of one party — for example, a contract with a minor or one induced by fraud or undue influence." },
-  { topic: 5, q: "The Statute of Frauds requires real estate contracts to be:", opts: ["A. Notarized to be enforceable", "B. In writing and signed by the party to be charged", "C. Witnessed by at least two people", "D. Recorded in the county recorder's office"], a: 1, exp: "The Statute of Frauds requires contracts for the sale or long-term lease (over one year) of real property to be in writing and signed by the party against whom enforcement is sought." },
-  { topic: 5, q: "When a buyer defaults on a real estate purchase contract, the seller's remedy of liquidated damages refers to:", opts: ["A. Suing the buyer for the full purchase price", "B. Retaining the buyer's deposit as agreed pre-estimated damages", "C. Rescinding the contract and suing for consequential damages", "D. Forcing the buyer to complete the purchase"], a: 1, exp: "Liquidated damages is a pre-agreed amount (often the earnest money deposit) that one party keeps if the other breaches. In California residential contracts, the liquidated damages clause limits the seller to 3% of the purchase price." },
-  { topic: 5, q: "Specific performance as a remedy in real estate means:", opts: ["A. Awarding monetary damages to the injured party", "B. Canceling the contract and returning parties to their original positions", "C. Compelling the defaulting party to complete the transaction", "D. Allowing the breaching party to pay a penalty and walk away"], a: 2, exp: "Specific performance is an equitable remedy that compels the breaching party to perform the contract as agreed. It is commonly available in real estate because land is considered unique." },
-  { topic: 5, q: "An option contract in real estate gives the optionee:", opts: ["A. The obligation to purchase the property within a specified time", "B. The exclusive right, but not the obligation, to purchase within a specified time", "C. A lien on the property", "D. Joint ownership interest in the property"], a: 1, exp: "An option contract gives the optionee the right to buy (or lease) property at a set price within a specific period. The optionee is not obligated to exercise the option; the optionor (seller) is bound to the terms." },
-  { topic: 5, q: "Mutual assent in contract law means:", opts: ["A. Both parties must hire attorneys", "B. A meeting of the minds — both parties agree to the same terms", "C. Both parties sign the contract simultaneously", "D. All terms must be written in plain language"], a: 1, exp: "Mutual assent (or 'meeting of the minds') requires that both parties freely agree to the same material terms. It is typically evidenced by a valid offer and acceptance." },
-  { topic: 5, q: "If a contract lacks a legal purpose, it is:", opts: ["A. Voidable at either party's option", "B. Void and unenforceable", "C. Valid but must be reformed by a court", "D. Enforceable only if both parties are professionals"], a: 1, exp: "A contract with an illegal or unlawful objective (purpose) is void — it has no legal effect, and no court will enforce it." },
-  { topic: 5, q: "An addendum to a contract is:", opts: ["A. A separate document that changes the terms after both parties signed", "B. A modification made verbally after signing", "C. An amendment recorded at the county", "D. An extension of the contract's expiration date only"], a: 0, exp: "An addendum is an attachment to a contract that adds or modifies terms, usually executed simultaneously with or as part of the original agreement. An amendment changes terms after the contract is formed." },
-
-  // ── Topic 6: Types of Real Estate Contracts ──
-  { topic: 6, q: "A listing agreement is a contract between:", opts: ["A. A buyer and a seller", "B. A seller and a real estate broker", "C. A buyer and a real estate broker", "D. Two real estate brokers"], a: 1, exp: "A listing agreement is an employment contract between a property owner (seller/landlord) and a real estate broker, authorizing the broker to procure a buyer or tenant." },
-  { topic: 6, q: "Under an exclusive right-to-sell listing, the listing broker earns a commission:", opts: ["A. Only if the broker personally finds the buyer", "B. Only if the seller does not find a buyer independently", "C. Regardless of who procures the buyer, including the seller", "D. Only if the property sells above the listed price"], a: 2, exp: "Under an exclusive right-to-sell listing, the broker earns a commission if the property sells during the listing period, regardless of who finds the buyer — even if the seller finds the buyer themselves." },
-  { topic: 6, q: "A purchase and sale agreement (purchase contract) is considered a:", opts: ["A. Unilateral contract", "B. Bilateral contract", "C. Option contract", "D. Listing agreement"], a: 1, exp: "A purchase and sale agreement is bilateral — both the buyer and seller make promises to each other (buyer promises to pay, seller promises to convey title). Both parties are bound to perform." },
-  { topic: 6, q: "An installment sale contract (land contract/contract for deed) is an arrangement where:", opts: ["A. The buyer takes title immediately upon signing", "B. The seller retains legal title until the buyer pays all or a specified amount", "C. A third-party lender holds title during repayment", "D. The buyer leases the property with no purchase option"], a: 1, exp: "In a land contract (contract for deed), the seller retains legal (record) title while the buyer holds equitable title and makes installment payments. Legal title transfers to the buyer upon full payment." },
-  { topic: 6, q: "A lease-option agreement gives the tenant:", opts: ["A. Ownership of the property at lease signing", "B. The right to purchase the property at a set price during or at the end of the lease", "C. The obligation to purchase at the end of the lease term", "D. An easement to use the property"], a: 1, exp: "A lease-option (lease with option to purchase) gives the tenant the right, but not the obligation, to buy the property at a predetermined price and terms during or at the end of the lease." },
-  { topic: 6, q: "An open listing allows the seller to:", opts: ["A. List with only one broker at a time", "B. List with multiple brokers, paying commission only to the one who produces a ready buyer", "C. Revoke the listing only with 30-days notice", "D. Retain all commissions earned during the listing period"], a: 1, exp: "An open listing is non-exclusive — the seller may list with multiple brokers simultaneously and pays a commission only to the broker who is the procuring cause of the sale. The seller retains the right to sell themselves." },
-  { topic: 6, q: "A buyer representation agreement binds the buyer to:", opts: ["A. Purchase any property shown by the agent", "B. work exclusively with that agent or brokerage when purchasing", "C. Pay a fixed purchase price", "D. Use a specific lender"], a: 1, exp: "A buyer representation agreement is an employment contract between a buyer and a broker/agent. It may establish exclusivity, duration, and compensation terms — committing the buyer to work with that agent." },
-  { topic: 6, q: "Which of the following is NOT typically a contingency found in a purchase contract?", opts: ["A. Loan contingency", "B. Inspection contingency", "C. Appraisal contingency", "D. Agent commission contingency"], a: 3, exp: "Common contingencies in purchase contracts include loan approval, property inspection, and appraisal. Agent commission is not a contingency — it is a term of the listing or buyer representation agreement." },
-  { topic: 6, q: "Escrow instructions in a real estate transaction:", opts: ["A. Replace the purchase contract", "B. Direct the escrow holder to perform specific duties to close the transaction", "C. Transfer title to the buyer upon signing", "D. Are only required in commercial transactions"], a: 1, exp: "Escrow instructions are written directions from buyer and seller to the escrow holder, outlining the conditions that must be met before closing and the actions the escrow holder is authorized to take." },
-  { topic: 6, q: "A net listing is:", opts: ["A. A listing where the broker's commission is a fixed percentage of the sale price", "B. A listing where the broker receives any amount above a set net price as commission", "C. A type of open listing with multiple brokers", "D. A listing that guarantees sale within 90 days"], a: 1, exp: "A net listing allows the broker to keep any amount over a specified net price as commission. Most states prohibit or discourage net listings because they create a conflict of interest between broker and client." },
-
-  // ── Topic 7: Real Estate Agency Law ──
-  { topic: 7, q: "An agent owes which fiduciary duties to their principal?", opts: ["A. Loyalty, disclosure, confidentiality, obedience, reasonable care, accounting (LCDOCA)", "B. Only honesty and fair dealing", "C. Duties only to the buyer, not the seller", "D. Profit maximization and marketing"], a: 0, exp: "A fiduciary owes LCDOCA duties: Loyalty, Confidentiality, Disclosure, Obedience, Reasonable Care, and Accounting. These duties prioritize the principal's interests." },
-  { topic: 7, q: "In California, agency disclosure is required:", opts: ["A. Only in commercial transactions", "B. In residential sales of 1–4 units; the agent must give the disclosure form ASAP", "C. Only when the agent represents both buyer and seller", "D. When the property sells for over $1 million"], a: 1, exp: "California's Agency Disclosure Law (Civil Code §2079) requires agents to provide a written disclosure of the agency relationship as soon as practicable in residential transactions of 1–4 units." },
-  { topic: 7, q: "Dual agency occurs when:", opts: ["A. Two brokers each represent one party in the same transaction", "B. A broker or agent represents both buyer and seller in the same transaction", "C. An agent works for two different brokerages", "D. A buyer uses two agents simultaneously"], a: 1, exp: "Dual agency arises when the same broker (or agent) represents both the buyer and seller in the same transaction. In California, dual agency is legal only with the informed written consent of both parties." },
-  { topic: 7, q: "The term 'procuring cause' refers to:", opts: ["A. The legal basis for filing a lawsuit", "B. The broker whose efforts were the uninterrupted chain of events leading to the sale", "C. The cause of a defect in the property", "D. The reason a listing expires"], a: 1, exp: "Procuring cause is the broker who initiated and maintained an uninterrupted chain of negotiations that resulted in a completed sale. This determines which broker is entitled to the commission." },
-  { topic: 7, q: "A seller's agent must disclose to a buyer:", opts: ["A. The seller's minimum acceptable price", "B. All known material facts about the property", "C. The seller's personal financial situation", "D. The history of all previous offers"], a: 1, exp: "Even though a seller's agent represents the seller, they have a duty to disclose all known material facts about the property to prospective buyers. This is separate from their fiduciary duty to the seller." },
-  { topic: 7, q: "Sub-agency in real estate refers to:", opts: ["A. An agent who works part-time under a broker", "B. A broker working as agent of another broker to sell the listing", "C. An unlicensed assistant helping a licensed agent", "D. An agent licensed in multiple states"], a: 1, exp: "Sub-agency occurs when a cooperating broker (and their agents) act as agents of the listing broker — and thus as sub-agents of the seller — rather than as buyer's agents." },
-  { topic: 7, q: "In a designated agency arrangement:", opts: ["A. The broker personally represents both parties", "B. The broker appoints different agents within their firm to represent each party", "C. A third-party neutral represents both parties", "D. Both parties agree to no agent representation"], a: 1, exp: "Designated agency allows a broker to designate specific agents within the same firm to represent the buyer and seller separately, each acting in their respective client's best interests." },
-  { topic: 7, q: "Which of the following would be a violation of an agent's duty of loyalty to their client?", opts: ["A. Presenting all offers to the seller promptly", "B. Purchasing the listed property personally without disclosing the agent relationship", "C. Disclosing a material defect to the buyer", "D. Advertising the property on multiple platforms"], a: 1, exp: "The duty of loyalty requires the agent to act in the principal's best interest. Purchasing the principal's property without full disclosure violates this duty." },
-  { topic: 7, q: "A real estate broker in California must:", opts: ["A. Have a salesperson license for at least 1 year before obtaining a broker license", "B. Have at least 2 years full-time experience and pass a broker exam", "C. Only supervise other agents, not directly represent clients", "D. Renew their license every 2 years"], a: 1, exp: "In California, a broker license requires at least 2 years of full-time licensed salesperson experience (within the last 5 years), completion of required college-level courses, and passing the broker exam." },
-  { topic: 7, q: "The duty of 'accounting' in a fiduciary relationship means:", opts: ["A. Preparing the seller's tax returns", "B. Safeguarding and reporting all funds received on behalf of the client", "C. Keeping records of all showing appointments", "D. Performing a comparative market analysis"], a: 1, exp: "The duty of accounting requires the agent to responsibly account for all money and property received on behalf of the principal — this includes proper handling of earnest money deposits and trust funds." },
-
-  // ── Topic 8: Principles of RE Financing ──
-  { topic: 8, q: "A promissory note in real estate is:", opts: ["A. The instrument that transfers title", "B. The borrower's written promise to repay the debt", "C. The deed of trust recorded against the property", "D. A government disclosure form"], a: 1, exp: "A promissory note is the personal liability instrument — the borrower's unconditional written promise to pay a specified sum at a specified time. It is the 'IOU' in the transaction." },
-  { topic: 8, q: "In California, a deed of trust differs from a mortgage primarily because:", opts: ["A. A deed of trust requires a longer foreclosure process", "B. A deed of trust involves three parties including a neutral trustee", "C. A mortgage involves the borrower, lender, and a trustee", "D. A deed of trust does not secure a loan"], a: 1, exp: "A deed of trust involves three parties: the trustor (borrower), beneficiary (lender), and trustee (neutral third party who holds bare legal title). A mortgage involves only two parties." },
-  { topic: 8, q: "Amortization in mortgage financing refers to:", opts: ["A. The process of increasing loan payments over time", "B. The gradual repayment of the loan principal through scheduled payments", "C. The penalty for early repayment of a loan", "D. The assessment of property value by an appraiser"], a: 1, exp: "Amortization is the process of retiring a debt through regular principal and interest payments over a set period, so that the loan balance reaches zero at the end of the term." },
-  { topic: 8, q: "The loan-to-value (LTV) ratio is:", opts: ["A. The ratio of annual income to monthly debt payments", "B. The ratio of the loan amount to the appraised value of the property", "C. The interest rate divided by the loan term", "D. The ratio of down payment to closing costs"], a: 1, exp: "LTV = Loan Amount ÷ Appraised Value (or Sales Price, whichever is lower). A lower LTV represents less risk for the lender. Loans with LTV above 80% typically require PMI." },
-  { topic: 8, q: "Private Mortgage Insurance (PMI) is typically required when:", opts: ["A. The borrower has a credit score below 700", "B. The down payment is less than 20% of the purchase price", "C. The loan term exceeds 30 years", "D. The property is a second home"], a: 1, exp: "PMI protects the lender if the borrower defaults. It is generally required on conventional loans when the down payment is less than 20% (LTV exceeds 80%)." },
-  { topic: 8, q: "An adjustable-rate mortgage (ARM) differs from a fixed-rate mortgage in that:", opts: ["A. The loan term adjusts based on property value", "B. The interest rate can change periodically after an initial fixed period", "C. The monthly payment never changes", "D. The principal balance adjusts with inflation"], a: 1, exp: "An ARM has an interest rate that adjusts periodically based on a benchmark index plus a margin. It typically offers a lower initial rate than a fixed-rate mortgage but carries rate risk for the borrower." },
-  { topic: 8, q: "A due-on-sale clause in a mortgage:", opts: ["A. Requires the borrower to make a balloon payment after 5 years", "B. Requires full repayment of the loan when the property is sold or transferred", "C. Allows the buyer to assume the existing mortgage", "D. Accelerates the interest rate upon sale"], a: 1, exp: "A due-on-sale (alienation) clause requires the entire loan balance to be paid when the property is sold or otherwise transferred, preventing loan assumption without lender approval." },
-  { topic: 8, q: "Discount points paid on a mortgage loan:", opts: ["A. Increase the interest rate on the loan", "B. Are prepaid interest that lower the interest rate", "C. Reduce the required down payment", "D. Are fees paid to the title company at closing"], a: 1, exp: "Discount points are prepaid interest charges paid at closing to reduce (buy down) the interest rate. One point equals 1% of the loan amount and typically reduces the rate by 0.125–0.25%." },
-  { topic: 8, q: "The secondary mortgage market is best described as:", opts: ["A. A market for second mortgages only", "B. The market where existing mortgages are bought and sold by investors", "C. The process of a lender making loans directly to borrowers", "D. Government-issued mortgage-backed securities"], a: 1, exp: "The secondary mortgage market is where already-originated mortgages are bought and sold — primarily by entities like Fannie Mae and Freddie Mac. This provides lenders with liquidity to make new loans." },
-  { topic: 8, q: "A hard money loan is characterized by:", opts: ["A. Low interest rates backed by the federal government", "B. Financing based primarily on the value of the collateral rather than borrower creditworthiness", "C. A loan made by a credit union to its members", "D. A federally insured mortgage with no down payment"], a: 1, exp: "Hard money loans are typically provided by private investors or firms and are asset-based — the loan is secured by real property value rather than the borrower's credit. They usually carry high rates and short terms." },
-
-  // ── Topic 9: Applying for a Residential Loan ──
-  { topic: 9, q: "RESPA (Real Estate Settlement Procedures Act) regulates:", opts: ["A. Property tax assessments in all states", "B. Closing procedures and prohibits kickbacks for federally related mortgage loans", "C. The maximum interest rate a lender may charge", "D. Zoning and land use in residential areas"], a: 1, exp: "RESPA governs the closing process for federally related mortgage loans, requires disclosure of settlement costs (via Loan Estimate and Closing Disclosure), and prohibits kickbacks and referral fees." },
-  { topic: 9, q: "The Loan Estimate provided to a mortgage applicant must be delivered within:", opts: ["A. 24 hours of application", "B. 3 business days of receiving a completed loan application", "C. 10 days before closing", "D. 30 days of application"], a: 1, exp: "Under TRID (TILA-RESPA Integrated Disclosure) rules, lenders must provide the Loan Estimate within 3 business days of receiving a completed loan application." },
-  { topic: 9, q: "A borrower's debt-to-income (DTI) ratio is:", opts: ["A. The ratio of assets to total debts", "B. Monthly debt obligations divided by gross monthly income", "C. Annual income divided by the loan amount", "D. The ratio of the down payment to monthly expenses"], a: 1, exp: "DTI ratio = Total Monthly Debt Obligations ÷ Gross Monthly Income. Lenders use DTI to assess a borrower's ability to repay — most conventional loans require a DTI of 43% or less." },
-  { topic: 9, q: "Which federal law prohibits discrimination in lending based on race, color, religion, national origin, sex, marital status, or age?", opts: ["A. RESPA", "B. The Equal Credit Opportunity Act (ECOA)", "C. TILA", "D. The Community Reinvestment Act"], a: 1, exp: "The Equal Credit Opportunity Act (ECOA) prohibits credit discrimination based on race, color, religion, national origin, sex, marital status, age, or receipt of public assistance." },
-  { topic: 9, q: "Redlining is an illegal practice where:", opts: ["A. Lenders highlight high-value properties on maps for investment", "B. Lenders refuse to make loans in specific geographic areas, often minority neighborhoods", "C. Appraisers overvalue properties in certain ZIP codes", "D. Sellers refuse to accept offers from certain buyers"], a: 1, exp: "Redlining is the discriminatory practice of refusing to offer credit, insurance, or services to residents of certain areas — typically minority communities — based on demographics rather than individual creditworthiness." },
-  { topic: 9, q: "The Truth in Lending Act (TILA) requires lenders to disclose:", opts: ["A. The property's assessed value and tax history", "B. The Annual Percentage Rate (APR) and total cost of credit", "C. The borrower's credit score to the seller", "D. All liens and encumbrances on the property"], a: 1, exp: "TILA requires disclosure of credit terms in a standardized way, including the Annual Percentage Rate (APR), finance charges, total payments, and payment schedule — enabling borrowers to compare loan offers." },
-  { topic: 9, q: "Predatory lending practices typically include:", opts: ["A. Fixed-rate loans with no prepayment penalties", "B. Excessive fees, high-pressure tactics, or loan terms designed to benefit lenders at borrowers' expense", "C. Loans requiring a 20% down payment", "D. Full disclosure of all loan terms per TILA"], a: 1, exp: "Predatory lending involves abusive practices such as excessive interest rates, hidden fees, flipping loans, equity stripping, and targeting vulnerable borrowers — often leading to loan default and foreclosure." },
-  { topic: 9, q: "Pre-qualification for a mortgage differs from pre-approval in that:", opts: ["A. Pre-qualification is a more thorough process requiring credit verification", "B. Pre-qualification is an informal estimate based on self-reported information, while pre-approval involves credit verification", "C. Pre-approval requires no documentation", "D. Pre-qualification guarantees the loan will fund"], a: 1, exp: "Pre-qualification is an informal estimate based on unverified self-reported information. Pre-approval involves a full application, credit check, and income verification — providing a stronger indication of loan eligibility." },
-  { topic: 9, q: "The Closing Disclosure must be provided to the borrower:", opts: ["A. At least 1 business day before closing", "B. At least 3 business days before closing", "C. Immediately after the loan closes", "D. Within 10 days after closing"], a: 1, exp: "Under TRID, lenders must provide the Closing Disclosure to borrowers at least 3 business days before the loan consummation (closing), giving borrowers time to review final loan terms." },
-  { topic: 9, q: "The Community Reinvestment Act (CRA) encourages:", opts: ["A. Lenders to fund only prime borrowers in wealthy neighborhoods", "B. Banks to help meet the credit needs of the communities in which they operate, including low- and moderate-income areas", "C. Borrowers to refinance when rates decline by 1%", "D. Appraisers to use automated valuation models"], a: 1, exp: "The CRA requires federally insured banks to help meet the credit needs of their entire communities, including low- and moderate-income neighborhoods, while maintaining safe and sound operations." }
+const LEVELS = [
+  {lvl:1,title:"Open House Visitor",xp:0},
+  {lvl:2,title:"Prospective Buyer",xp:150},
+  {lvl:3,title:"First-Time Buyer",xp:350},
+  {lvl:4,title:"Licensed Salesperson",xp:700},
+  {lvl:5,title:"Junior Agent",xp:1200},
+  {lvl:6,title:"Seasoned Agent",xp:2000},
+  {lvl:7,title:"Lead Negotiator",xp:3200},
+  {lvl:8,title:"Senior Broker",xp:5000},
+  {lvl:9,title:"Branch Director",xp:7500},
+  {lvl:10,title:"Regional Manager",xp:11000},
+  {lvl:11,title:"Real Estate Investor",xp:16000},
+  {lvl:12,title:"Property Mogul",xp:22000}
 ];
 
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
-let state = {
-  selectedTopics: TOPICS.map((_, i) => i), // all
+const BADGES_DEF = [
+  {id:"first_correct",name:"First Step",desc:"Answer your first question correctly",icon:"★"},
+  {id:"perfect_10",name:"Perfect 10",desc:"Score 100% on a 10-question test",icon:"◆"},
+  {id:"perfect_score",name:"Flawless",desc:"Score 100% on any 20+ question test",icon:"◈"},
+  {id:"streak_5",name:"On a Roll",desc:"Get 5 correct answers in a row",icon:"▲"},
+  {id:"streak_10",name:"Unstoppable",desc:"Get 10 correct answers in a row",icon:"▲▲"},
+  {id:"day_streak_3",name:"Consistent",desc:"Study 3 days in a row",icon:"●"},
+  {id:"day_streak_7",name:"Dedicated",desc:"Study 7 days in a row",icon:"●●"},
+  {id:"topic_master",name:"Topic Master",desc:"Score 90%+ on a single topic",icon:"◉"},
+  {id:"century",name:"Century",desc:"Answer 100 questions total",icon:"C"},
+  {id:"level_5",name:"Rising Pro",desc:"Reach Level 5",icon:"⬡"},
+  {id:"comeback",name:"Comeback Kid",desc:"Get 5 correct after 3 wrong in one test",icon:"↑"},
+  {id:"mogul",name:"Mogul",desc:"Reach Level 12",icon:"★★"},
+];
+
+const QB = [
+  {t:0,q:"Which of the following is considered real property?",o:["A. A stock certificate","B. A vehicle parked on land","C. A building permanently attached to land","D. A promissory note"],a:2,e:"Real property includes land and anything permanently attached to it, such as buildings and fixtures."},
+  {t:0,q:"The term 'bundle of rights' in real property refers to:",o:["A. The physical boundaries of a parcel","B. A collection of legal rights associated with property ownership","C. The list of encumbrances on a title","D. Federal zoning regulations"],a:1,e:"The 'bundle of rights' describes all legal rights held by a property owner — use, sell, lease, enter, or give away."},
+  {t:0,q:"Which of the following would be classified as a fixture?",o:["A. A portable air conditioner","B. Built-in kitchen cabinetry","C. A dining room table","D. A rolled-up area rug"],a:1,e:"Fixtures are personal property permanently attached to real property. Built-in cabinets pass the method, adaptation, and intent tests."},
+  {t:0,q:"Air rights, mineral rights, and water rights are examples of:",o:["A. Easements appurtenant","B. Involuntary liens","C. Components of real property ownership","D. Servitudes"],a:2,e:"Real property ownership extends above (air), below (minerals), and along water boundaries as part of the full bundle of rights."},
+  {t:0,q:"The concept that land cannot be destroyed is known as:",o:["A. Scarcity","B. Immobility","C. Indestructibility","D. Uniqueness"],a:2,e:"Indestructibility (permanence) means land itself cannot be destroyed, though improvements can be."},
+  {t:0,q:"Personal property that becomes real property through attachment is called a:",o:["A. Severance","B. Chattel","C. Fixture","D. License"],a:2,e:"A fixture is personal property (chattel) affixed to land in a way that makes it part of real property."},
+  {t:0,q:"Which physical characteristic of land refers to its fixed geographic location?",o:["A. Indestructibility","B. Immobility","C. Non-homogeneity","D. Scarcity"],a:1,e:"Immobility means land cannot be moved from its location — it is geographically fixed."},
+  {t:0,q:"Under what test would a court determine if an item is a fixture?",o:["A. The economic test","B. The MARIA test (Method, Adaptation, Relationship, Intention, Agreement)","C. The title insurance test","D. The depreciation test"],a:1,e:"Courts use the MARIA test: Method of annexation, Adaptation, Relationship of parties, Intention, and Agreement."},
+  {t:0,q:"A tree growing on a property is considered:",o:["A. Personal property","B. A trade fixture","C. Real property","D. A license"],a:2,e:"Naturally growing vegetation is classified as real property, permanently affixed to the land."},
+  {t:0,q:"Which best describes 'riparian rights'?",o:["A. Right to mine minerals beneath the surface","B. Rights of landowners whose property borders a stream or river","C. Right to use air space above the property","D. Governmental restrictions on land use"],a:1,e:"Riparian rights belong to landowners adjacent to a body of water, entitling them to reasonable water use."},
+  {t:1,q:"A fee simple absolute estate is best described as:",o:["A. An ownership interest that terminates upon the owner's death","B. The most complete form of ownership with no conditions","C. An ownership that reverts to the grantor upon a condition","D. A leasehold interest for a fixed period"],a:1,e:"Fee simple absolute is the highest form of ownership — unconditional, potentially infinite, and freely transferable."},
+  {t:1,q:"Two unmarried individuals who own property with the right of survivorship hold title as:",o:["A. Tenants in common","B. Joint tenants","C. Community property owners","D. Tenants by the entirety"],a:1,e:"Joint tenancy requires the four unities and includes the right of survivorship."},
+  {t:1,q:"In a tenancy in common, each co-owner:",o:["A. Must sell simultaneously with others","B. Automatically inherits the other's share upon death","C. May hold unequal ownership shares","D. Must be married to other co-owners"],a:2,e:"Tenants in common may hold unequal shares, have no right of survivorship, and can transfer their interest independently."},
+  {t:1,q:"A life estate is an ownership interest that:",o:["A. Lasts indefinitely","B. Is measured by the lifetime of a person","C. Can be inherited by the owner's heirs","D. Includes full bundle of rights without limitation"],a:1,e:"A life estate is limited to the duration of a specified person's life and cannot be passed to heirs."},
+  {t:1,q:"When a husband and wife hold title as community property, each spouse owns:",o:["A. The entire property jointly","B. An undivided one-half interest","C. A separate fee simple interest","D. A tenancy by the entirety"],a:1,e:"In community property states, each spouse holds an equal, undivided one-half interest in property acquired during marriage."},
+  {t:1,q:"A fee simple defeasible estate is one that:",o:["A. Has no conditions on ownership","B. May be terminated if a condition is violated","C. Exists only during the owner's lifetime","D. Cannot be transferred without court approval"],a:1,e:"A fee simple defeasible estate can be defeated or terminated if a specified condition occurs or fails to occur."},
+  {t:1,q:"The 'four unities' required for joint tenancy are:",o:["A. Time, Title, Interest, Possession","B. Location, Value, Duration, Ownership","C. Deed, Recording, Consideration, Acceptance","D. Agency, Escrow, Financing, Closing"],a:0,e:"Joint tenancy requires: Time (same acquisition), Title (same instrument), Interest (equal shares), Possession (same right to whole)."},
+  {t:1,q:"A remainder interest in real property refers to:",o:["A. The balance owed on a mortgage","B. The future interest that takes effect after a life estate ends","C. The excess equity after all liens are paid","D. An easement that remains after property is sold"],a:1,e:"A remainder is a future interest that becomes possessory after a preceding estate (typically a life estate) expires."},
+  {t:1,q:"Severalty ownership means:",o:["A. Ownership by several individuals together","B. Ownership by one person alone","C. Ownership split into several parts","D. Ownership requiring severance to transfer"],a:1,e:"Ownership in severalty means the property is owned by one person or entity alone."},
+  {t:1,q:"Which type of co-ownership is only available to legally married couples?",o:["A. Tenancy in common","B. Joint tenancy","C. Tenancy by the entirety","D. Community property"],a:2,e:"Tenancy by the entirety is available only to married couples and carries the right of survivorship."},
+  {t:2,q:"Which of the following is required for a deed to be valid?",o:["A. Acknowledgment by a notary public","B. Recording with the county recorder","C. Competent grantor and grantee identification","D. Payment of transfer taxes"],a:2,e:"A valid deed must identify competent parties, contain a legal description, include words of conveyance, and be signed by the grantor."},
+  {t:2,q:"A grant deed in California contains which implied warranty?",o:["A. The grantor guarantees against all future title claims","B. The grantor has not previously conveyed the property to another","C. The property is free of all physical defects","D. The grantee will have quiet enjoyment forever"],a:1,e:"A grant deed implies: (1) not previously conveyed to another, and (2) title is free from encumbrances made by the grantor."},
+  {t:2,q:"A quitclaim deed conveys:",o:["A. A warranty against all encumbrances","B. Whatever interest the grantor may have, if any","C. Fee simple absolute title","D. A guaranteed marketable title"],a:1,e:"A quitclaim deed transfers only whatever interest the grantor currently holds — it makes no warranties."},
+  {t:2,q:"The process by which the government acquires private property for public use is called:",o:["A. Adverse possession","B. Escheat","C. Eminent domain","D. Foreclosure"],a:2,e:"Eminent domain is the government's power to take private property for public use with just compensation."},
+  {t:2,q:"Title by adverse possession requires occupancy that is:",o:["A. With the owner's permission","B. Open, notorious, hostile, continuous, and exclusive for the statutory period","C. Under a recorded easement for five years","D. After paying property taxes for two years only"],a:1,e:"Adverse possession requires: actual, open and notorious, hostile, exclusive, and continuous use for the statutory period."},
+  {t:2,q:"Delivery and acceptance of a deed is important because:",o:["A. It establishes the purchase price","B. Title does not pass until the deed is delivered and accepted","C. It triggers automatic recording","D. It determines priority of liens"],a:1,e:"Title passes when a deed is delivered by the grantor with intent to pass title and accepted by the grantee."},
+  {t:2,q:"Which document provides the BEST title protection for a buyer?",o:["A. Quitclaim deed","B. Warranty deed","C. Sheriff's deed","D. Tax deed"],a:1,e:"A general warranty deed provides the broadest protection — the grantor warrants title against all claims ever."},
+  {t:2,q:"When a person dies intestate, property passes through:",o:["A. A will","B. Laws of intestate succession","C. A living trust","D. An inter vivos gift"],a:1,e:"Dying intestate means dying without a will. Property passes per the state's intestate succession laws."},
+  {t:2,q:"Recording a deed primarily serves to:",o:["A. Make the deed legally valid","B. Provide constructive notice to the public","C. Transfer title to the grantee","D. Calculate transfer taxes"],a:1,e:"Recording provides constructive notice to the world of the transfer, protecting the grantee against subsequent purchasers."},
+  {t:2,q:"A deed of gift is a transfer of property:",o:["A. In exchange for a mortgage","B. As compensation for services","C. Without monetary consideration","D. Through a court order"],a:2,e:"A deed of gift conveys property without monetary consideration — love and affection may serve as valid consideration."},
+  {t:3,q:"An encumbrance on real property is best defined as:",o:["A. Any claim, lien, charge, or liability affecting the title","B. The recorded owner of a property","C. The physical boundary of the property","D. A government restriction on use"],a:0,e:"An encumbrance is any claim, lien, charge, or liability attached to real property that may diminish value or restrict use."},
+  {t:3,q:"A mechanic's lien is:",o:["A. A voluntary lien created by a mortgage","B. A lien filed by contractors for unpaid work or materials","C. A government lien for unpaid property taxes","D. An easement allowing access across property"],a:1,e:"A mechanic's lien is filed by contractors, subcontractors, or suppliers who provided work or materials and weren't paid."},
+  {t:3,q:"A property tax lien is an example of:",o:["A. A specific voluntary lien","B. A general involuntary lien","C. A specific involuntary lien","D. A general voluntary lien"],a:2,e:"A property tax lien is specific (a particular property) and involuntary (created by law without owner's consent)."},
+  {t:3,q:"An easement appurtenant:",o:["A. Benefits a specific parcel and transfers with it","B. Belongs to a specific person regardless of land ownership","C. Is always created by express written agreement","D. Gives the right to permanently occupy the land"],a:0,e:"An easement appurtenant attaches to the dominant estate and passes with title, burdening the servient estate."},
+  {t:3,q:"Which lien generally has the highest priority?",o:["A. A first mortgage recorded last year","B. A mechanic's lien filed 6 months ago","C. A property tax lien","D. A judgment lien recorded 2 years ago"],a:2,e:"Property tax liens typically have super-priority status regardless of when other liens were recorded."},
+  {t:3,q:"A deed restriction (CC&R) is an encumbrance that:",o:["A. Can only be enforced by the government","B. Is placed by private parties and runs with the land","C. Automatically expires after 10 years","D. Only applies to commercial properties"],a:1,e:"CC&Rs are private limitations placed in the deed that run with the land and bind future owners."},
+  {t:3,q:"An easement in gross:",o:["A. Benefits an adjoining parcel of land","B. Is a personal right that does not attach to land","C. Is extinguished when property is sold","D. Requires court approval to create"],a:1,e:"An easement in gross is a personal right belonging to a specific person or entity, not to a parcel of land."},
+  {t:3,q:"A lis pendens is best described as:",o:["A. A final judgment creating a lien","B. A notice that a lawsuit affecting a property's title is pending","C. An involuntary transfer of property","D. A government restriction on development"],a:1,e:"Lis pendens is a recorded notice warning that a legal action affecting title is currently pending in court."},
+  {t:3,q:"A prescriptive easement is most similar to which concept?",o:["A. Eminent domain","B. Adverse possession","C. Quiet title","D. Escheat"],a:1,e:"A prescriptive easement is acquired through open, notorious, hostile, and continuous use — similar to adverse possession but results in a use right rather than ownership."},
+  {t:3,q:"A court judgment typically creates:",o:["A. A specific voluntary lien on one property","B. A general lien on all real property owned in that county","C. A prescriptive easement over the debtor's land","D. A fee simple defeasible interest"],a:1,e:"A judgment lien is a general lien — once recorded, it attaches to all real property the debtor owns or acquires in that county."},
+  {t:4,q:"Zoning is an example of which governmental power?",o:["A. Eminent domain","B. Taxation","C. Police power","D. Escheat"],a:2,e:"Zoning is enacted under police power — authority to regulate for public health, safety, morals, and general welfare."},
+  {t:4,q:"A variance is:",o:["A. A change in the zoning map","B. Permission to deviate from current zoning requirements for a specific property","C. An illegal use of property","D. A special use permit for commercial activity in a residential zone"],a:1,e:"A variance grants relief from specific zoning requirements due to unique physical characteristics or undue hardship."},
+  {t:4,q:"A non-conforming use in zoning law refers to:",o:["A. Illegal construction on a property","B. A use that was legal when established but no longer conforms to current zoning","C. A use that requires a special permit annually","D. Any commercial use in a residential zone"],a:1,e:"A legal non-conforming use existed lawfully before a zoning change but now violates the ordinance — typically allowed to continue."},
+  {t:4,q:"The purpose of a building permit is to:",o:["A. Record ownership of the property","B. Ensure proposed construction complies with local codes","C. Establish assessed value for taxation","D. Grant an easement to the municipality"],a:1,e:"Building permits ensure construction complies with local building codes, zoning, and safety standards."},
+  {t:4,q:"Master plans (general plans) are used by local governments to:",o:["A. Establish individual property tax rates","B. Guide long-term land use and development in a community","C. Create deed restrictions on private land","D. Set mortgage interest rates"],a:1,e:"A master plan is a long-range policy document guiding development decisions about land use, transportation, housing, and services."},
+  {t:4,q:"Conditional use permits (CUPs) are required when:",o:["A. Any construction project begins","B. A use is potentially compatible but may have impacts requiring review","C. Property is sold to a new owner","D. A variance is denied"],a:1,e:"A CUP allows a use compatible with a zone but that may create negative impacts — requiring review and conditions to mitigate them."},
+  {t:4,q:"The term 'highest and best use' refers to:",o:["A. The most profitable legal use for which the property is physically adaptable","B. The use the zoning ordinance requires","C. The historical use of the property","D. The use the owner intends"],a:0,e:"Highest and best use is the legally permissible, physically possible, financially feasible use that maximizes property value."},
+  {t:4,q:"Subdivision regulations typically require developers to:",o:["A. Sell all lots within 12 months","B. Provide infrastructure like streets, utilities, and drainage","C. Pay impact fees to neighboring property owners","D. Obtain a variance before subdividing"],a:1,e:"Subdivision regulations require public improvements (streets, sewers, drainage), a subdivision map, and design standards."},
+  {t:4,q:"Spot zoning is generally considered illegal because:",o:["A. It creates uniform land use","B. It grants special privileges to one parcel inconsistent with surrounding plans","C. It allows agricultural uses in residential zones","D. It prevents development in flood-prone areas"],a:1,e:"Spot zoning singles out one parcel for treatment inconsistent with surrounding zoning — courts often strike it down as arbitrary."},
+  {t:4,q:"Environmental impact reports (EIRs) under CEQA are required to:",o:["A. Assess only the economic impact of a project","B. Identify and mitigate significant environmental effects","C. Determine if property qualifies for agricultural zoning","D. Set property tax assessments for new construction"],a:1,e:"Under CEQA, agencies must evaluate significant environmental effects and adopt feasible mitigation measures."},
+  {t:5,q:"For a contract to be legally enforceable, it must contain:",o:["A. Offer, acceptance, and notarization","B. Offer, acceptance, consideration, and capacity","C. Written terms, witnesses, and delivery","D. Recording, signatures, and a purchase price"],a:1,e:"A valid contract requires mutual assent (offer + acceptance), consideration, legal capacity, and lawful objective."},
+  {t:5,q:"Consideration in a contract is:",o:["A. Always a sum of money","B. Something of value exchanged between parties","C. The physical act of signing","D. The legal description of the property"],a:1,e:"Consideration is something of legal value given in exchange for a promise — money, services, or a promise to act/refrain."},
+  {t:5,q:"A voidable contract is one that:",o:["A. Has no legal effect from inception","B. Can be disaffirmed by one party due to a legal deficiency","C. Requires court approval to enforce","D. Is missing consideration"],a:1,e:"A voidable contract can be canceled or affirmed by one party — e.g., contracts with minors or induced by fraud."},
+  {t:5,q:"The Statute of Frauds requires real estate contracts to be:",o:["A. Notarized to be enforceable","B. In writing and signed by the party to be charged","C. Witnessed by at least two people","D. Recorded in the county recorder's office"],a:1,e:"The Statute of Frauds requires real property contracts to be in writing and signed by the party against whom enforcement is sought."},
+  {t:5,q:"Liquidated damages in a purchase contract refers to:",o:["A. Suing the buyer for the full purchase price","B. Retaining the buyer's deposit as pre-agreed damages","C. Rescinding and suing for consequential damages","D. Forcing the buyer to complete the purchase"],a:1,e:"Liquidated damages is a pre-agreed amount (often earnest money) the seller retains if the buyer breaches. In CA, limited to 3%."},
+  {t:5,q:"Specific performance as a remedy means:",o:["A. Awarding monetary damages","B. Canceling the contract","C. Compelling the defaulting party to complete the transaction","D. Allowing the breaching party to pay a penalty and walk away"],a:2,e:"Specific performance compels the breaching party to perform the contract — common in real estate because land is unique."},
+  {t:5,q:"An option contract gives the optionee:",o:["A. The obligation to purchase within a specified time","B. The exclusive right, but not obligation, to purchase within a specified time","C. A lien on the property","D. Joint ownership interest"],a:1,e:"An option gives the right to buy (not the obligation) at a set price within a specific period. The optionor (seller) is bound."},
+  {t:5,q:"Mutual assent in contract law means:",o:["A. Both parties must hire attorneys","B. A meeting of the minds — both agree to the same terms","C. Both parties sign simultaneously","D. All terms are in plain language"],a:1,e:"Mutual assent requires both parties to freely agree to the same material terms, evidenced by valid offer and acceptance."},
+  {t:5,q:"If a contract lacks a legal purpose, it is:",o:["A. Voidable at either party's option","B. Void and unenforceable","C. Valid but must be reformed by a court","D. Enforceable only between professionals"],a:1,e:"A contract with an illegal objective is void — no legal effect, no court will enforce it."},
+  {t:5,q:"An addendum to a contract is:",o:["A. A separate document that adds or modifies terms","B. A modification made verbally after signing","C. An amendment recorded at the county","D. An extension of expiration date only"],a:0,e:"An addendum attaches to a contract adding or modifying terms, executed simultaneously with or as part of the original agreement."},
+  {t:6,q:"A listing agreement is a contract between:",o:["A. A buyer and a seller","B. A seller and a real estate broker","C. A buyer and a real estate broker","D. Two real estate brokers"],a:1,e:"A listing agreement is an employment contract between a property owner and broker, authorizing the broker to procure a buyer."},
+  {t:6,q:"Under an exclusive right-to-sell listing, the broker earns commission:",o:["A. Only if the broker personally finds the buyer","B. Only if the seller does not find a buyer independently","C. Regardless of who procures the buyer, including the seller","D. Only if the property sells above list price"],a:2,e:"Under an exclusive right-to-sell listing, commission is earned if the property sells during the listing period, regardless of who finds the buyer."},
+  {t:6,q:"A purchase and sale agreement is considered a:",o:["A. Unilateral contract","B. Bilateral contract","C. Option contract","D. Listing agreement"],a:1,e:"A purchase agreement is bilateral — both buyer and seller make promises to each other."},
+  {t:6,q:"An installment sale contract (land contract) is an arrangement where:",o:["A. The buyer takes title immediately upon signing","B. The seller retains legal title until the buyer pays all or a specified amount","C. A third-party lender holds title during repayment","D. The buyer leases with no purchase option"],a:1,e:"In a land contract, the seller retains legal title while the buyer holds equitable title and makes installment payments."},
+  {t:6,q:"A lease-option agreement gives the tenant:",o:["A. Ownership of the property at lease signing","B. The right to purchase at a set price during or at the end of the lease","C. The obligation to purchase at the end of the lease term","D. An easement to use the property"],a:1,e:"A lease-option gives the tenant the right, but not the obligation, to buy at a predetermined price and terms."},
+  {t:6,q:"An open listing allows the seller to:",o:["A. List with only one broker","B. List with multiple brokers, paying commission only to the procuring cause","C. Revoke the listing with 30 days notice only","D. Retain all commissions"],a:1,e:"An open listing is non-exclusive — the seller may list with multiple brokers and pays only the procuring cause."},
+  {t:6,q:"A buyer representation agreement binds the buyer to:",o:["A. Purchase any property shown by the agent","B. Work exclusively with that agent or brokerage when purchasing","C. Pay a fixed purchase price","D. Use a specific lender"],a:1,e:"A buyer representation agreement establishes exclusivity, duration, and compensation terms between buyer and broker."},
+  {t:6,q:"Which is NOT typically a contingency in a purchase contract?",o:["A. Loan contingency","B. Inspection contingency","C. Appraisal contingency","D. Agent commission contingency"],a:3,e:"Common contingencies include loan, inspection, and appraisal. Agent commission is a term of the listing agreement, not a purchase contingency."},
+  {t:6,q:"Escrow instructions in a real estate transaction:",o:["A. Replace the purchase contract","B. Direct the escrow holder to perform specific duties to close the transaction","C. Transfer title upon signing","D. Are only required in commercial transactions"],a:1,e:"Escrow instructions are written directions from buyer and seller to the escrow holder, outlining conditions needed for closing."},
+  {t:6,q:"A net listing is:",o:["A. A listing where commission is a fixed percentage","B. A listing where the broker keeps any amount above a set net price as commission","C. A type of open listing with multiple brokers","D. A listing guaranteeing sale within 90 days"],a:1,e:"A net listing lets the broker keep any amount over a specified net to the seller. Most states discourage them due to conflicts of interest."},
+  {t:7,q:"An agent owes which fiduciary duties to their principal?",o:["A. Loyalty, Confidentiality, Disclosure, Obedience, Reasonable Care, Accounting (LCDOCA)","B. Only honesty and fair dealing","C. Duties only to the buyer","D. Profit maximization and marketing"],a:0,e:"A fiduciary owes LCDOCA duties: Loyalty, Confidentiality, Disclosure, Obedience, Reasonable Care, and Accounting."},
+  {t:7,q:"In California, agency disclosure is required:",o:["A. Only in commercial transactions","B. In residential sales of 1–4 units as soon as practicable","C. Only in dual agency situations","D. When the property sells for over $1 million"],a:1,e:"California's Agency Disclosure Law (Civil Code §2079) requires written disclosure ASAP in residential 1–4 unit transactions."},
+  {t:7,q:"Dual agency occurs when:",o:["A. Two brokers each represent one party","B. A broker represents both buyer and seller in the same transaction","C. An agent works for two brokerages","D. A buyer uses two agents simultaneously"],a:1,e:"Dual agency arises when the same broker represents both buyer and seller. In California, it requires informed written consent of both."},
+  {t:7,q:"The term 'procuring cause' refers to:",o:["A. The legal basis for filing a lawsuit","B. The broker whose efforts were the uninterrupted chain leading to the sale","C. The cause of a property defect","D. The reason a listing expires"],a:1,e:"Procuring cause is the broker who initiated and maintained an uninterrupted chain of negotiations resulting in a completed sale."},
+  {t:7,q:"A seller's agent must disclose to a buyer:",o:["A. The seller's minimum acceptable price","B. All known material facts about the property","C. The seller's personal financial situation","D. The history of all previous offers"],a:1,e:"Even representing the seller, the agent must disclose all known material facts about the property to prospective buyers."},
+  {t:7,q:"Sub-agency in real estate refers to:",o:["A. An agent who works part-time under a broker","B. A broker working as agent of another broker to sell the listing","C. An unlicensed assistant helping a licensed agent","D. An agent licensed in multiple states"],a:1,e:"Sub-agency occurs when a cooperating broker acts as agent of the listing broker, and thus sub-agent of the seller."},
+  {t:7,q:"In a designated agency arrangement:",o:["A. The broker personally represents both parties","B. The broker appoints different agents within the firm to represent each party","C. A neutral third party represents both parties","D. Both parties agree to no representation"],a:1,e:"Designated agency allows a broker to designate specific agents within the same firm to each represent one party separately."},
+  {t:7,q:"Which would violate an agent's duty of loyalty?",o:["A. Presenting all offers promptly","B. Purchasing the listed property personally without disclosing the agency relationship","C. Disclosing a material defect to the buyer","D. Advertising the property widely"],a:1,e:"Loyalty requires acting in the principal's best interest. Purchasing their property without full disclosure violates this duty."},
+  {t:7,q:"A California real estate broker must:",o:["A. Have a salesperson license for 1 year before broker license","B. Have at least 2 years full-time experience and pass a broker exam","C. Only supervise agents, not represent clients","D. Renew their license every 2 years"],a:1,e:"A CA broker license requires 2 years full-time licensed salesperson experience, required courses, and passing the broker exam."},
+  {t:7,q:"The duty of 'accounting' in a fiduciary relationship means:",o:["A. Preparing the seller's tax returns","B. Safeguarding and reporting all funds received on behalf of the client","C. Keeping records of all showings","D. Performing a comparative market analysis"],a:1,e:"Accounting requires the agent to responsibly account for all money and property received on behalf of the principal."},
+  {t:8,q:"A promissory note in real estate is:",o:["A. The instrument that transfers title","B. The borrower's written promise to repay the debt","C. The deed of trust recorded against the property","D. A government disclosure form"],a:1,e:"A promissory note is the borrower's unconditional written promise to pay a specified sum — the personal liability instrument."},
+  {t:8,q:"In California, a deed of trust differs from a mortgage because:",o:["A. It requires a longer foreclosure process","B. It involves three parties including a neutral trustee","C. A mortgage involves borrower, lender, and trustee","D. A deed of trust does not secure a loan"],a:1,e:"A deed of trust involves three parties: trustor (borrower), beneficiary (lender), and trustee (neutral third party)."},
+  {t:8,q:"Amortization in mortgage financing refers to:",o:["A. Increasing loan payments over time","B. Gradual repayment of loan principal through scheduled payments","C. A penalty for early repayment","D. An appraiser assessing property value"],a:1,e:"Amortization is retiring a debt through regular principal and interest payments so the balance reaches zero at term end."},
+  {t:8,q:"The loan-to-value (LTV) ratio is:",o:["A. The ratio of annual income to monthly debt payments","B. The ratio of loan amount to appraised value","C. Interest rate divided by loan term","D. Down payment to closing costs ratio"],a:1,e:"LTV = Loan Amount ÷ Appraised Value. Lower LTV = less risk for lender. LTV above 80% typically requires PMI."},
+  {t:8,q:"Private Mortgage Insurance (PMI) is typically required when:",o:["A. The borrower has a credit score below 700","B. The down payment is less than 20%","C. The loan term exceeds 30 years","D. The property is a second home"],a:1,e:"PMI protects lenders if the borrower defaults. Required on conventional loans when the down payment is less than 20%."},
+  {t:8,q:"An adjustable-rate mortgage (ARM) differs from a fixed-rate mortgage in that:",o:["A. The loan term adjusts based on property value","B. The interest rate can change periodically after an initial fixed period","C. The monthly payment never changes","D. The principal adjusts with inflation"],a:1,e:"An ARM's rate adjusts periodically based on a benchmark index plus a margin, offering a lower initial rate with future rate risk."},
+  {t:8,q:"A due-on-sale clause in a mortgage:",o:["A. Requires a balloon payment after 5 years","B. Requires full repayment of the loan when the property is sold","C. Allows the buyer to assume the existing mortgage","D. Accelerates the interest rate upon sale"],a:1,e:"A due-on-sale clause requires the entire loan balance to be paid when the property is sold or transferred."},
+  {t:8,q:"Discount points paid on a mortgage:",o:["A. Increase the interest rate","B. Are prepaid interest that lower the interest rate","C. Reduce the required down payment","D. Are fees paid to the title company"],a:1,e:"Discount points are prepaid interest charges paid at closing to buy down the interest rate. One point = 1% of loan amount."},
+  {t:8,q:"The secondary mortgage market is best described as:",o:["A. A market for second mortgages only","B. The market where existing mortgages are bought and sold by investors","C. The process of a lender making loans directly to borrowers","D. Government-issued mortgage-backed securities"],a:1,e:"The secondary mortgage market is where originated mortgages are bought and sold (e.g., Fannie Mae, Freddie Mac), providing lenders liquidity."},
+  {t:8,q:"A hard money loan is characterized by:",o:["A. Low rates backed by the federal government","B. Financing based on collateral value rather than borrower creditworthiness","C. A loan made by a credit union to members","D. A federally insured mortgage with no down payment"],a:1,e:"Hard money loans are asset-based — secured by real property value, not borrower credit. They carry high rates and short terms."},
+  {t:9,q:"RESPA (Real Estate Settlement Procedures Act) regulates:",o:["A. Property tax assessments in all states","B. Closing procedures and prohibits kickbacks for federally related mortgage loans","C. The maximum interest rate a lender may charge","D. Zoning and land use in residential areas"],a:1,e:"RESPA governs closing for federally related mortgage loans, requires cost disclosures, and prohibits kickbacks and referral fees."},
+  {t:9,q:"The Loan Estimate must be delivered within:",o:["A. 24 hours of application","B. 3 business days of receiving a completed loan application","C. 10 days before closing","D. 30 days of application"],a:1,e:"Under TRID rules, lenders must provide the Loan Estimate within 3 business days of a completed loan application."},
+  {t:9,q:"A borrower's debt-to-income (DTI) ratio is:",o:["A. Ratio of assets to total debts","B. Monthly debt obligations divided by gross monthly income","C. Annual income divided by loan amount","D. Down payment divided by monthly expenses"],a:1,e:"DTI = Total Monthly Debt ÷ Gross Monthly Income. Most conventional loans require DTI of 43% or less."},
+  {t:9,q:"Which federal law prohibits discrimination in lending based on race, color, religion, national origin, sex, marital status, or age?",o:["A. RESPA","B. The Equal Credit Opportunity Act (ECOA)","C. TILA","D. The Community Reinvestment Act"],a:1,e:"ECOA prohibits credit discrimination based on race, color, religion, national origin, sex, marital status, age, or public assistance."},
+  {t:9,q:"Redlining is an illegal practice where:",o:["A. Lenders highlight high-value properties for investment","B. Lenders refuse to make loans in specific geographic areas based on demographics","C. Appraisers overvalue properties in certain ZIP codes","D. Sellers refuse to accept offers from certain buyers"],a:1,e:"Redlining is the discriminatory practice of refusing credit or services to residents of certain areas based on demographics."},
+  {t:9,q:"The Truth in Lending Act (TILA) requires lenders to disclose:",o:["A. The property's assessed value and tax history","B. The Annual Percentage Rate (APR) and total cost of credit","C. The borrower's credit score to the seller","D. All liens and encumbrances on the property"],a:1,e:"TILA requires standardized disclosure of credit terms including APR, finance charges, total payments, and payment schedule."},
+  {t:9,q:"Predatory lending practices typically include:",o:["A. Fixed-rate loans with no prepayment penalties","B. Excessive fees, high-pressure tactics, or terms designed to benefit lenders at borrowers' expense","C. Loans requiring a 20% down payment","D. Full disclosure of all loan terms per TILA"],a:1,e:"Predatory lending involves abusive practices like excessive rates, hidden fees, and targeting vulnerable borrowers."},
+  {t:9,q:"Pre-qualification differs from pre-approval in that:",o:["A. Pre-qualification is more thorough and requires credit verification","B. Pre-qualification is an informal estimate based on self-reported info; pre-approval involves credit verification","C. Pre-approval requires no documentation","D. Pre-qualification guarantees the loan will fund"],a:1,e:"Pre-qualification is informal and unverified. Pre-approval involves full application, credit check, and income verification."},
+  {t:9,q:"The Closing Disclosure must be provided to the borrower:",o:["A. At least 1 business day before closing","B. At least 3 business days before closing","C. Immediately after the loan closes","D. Within 10 days after closing"],a:1,e:"Under TRID, lenders must provide the Closing Disclosure at least 3 business days before loan consummation."},
+  {t:9,q:"The Community Reinvestment Act (CRA) encourages:",o:["A. Lenders to fund only prime borrowers in wealthy areas","B. Banks to help meet credit needs of communities, including low- and moderate-income areas","C. Borrowers to refinance when rates decline by 1%","D. Appraisers to use automated valuation models"],a:1,e:"The CRA requires federally insured banks to help meet the credit needs of their entire communities, including low/moderate-income areas."}
+];
+
+// ══════════════════════════════════════════════════════
+// PERSISTENCE
+// ══════════════════════════════════════════════════════
+const SAVE_KEY = 'realprep_v2';
+function defaultSave(){
+  return {
+    totalXP:0, level:1,
+    totalQ:0, totalCorrect:0, testsCompleted:0,
+    topicCorrect:new Array(10).fill(0),
+    topicTotal:new Array(10).fill(0),
+    bestScore:null, bestAnswerStreak:0, bestDayStreak:0, bestXPTest:0,
+    dailyStreak:0, lastLoginDate:null, loginHistory:[],
+    earnedBadges:[],
+    testHistory:[],
+  };
+}
+function loadSave(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw) return defaultSave();
+    const d=JSON.parse(raw);
+    const def=defaultSave();
+    return Object.assign(def,d);
+  }catch(e){return defaultSave();}
+}
+function persist(d){
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
+}
+
+let SAVE = loadSave();
+
+// ══════════════════════════════════════════════════════
+// DAILY STREAK
+// ══════════════════════════════════════════════════════
+function checkDailyStreak(){
+  const today = new Date().toDateString();
+  if(SAVE.lastLoginDate === today) return 0; // already logged in today
+  const yesterday = new Date(Date.now()-864e5).toDateString();
+  let bonus = 0;
+  if(SAVE.lastLoginDate === yesterday){
+    SAVE.dailyStreak = (SAVE.dailyStreak||0)+1;
+  } else if(SAVE.lastLoginDate !== today){
+    SAVE.dailyStreak = 1;
+  }
+  SAVE.lastLoginDate = today;
+  if(!SAVE.loginHistory) SAVE.loginHistory=[];
+  SAVE.loginHistory.push(today);
+  if(SAVE.dailyStreak > SAVE.bestDayStreak) SAVE.bestDayStreak = SAVE.dailyStreak;
+  // Daily streak bonus
+  const ds = SAVE.dailyStreak;
+  if(ds>=7) bonus=150;
+  else if(ds>=5) bonus=75;
+  else if(ds>=3) bonus=50;
+  else if(ds>=2) bonus=25;
+  if(bonus>0) SAVE.totalXP += bonus;
+  persist(SAVE);
+  return bonus;
+}
+
+// ══════════════════════════════════════════════════════
+// XP & LEVELS
+// ══════════════════════════════════════════════════════
+function getLevelInfo(xp){
+  let cur=LEVELS[0], next=LEVELS[1];
+  for(let i=LEVELS.length-1;i>=0;i--){
+    if(xp>=LEVELS[i].xp){cur=LEVELS[i];next=LEVELS[i+1]||null;break;}
+  }
+  return {cur,next};
+}
+function xpPct(xp){
+  const {cur,next}=getLevelInfo(xp);
+  if(!next) return 100;
+  return Math.round(((xp-cur.xp)/(next.xp-cur.xp))*100);
+}
+
+// ══════════════════════════════════════════════════════
+// BADGES
+// ══════════════════════════════════════════════════════
+function checkBadges(sessionData){
+  const newBadges=[];
+  const has=id=>SAVE.earnedBadges.includes(id);
+  const earn=id=>{if(!has(id)){SAVE.earnedBadges.push(id);newBadges.push(id);}};
+  if(SAVE.totalCorrect>=1) earn('first_correct');
+  if(sessionData.score===100 && sessionData.total===10) earn('perfect_10');
+  if(sessionData.score===100 && sessionData.total>=20) earn('perfect_score');
+  if(sessionData.bestAnsStreak>=5) earn('streak_5');
+  if(sessionData.bestAnsStreak>=10) earn('streak_10');
+  if(SAVE.dailyStreak>=3) earn('day_streak_3');
+  if(SAVE.dailyStreak>=7) earn('day_streak_7');
+  if(SAVE.totalQ>=100) earn('century');
+  const {cur}=getLevelInfo(SAVE.totalXP);
+  if(cur.lvl>=5) earn('level_5');
+  if(cur.lvl>=12) earn('mogul');
+  // topic master
+  for(let i=0;i<10;i++){
+    if(SAVE.topicTotal[i]>=5 && SAVE.topicCorrect[i]/SAVE.topicTotal[i]>=0.9){earn('topic_master');break;}
+  }
+  // comeback: 5 correct after 3 wrong — tracked in sessionData
+  if(sessionData.comebackAchieved) earn('comeback');
+  return newBadges;
+}
+
+// ══════════════════════════════════════════════════════
+// READINESS METER
+// ══════════════════════════════════════════════════════
+function calcReadiness(){
+  const hist = SAVE.testHistory||[];
+  if(hist.length===0) return 0;
+  // Weight last 3 tests
+  const recent = hist.slice(-3);
+  const weights=[0.2,0.35,0.45].slice(3-recent.length);
+  let weighted=0;
+  recent.forEach((h,i)=>{ weighted += h.pct * weights[i]; });
+  // Topic coverage penalty: each untested topic costs 5%
+  let untested=0;
+  for(let i=0;i<10;i++){ if(SAVE.topicTotal[i]===0) untested++; }
+  const penalty = untested * 4;
+  return Math.max(0, Math.min(100, Math.round(weighted - penalty)));
+}
+function updateReadinessUI(){
+  const r = calcReadiness();
+  document.getElementById('ready-pct').innerHTML = r+'<span>%</span>';
+  document.getElementById('ready-fill').style.width = r+'%';
+  // Color gradient
+  let grad;
+  if(r<30) grad='linear-gradient(90deg,var(--wrong),#e87c3c)';
+  else if(r<60) grad='linear-gradient(90deg,#e87c3c,var(--gold))';
+  else if(r<80) grad='linear-gradient(90deg,var(--gold),var(--gold-light))';
+  else grad='linear-gradient(90deg,var(--gold),var(--correct))';
+  document.getElementById('ready-fill').style.background=grad;
+  // Labels
+  let title,sub,activeIdx;
+  if(r===0){title='Not Started';sub='Complete practice tests to build your score.';activeIdx=0;}
+  else if(r<40){title='Not Ready';sub='Keep practicing — focus on untested topics.';activeIdx=0;}
+  else if(r<65){title='Building Confidence';sub='Good progress. Keep drilling weak areas.';activeIdx=1;}
+  else if(r<85){title='Almost There';sub='Strong foundation. A few more sessions and you\'re set.';activeIdx=2;}
+  else{title='Exam Ready';sub='Outstanding readiness. You\'re prepared to sit the exam.';activeIdx=3;}
+  document.getElementById('ready-title').textContent=title;
+  document.getElementById('ready-sub').textContent=sub;
+  ['rt0','rt1','rt2','rt3'].forEach((id,i)=>{
+    document.getElementById(id).className='readiness-tick'+(i===activeIdx?' active':'');
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// HEADER UPDATE
+// ══════════════════════════════════════════════════════
+function updateHeader(){
+  const {cur,next}=getLevelInfo(SAVE.totalXP);
+  const pct=xpPct(SAVE.totalXP);
+  document.getElementById('hdr-level').textContent='LV '+cur.lvl;
+  document.getElementById('hdr-title').textContent=cur.title;
+  document.getElementById('hdr-xp-fill').style.width=pct+'%';
+  const xpInLevel = SAVE.totalXP - cur.xp;
+  const xpNeeded = next ? (next.xp - cur.xp) : 0;
+  document.getElementById('hdr-xp-label').textContent = next ? xpInLevel+' / '+(xpNeeded)+' XP' : 'MAX';
+  document.getElementById('hdr-streak-val').textContent = SAVE.dailyStreak||0;
+}
+
+// ══════════════════════════════════════════════════════
+// EXAM STATE
+// ══════════════════════════════════════════════════════
+let exam = {
+  selectedTopics: TOPICS.map((_,i)=>i),
   questionCount: 20,
-  mode: 'tutor',
-  order: 'random',
-  questions: [],
-  current: 0,
-  answers: [],
-  correctCount: 0,
-  wrongCount: 0,
-  answered: false
+  mode:'tutor',
+  order:'random',
+  questions:[],
+  current:0,
+  answers:[],
+  sessionXP:0,
+  ansStreak:0,
+  bestAnsStreak:0,
+  correctCount:0,
+  wrongCount:0,
+  comebackWrongRun:0,
+  comebackCorrectRun:0,
+  comebackAchieved:false,
+  prevLevelNum:1,
 };
 
-// ══════════════════════════════════════
+function setCount(n,el){
+  exam.questionCount=n;
+  document.querySelectorAll('#count-pills .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+function setMode(m,el){
+  exam.mode=m;
+  document.querySelectorAll('#mode-pills .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+function setOrder(o,el){
+  exam.order=o;
+  document.querySelectorAll('#order-pills .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════
 // NAVIGATION
-// ══════════════════════════════════════
-function showView(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+// ══════════════════════════════════════════════════════
+function showInHome(id){
+  document.querySelectorAll('#tab-home .view').forEach(v=>v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showModules(){showInHome('view-home');updateReadinessUI();}
+function showTopicSelect(){buildTopicGrid();showInHome('view-topics');}
+function goHome(){switchTab('home');showModules();}
+function goStats(){switchTab('stats');}
+
+function switchTab(tab){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  document.querySelectorAll('[id^="tab-"]').forEach(v=>v.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='stats') renderStats();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function showHome() { showView('view-home'); }
-
-function showTopicSelect() {
-  buildTopicGrid();
-  showView('view-topics');
+function buildTopicGrid(){
+  const grid=document.getElementById('topic-grid');
+  grid.innerHTML='';
+  TOPICS.forEach((t,i)=>{
+    const count=QB.filter(q=>q.t===i).length;
+    const div=document.createElement('div');
+    div.className='topic-checkbox'+(exam.selectedTopics.includes(i)?' checked':'');
+    div.dataset.idx=i;
+    div.innerHTML=`<div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#0d1018" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="topic-label">${i+1}. ${t} <span style="color:var(--text-dim);font-size:.72rem;">(${count}q)</span></div>`;
+    div.onclick=()=>toggleTopic(i,div);
+    grid.appendChild(div);
+  });
+}
+function toggleTopic(i,el){
+  const idx=exam.selectedTopics.indexOf(i);
+  if(idx===-1){exam.selectedTopics.push(i);el.classList.add('checked');}
+  else{exam.selectedTopics.splice(idx,1);el.classList.remove('checked');}
+}
+function toggleAll(){
+  if(exam.selectedTopics.length===TOPICS.length){
+    exam.selectedTopics=[];
+    document.querySelectorAll('.topic-checkbox').forEach(el=>el.classList.remove('checked'));
+  } else {
+    exam.selectedTopics=TOPICS.map((_,i)=>i);
+    document.querySelectorAll('.topic-checkbox').forEach(el=>el.classList.add('checked'));
+  }
 }
 
-function buildTopicGrid() {
-  const grid = document.getElementById('topic-grid');
-  grid.innerHTML = '';
-  TOPICS.forEach((t, i) => {
-    const count = QUESTION_BANK.filter(q => q.topic === i).length;
-    const div = document.createElement('div');
-    div.className = 'topic-checkbox' + (state.selectedTopics.includes(i) ? ' checked' : '');
-    div.dataset.idx = i;
-    div.innerHTML = `
-      <div class="check-box">
-        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-          <path d="M1 4L3.5 6.5L9 1" stroke="#0f1117" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="topic-label">${i+1}. ${t} <span style="color:var(--text-dim);font-size:0.75rem;">(${count})</span></div>
-    `;
-    div.onclick = () => toggleTopic(i, div);
+// ══════════════════════════════════════════════════════
+// EXAM
+// ══════════════════════════════════════════════════════
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+function startExam(){
+  if(exam.selectedTopics.length===0){alert('Please select at least one topic.');return;}
+  let pool=QB.filter(q=>exam.selectedTopics.includes(q.t));
+  if(exam.order==='random') pool=shuffle([...pool]);
+  exam.questions=pool.slice(0,exam.questionCount);
+  exam.current=0;
+  exam.answers=new Array(exam.questions.length).fill(null);
+  exam.sessionXP=0;
+  exam.ansStreak=0;
+  exam.bestAnsStreak=0;
+  exam.correctCount=0;
+  exam.wrongCount=0;
+  exam.comebackWrongRun=0;
+  exam.comebackCorrectRun=0;
+  exam.comebackAchieved=false;
+  const {cur}=getLevelInfo(SAVE.totalXP);
+  exam.prevLevelNum=cur.lvl;
+  showInHome('view-exam');
+  renderQuestion();
+}
+
+function calcXPGain(isCorrect){
+  if(!isCorrect) return 0;
+  let xp=10;
+  const s=exam.ansStreak;
+  if(s>=5) xp=Math.round(xp*2);
+  else if(s>=3) xp=Math.round(xp*1.5);
+  return xp;
+}
+
+function selectAnswer(choice){
+  const q=exam.questions[exam.current];
+  exam.answers[exam.current]=choice;
+  const correct=(choice===q.a);
+  if(correct){
+    exam.correctCount++;
+    exam.ansStreak++;
+    exam.comebackCorrectRun++;
+    exam.comebackWrongRun=0;
+    if(exam.ansStreak>exam.bestAnsStreak) exam.bestAnsStreak=exam.ansStreak;
+    // comeback check
+    if(exam.comebackCorrectRun>=5 && !exam.comebackAchieved) exam.comebackAchieved=true;
+    const xpGain=calcXPGain(true);
+    exam.sessionXP+=xpGain;
+    SAVE.totalXP+=xpGain;
+    SAVE.totalCorrect++;
+  } else {
+    exam.wrongCount++;
+    exam.ansStreak=0;
+    exam.comebackWrongRun++;
+    if(exam.comebackWrongRun>=3) exam.comebackCorrectRun=0;
+  }
+  SAVE.totalQ++;
+  SAVE.topicTotal[q.t]++;
+  if(correct) SAVE.topicCorrect[q.t]++;
+  persist(SAVE);
+  updateHeader();
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const total=exam.questions.length;
+  const idx=exam.current;
+  const q=exam.questions[idx];
+  const pct=Math.round((idx/total)*100);
+  document.getElementById('q-progress').textContent=`Question ${idx+1} of ${total}`;
+  document.getElementById('q-pct').textContent=pct+'%';
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('stat-correct').textContent='+ '+exam.correctCount;
+  document.getElementById('stat-wrong').textContent='- '+exam.wrongCount;
+  document.getElementById('stat-streak').textContent='🔥 '+exam.ansStreak;
+  document.getElementById('stat-xp').textContent=exam.sessionXP+' XP';
+  const already=exam.answers[idx];
+  const answered=already!==null;
+  const letters=['A','B','C','D'];
+  let xpGain=0;
+  if(answered && already===q.a){
+    // recalculate displayed xp for this answer
+    xpGain=10; // base shown
+    const streak=exam.ansStreak;
+    if(streak>=5) xpGain=20;
+    else if(streak>=3) xpGain=15;
+  }
+  let optHTML=q.o.map((opt,oi)=>{
+    let cls='option-btn';
+    if(answered){
+      if(oi===q.a) cls+=' correct';
+      else if(oi===already) cls+=' wrong';
+    }
+    return `<li><button class="${cls}" onclick="selectAnswer(${oi})" ${answered?'disabled':''}><span class="option-letter">${letters[oi]}</span><span>${opt.substring(3)}</span></button></li>`;
+  }).join('');
+  let explHTML='';
+  if(answered && exam.mode==='tutor'){
+    const isCorrect=(already===q.a);
+    explHTML=`<div class="explanation-box"><div class="expl-label">Explanation</div><p>${q.e}</p></div>`;
+    if(isCorrect){
+      const streak=exam.ansStreak;
+      let mult='';
+      if(streak>=5) mult=' &nbsp;<span style="color:#ff6b35;font-size:.7rem;">2x STREAK!</span>';
+      else if(streak>=3) mult=' &nbsp;<span style="color:#ff6b35;font-size:.7rem;">1.5x STREAK</span>';
+      explHTML+=`<div class="xp-toast">+${xpGain} XP earned${mult}</div>`;
+    }
+  }
+  document.getElementById('question-area').innerHTML=`<div class="question-card"><div class="q-meta"><div class="q-number">Question ${idx+1} / ${total}</div><div class="q-topic-tag">${TOPICS[q.t]}</div></div><div class="question-text">${q.q}</div><ul class="options-list">${optHTML}</ul>${explHTML}</div>`;
+  renderActions();
+}
+
+function renderActions(){
+  const actions=document.getElementById('exam-actions');
+  const idx=exam.current;
+  const total=exam.questions.length;
+  const answered=exam.answers[idx]!==null;
+  let html='';
+  if(idx>0) html+=`<button class="btn btn-outline" onclick="prevQ()">← Previous</button>`;
+  if(idx<total-1){
+    html+=`<button class="btn btn-gold" onclick="nextQ()" ${(exam.mode==='tutor'&&!answered)?'disabled':''}>Next →</button>`;
+  } else {
+    html+=`<button class="btn btn-gold" onclick="finishExam()">Finish Exam</button>`;
+  }
+  actions.innerHTML=html;
+}
+function nextQ(){if(exam.current<exam.questions.length-1){exam.current++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}}
+function prevQ(){if(exam.current>0){exam.current--;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}}
+function confirmQuit(){document.getElementById('quit-modal').classList.remove('hidden');}
+function closeModal(){document.getElementById('quit-modal').classList.add('hidden');}
+function doQuit(){closeModal();showTopicSelect();}
+
+// ══════════════════════════════════════════════════════
+// FINISH EXAM
+// ══════════════════════════════════════════════════════
+function finishExam(){
+  // Tally any unanswered in exam mode
+  exam.questions.forEach((q,i)=>{if(exam.answers[i]===null){exam.wrongCount++;SAVE.totalQ++;}});
+  const total=exam.questions.length;
+  const correct=exam.correctCount;
+  const pct=Math.round((correct/total)*100);
+  // Test completion bonus
+  let completionBonus=0;
+  if(pct>=90) completionBonus=200;
+  else if(pct>=80) completionBonus=100;
+  else if(pct>=70) completionBonus=50;
+  exam.sessionXP+=completionBonus;
+  SAVE.totalXP+=completionBonus;
+  SAVE.testsCompleted=(SAVE.testsCompleted||0)+1;
+  // Personal bests
+  if(SAVE.bestScore===null||pct>SAVE.bestScore) SAVE.bestScore=pct;
+  if(exam.bestAnsStreak>SAVE.bestAnswerStreak) SAVE.bestAnswerStreak=exam.bestAnsStreak;
+  if(exam.sessionXP>SAVE.bestXPTest) SAVE.bestXPTest=exam.sessionXP;
+  // History
+  if(!SAVE.testHistory) SAVE.testHistory=[];
+  SAVE.testHistory.push({date:new Date().toLocaleDateString(),pct,correct,total,xp:exam.sessionXP,topics:exam.selectedTopics.map(i=>TOPICS[i])});
+  if(SAVE.testHistory.length>50) SAVE.testHistory=SAVE.testHistory.slice(-50);
+  persist(SAVE);
+  // Check badges
+  const newBadges=checkBadges({score:pct,total,bestAnsStreak:exam.bestAnsStreak,comebackAchieved:exam.comebackAchieved});
+  persist(SAVE);
+  // Level up check
+  const {cur}=getLevelInfo(SAVE.totalXP);
+  const leveledUp=cur.lvl>exam.prevLevelNum;
+  updateHeader();
+  showResults(pct,correct,total,exam.sessionXP,completionBonus,leveledUp,cur,newBadges);
+}
+
+function showResults(pct,correct,total,xpEarned,bonus,leveledUp,curLevel,newBadges){
+  showInHome('view-results');
+  document.getElementById('score-pct').textContent=pct+'%';
+  document.getElementById('res-correct').textContent=correct;
+  document.getElementById('res-wrong').textContent=total-correct;
+  document.getElementById('res-xp').textContent='+'+xpEarned;
+  document.getElementById('res-total').textContent=total;
+  // Score ring
+  const circumference=364.4;
+  const offset=circumference*(1-pct/100);
+  const ring=document.getElementById('ring-fill');
+  const color=pct>=80?'var(--correct)':pct>=60?'var(--gold)':'var(--wrong)';
+  ring.style.stroke=color;
+  setTimeout(()=>{ring.style.strokeDashoffset=offset;},80);
+  // Message
+  let title,sub;
+  if(pct>=90){title='Outstanding!';sub='Near-perfect performance. You\'re ready for exam day.';}
+  else if(pct>=80){title='Excellent Work';sub='Strong score. Keep this up and you\'ll pass with ease.';}
+  else if(pct>=70){title='Good Job';sub='Solid performance. Review your missed questions.';}
+  else if(pct>=60){title='Keep Going';sub='You\'re building a foundation. More practice needed.';}
+  else{title='Keep Studying';sub='Review the material and focus on weak topics.';}
+  document.getElementById('results-title').textContent=title;
+  document.getElementById('results-sub').textContent=sub;
+  // Retry button
+  const wrongQs=exam.questions.filter((_,i)=>exam.answers[i]!==exam.questions[i].a);
+  document.getElementById('retry-btn').style.display=wrongQs.length>0?'':'none';
+  // Level up panel
+  const lup=document.getElementById('levelup-panel');
+  if(leveledUp){
+    lup.classList.add('show');
+    document.getElementById('lup-title').textContent='You reached Level '+curLevel.lvl+' — '+curLevel.title;
+  } else {
+    lup.classList.remove('show');
+  }
+  // New badges
+  const nbSection=document.getElementById('new-badges-section');
+  if(newBadges.length>0){
+    let html='<div class="stat-card" style="margin-bottom:1.5rem;"><div class="stat-card-title">New Badges Earned</div><div class="badges-grid">';
+    newBadges.forEach(id=>{
+      const def=BADGES_DEF.find(b=>b.id===id);
+      if(def) html+=`<div class="badge-item earned"><div class="badge-icon">${def.icon}</div><div class="badge-name">${def.name}</div><div class="badge-desc">${def.desc}</div></div>`;
+    });
+    html+='</div></div>';
+    nbSection.innerHTML=html;
+  } else {
+    nbSection.innerHTML='';
+  }
+  // Review
+  buildReview();
+  updateReadinessUI();
+}
+
+function buildReview(){
+  const letters=['A','B','C','D'];
+  let html='<h3>Question Review</h3>';
+  exam.questions.forEach((q,i)=>{
+    const ua=exam.answers[i];
+    const ok=ua===q.a;
+    html+=`<div class="review-item ${ok?'ok':'no'}"><div class="review-q">${i+1}. ${q.q}</div><div class="review-detail">`;
+    if(!ok) html+=`<span class="your">Your answer: ${ua!==null?letters[ua]+'. '+q.o[ua].substring(3):'Not answered'}</span><br>`;
+    html+=`<span class="right">Correct: ${letters[q.a]}. ${q.o[q.a].substring(3)}</span></div></div>`;
+  });
+  document.getElementById('review-section').innerHTML=html;
+}
+
+function retryWrong(){
+  const wrongQs=exam.questions.filter((q,i)=>exam.answers[i]!==q.a);
+  exam.questions=shuffle([...wrongQs]);
+  exam.current=0;
+  exam.answers=new Array(exam.questions.length).fill(null);
+  exam.sessionXP=0;exam.ansStreak=0;exam.bestAnsStreak=0;
+  exam.correctCount=0;exam.wrongCount=0;
+  exam.comebackWrongRun=0;exam.comebackCorrectRun=0;exam.comebackAchieved=false;
+  const {cur}=getLevelInfo(SAVE.totalXP);
+  exam.prevLevelNum=cur.lvl;
+  showInHome('view-exam');
+  renderQuestion();
+}
+
+// ══════════════════════════════════════════════════════
+// STATS DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderStats(){
+  const {cur,next}=getLevelInfo(SAVE.totalXP);
+  const pct=xpPct(SAVE.totalXP);
+  // Level card
+  document.getElementById('s-lvl-num').textContent=cur.lvl;
+  document.getElementById('s-lvl-title').textContent=cur.title;
+  const xpIn=SAVE.totalXP-cur.xp;
+  const xpRange=next?(next.xp-cur.xp):0;
+  document.getElementById('s-lvl-xp').textContent=next?(xpIn+' / '+xpRange+' XP'):'Max Level';
+  document.getElementById('s-xp-fill').style.width=pct+'%';
+  document.getElementById('s-xp-next').textContent=next?(next.xp-SAVE.totalXP)+' XP to '+next.title:'Maximum level reached';
+  // Streaks
+  document.getElementById('s-daily-streak').textContent=SAVE.dailyStreak||0;
+  document.getElementById('s-best-daily').textContent=SAVE.bestDayStreak||0;
+  document.getElementById('s-best-ans').textContent=SAVE.bestAnswerStreak||0;
+  // Calendar
+  renderCalendar();
+  // Overall
+  document.getElementById('s-total-q').textContent=SAVE.totalQ||0;
+  const acc=SAVE.totalQ>0?Math.round((SAVE.totalCorrect/SAVE.totalQ)*100)+'%':'—';
+  document.getElementById('s-accuracy').textContent=acc;
+  document.getElementById('s-tests').textContent=SAVE.testsCompleted||0;
+  document.getElementById('s-total-xp').textContent=SAVE.totalXP||0;
+  // Personal bests
+  document.getElementById('pb-score').textContent=SAVE.bestScore!==null?SAVE.bestScore+'%':'—';
+  document.getElementById('pb-ans').textContent=SAVE.bestAnswerStreak||'—';
+  document.getElementById('pb-day').textContent=SAVE.bestDayStreak||'—';
+  document.getElementById('pb-xp').textContent=SAVE.bestXPTest||'—';
+  // Strongest topic
+  let bestTopicIdx=-1,bestTopicPct=0;
+  for(let i=0;i<10;i++){
+    if(SAVE.topicTotal[i]>0){
+      const p=SAVE.topicCorrect[i]/SAVE.topicTotal[i];
+      if(p>bestTopicPct){bestTopicPct=p;bestTopicIdx=i;}
+    }
+  }
+  document.getElementById('pb-topic').textContent=bestTopicIdx>=0?TOPICS[bestTopicIdx].split(' ')[0]+'...':'—';
+  // Topic bars
+  renderTopicBars();
+  // Badges
+  renderBadges();
+  // History
+  renderHistory();
+}
+
+function renderCalendar(){
+  const row=document.getElementById('cal-row');
+  row.innerHTML='';
+  const today=new Date();
+  const history=SAVE.loginHistory||[];
+  for(let i=13;i>=0;i--){
+    const d=new Date(today);
+    d.setDate(d.getDate()-i);
+    const ds=d.toDateString();
+    const active=history.includes(ds);
+    const isToday=i===0;
+    const dot=document.createElement('div');
+    dot.className='cal-dot'+(active?' active':'')+(isToday?' today':'');
+    dot.title=d.toLocaleDateString();
+    row.appendChild(dot);
+  }
+}
+
+function renderTopicBars(){
+  const container=document.getElementById('topic-bars');
+  container.innerHTML='';
+  TOPICS.forEach((t,i)=>{
+    const total=SAVE.topicTotal[i]||0;
+    const correct=SAVE.topicCorrect[i]||0;
+    const pct=total>0?Math.round((correct/total)*100):0;
+    const color=pct>=80?'var(--correct)':pct>=60?'var(--gold)':total===0?'var(--text-dim)':'var(--wrong)';
+    const div=document.createElement('div');
+    div.className='topic-bar-row';
+    div.innerHTML=`<div class="topic-bar-meta"><span class="topic-bar-name">${i+1}. ${t}</span><span class="topic-bar-pct">${total>0?pct+'% ('+correct+'/'+total+')':'No data'}</span></div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:${pct}%;background:${color};"></div></div>`;
+    container.appendChild(div);
+  });
+}
+
+function renderBadges(){
+  const grid=document.getElementById('badges-grid');
+  grid.innerHTML='';
+  BADGES_DEF.forEach(b=>{
+    const earned=SAVE.earnedBadges.includes(b.id);
+    const div=document.createElement('div');
+    div.className='badge-item'+(earned?' earned':'');
+    div.innerHTML=`<div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div>`;
+    div.title=b.desc;
     grid.appendChild(div);
   });
 }
 
-function toggleTopic(i, el) {
-  const idx = state.selectedTopics.indexOf(i);
-  if (idx === -1) { state.selectedTopics.push(i); el.classList.add('checked'); }
-  else { state.selectedTopics.splice(idx, 1); el.classList.remove('checked'); }
-}
-
-function toggleAll() {
-  if (state.selectedTopics.length === TOPICS.length) {
-    state.selectedTopics = [];
-    document.querySelectorAll('.topic-checkbox').forEach(el => el.classList.remove('checked'));
-  } else {
-    state.selectedTopics = TOPICS.map((_,i) => i);
-    document.querySelectorAll('.topic-checkbox').forEach(el => el.classList.add('checked'));
-  }
-}
-
-function setCount(n, el) {
-  state.questionCount = n;
-  document.querySelectorAll('#count-pills .pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-}
-
-function setMode(m, el) {
-  state.mode = m;
-  document.querySelectorAll('#mode-pills .pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-}
-
-function setOrder(o, el) {
-  state.order = o;
-  document.querySelectorAll('#order-pills .pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-}
-
-// ══════════════════════════════════════
-// EXAM
-// ══════════════════════════════════════
-function startExam() {
-  if (state.selectedTopics.length === 0) {
-    alert('Please select at least one topic.');
+function renderHistory(){
+  const wrap=document.getElementById('history-wrap');
+  const hist=(SAVE.testHistory||[]).slice().reverse();
+  if(hist.length===0){
+    wrap.innerHTML='<div class="empty-state"><p>No tests completed yet</p></div>';
     return;
   }
-
-  let pool = QUESTION_BANK.filter(q => state.selectedTopics.includes(q.topic));
-  if (state.order === 'random') pool = shuffle([...pool]);
-  state.questions = pool.slice(0, state.questionCount);
-  state.current = 0;
-  state.answers = new Array(state.questions.length).fill(null);
-  state.correctCount = 0;
-  state.wrongCount = 0;
-
-  showView('view-exam');
-  renderQuestion();
-}
-
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function renderQuestion() {
-  const total = state.questions.length;
-  const idx = state.current;
-  const q = state.questions[idx];
-  const pct = Math.round((idx / total) * 100);
-
-  document.getElementById('q-progress').textContent = `Question ${idx + 1} of ${total}`;
-  document.getElementById('q-pct').textContent = pct + '%';
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('stat-correct').textContent = `✓ ${state.correctCount}`;
-  document.getElementById('stat-wrong').textContent = `✗ ${state.wrongCount}`;
-
-  const already = state.answers[idx];
-  const answered = already !== null;
-  const letters = ['A', 'B', 'C', 'D'];
-
-  let optionHTML = q.opts.map((opt, oi) => {
-    let cls = 'option-btn';
-    if (answered || state.mode === 'exam') {
-      if (answered) {
-        if (oi === q.a) cls += ' correct';
-        else if (oi === already) cls += ' wrong';
-      }
-    }
-    return `<li><button class="${cls}" onclick="selectAnswer(${oi})" ${answered ? 'disabled' : ''}>
-      <span class="option-letter">${letters[oi]}</span>
-      <span>${opt.substring(3)}</span>
-    </button></li>`;
-  }).join('');
-
-  let explHTML = '';
-  if (answered && state.mode === 'tutor') {
-    explHTML = `<div class="explanation-box">
-      <div class="expl-label">Explanation</div>
-      <p>${q.exp}</p>
-    </div>`;
-  }
-
-  document.getElementById('question-area').innerHTML = `
-    <div class="question-card">
-      <div class="q-meta">
-        <div class="q-number">Question ${idx + 1} / ${total}</div>
-        <div class="q-topic-tag">${TOPICS[q.topic]}</div>
-      </div>
-      <div class="question-text">${q.q}</div>
-      <ul class="options-list">${optionHTML}</ul>
-      ${explHTML}
-    </div>
-  `;
-
-  renderActions();
-}
-
-function selectAnswer(choice) {
-  const q = state.questions[state.current];
-  state.answers[state.current] = choice;
-  if (choice === q.a) state.correctCount++;
-  else state.wrongCount++;
-  renderQuestion();
-}
-
-function renderActions() {
-  const actions = document.getElementById('exam-actions');
-  const idx = state.current;
-  const total = state.questions.length;
-  const answered = state.answers[idx] !== null;
-
-  let html = '';
-
-  if (idx > 0) {
-    html += `<button class="btn btn-outline" onclick="prevQuestion()">← Previous</button>`;
-  }
-
-  if (idx < total - 1) {
-    html += `<button class="btn btn-gold" onclick="nextQuestion()" ${(state.mode === 'tutor' && !answered) ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>Next →</button>`;
-  } else {
-    html += `<button class="btn btn-gold" onclick="finishExam()">Finish Exam</button>`;
-  }
-
-  actions.innerHTML = html;
-}
-
-function nextQuestion() {
-  if (state.current < state.questions.length - 1) {
-    state.current++;
-    renderQuestion();
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
-}
-
-function prevQuestion() {
-  if (state.current > 0) {
-    state.current--;
-    renderQuestion();
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
-}
-
-function confirmQuit() {
-  if (confirm('Are you sure you want to quit this exam? Your progress will be lost.')) {
-    showTopicSelect();
-  }
-}
-
-// ══════════════════════════════════════
-// RESULTS
-// ══════════════════════════════════════
-function finishExam() {
-  // Tally unanswered in exam mode
-  state.questions.forEach((q, i) => {
-    if (state.answers[i] === null) { state.wrongCount++; }
+  let html='<table class="history-table"><thead><tr><th>Date</th><th>Score</th><th>Result</th><th>XP</th><th>Topics</th></tr></thead><tbody>';
+  hist.slice(0,20).forEach(h=>{
+    const cls=h.pct>=80?'hi':h.pct>=60?'mid':'lo';
+    const result=h.pct>=75?'Pass':'Needs Work';
+    const topics=h.topics&&h.topics.length<10?h.topics.map(t=>t.split(' ')[0]).join(', '):'All Topics';
+    html+=`<tr><td>${h.date}</td><td class="score-cell ${cls}">${h.pct}%</td><td>${h.correct}/${h.total}</td><td style="color:var(--xp-color)">+${h.xp}</td><td style="font-size:.8rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${topics}</td></tr>`;
   });
-
-  const total = state.questions.length;
-  const correct = state.correctCount;
-  const wrong = total - correct;
-  const pct = Math.round((correct / total) * 100);
-
-  showView('view-results');
-
-  document.getElementById('score-pct').textContent = pct + '%';
-  document.getElementById('res-correct').textContent = correct;
-  document.getElementById('res-wrong').textContent = wrong;
-  document.getElementById('res-total').textContent = total;
-
-  // Score messages
-  let title, sub;
-  if (pct >= 90) { title = 'Excellent Work!'; sub = 'Outstanding performance — you\'re well prepared for the real exam.'; }
-  else if (pct >= 75) { title = 'Great Job!'; sub = 'Solid performance. Review the questions you missed and you\'ll be ready.'; }
-  else if (pct >= 60) { title = 'Good Effort'; sub = 'You\'re on the right track. Focus on your weak areas and practice more.'; }
-  else { title = 'Keep Studying'; sub = 'Review the material and try again. Consistent practice leads to mastery.'; }
-
-  document.getElementById('results-title').textContent = title;
-  document.getElementById('results-sub').textContent = sub;
-
-  // Ring animation
-  const circumference = 2 * Math.PI * 68;
-  const fill = circumference * (1 - pct / 100);
-  const ring = document.getElementById('ring-fill');
-  const color = pct >= 75 ? '#4caf7d' : pct >= 60 ? '#c9a84c' : '#e05c5c';
-  ring.style.stroke = color;
-  setTimeout(() => { ring.style.strokeDashoffset = fill; }, 100);
-
-  // Retry wrong button
-  const wrongQs = state.questions.filter((_, i) => state.answers[i] !== state.questions[i].a);
-  document.getElementById('retry-btn').style.display = wrongQs.length > 0 ? '' : 'none';
-
-  // Review section
-  buildReview();
+  html+='</tbody></table>';
+  wrap.innerHTML=html;
 }
 
-function buildReview() {
-  const section = document.getElementById('review-section');
-  const letters = ['A','B','C','D'];
-  let html = '<h3>Question Review</h3>';
-
-  state.questions.forEach((q, i) => {
-    const userAns = state.answers[i];
-    const correct = userAns === q.a;
-    html += `<div class="review-item ${correct ? 'ok' : 'no'}">
-      <div class="review-q">${i+1}. ${q.q}</div>
-      <div class="review-detail">`;
-    if (!correct) {
-      html += `<span class="your">Your answer: ${userAns !== null ? letters[userAns] + '. ' + q.opts[userAns].substring(3) : 'Not answered'}</span><br>`;
-    }
-    html += `<span class="right">✓ Correct: ${letters[q.a]}. ${q.opts[q.a].substring(3)}</span>`;
-    html += `</div></div>`;
-  });
-
-  section.innerHTML = html;
-}
-
-function retryWrong() {
-  const wrongQs = state.questions.filter((q, i) => state.answers[i] !== q.a);
-  state.questions = shuffle([...wrongQs]);
-  state.current = 0;
-  state.answers = new Array(state.questions.length).fill(null);
-  state.correctCount = 0;
-  state.wrongCount = 0;
-  showView('view-exam');
-  renderQuestion();
-}
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+(function init(){
+  checkDailyStreak();
+  persist(SAVE);
+  updateHeader();
+  updateReadinessUI();
+})();
 </script>
 </body>
 </html>
