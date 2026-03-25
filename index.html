@@ -1872,7 +1872,7 @@ function initSplash(){
   // End splash when video ends
   video.addEventListener('ended',endSplash);
   // Fallback: end after 6 seconds if video doesn't play
-  const fallback=setTimeout(endSplash,6000);
+  const fallback=setTimeout(endSplash,60000);
   video.addEventListener('ended',()=>clearTimeout(fallback));
   // If video fails to load, skip immediately
   video.addEventListener('error',endSplash);
