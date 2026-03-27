@@ -509,6 +509,23 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
 .optin-msg.error{color:var(--wrong);display:block;}
 .landing-footer-cta{padding:4.5rem 2rem;background:linear-gradient(160deg,rgba(201,168,76,.06),var(--bg));}
 .landing-footer{padding:1.5rem 2rem;border-top:1px solid var(--border);}
+
+/* ── FINAL EXAM SIMULATION ── */
+.sim-banner{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:1.5rem 1.75rem;margin-top:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;position:relative;overflow:hidden;cursor:pointer;transition:border-color .25s,box-shadow .25s;}
+.sim-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);}
+.sim-banner:hover{border-color:var(--gold);box-shadow:0 8px 30px rgba(0,0,0,.35);}
+.sim-banner.locked{opacity:.5;}
+.sim-banner-tag{font-family:'DM Mono',monospace;font-size:.61rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.sim-banner-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:.3rem;}
+.sim-banner-desc{font-size:.88rem;color:var(--text-muted);font-weight:300;max-width:480px;}
+.sim-stats{display:flex;gap:1.75rem;flex-wrap:wrap;align-items:center;flex-shrink:0;}
+.sim-stat{text-align:center;}
+.sim-stat-num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--gold-light);line-height:1;}
+.sim-stat-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-top:.25rem;}
+.sim-timer{font-family:'DM Mono',monospace;font-size:.85rem;letter-spacing:.12em;padding:5px 13px;border-radius:6px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.08);display:none;align-items:center;gap:6px;}
+.sim-timer.active{display:flex;}
+.sim-timer.warning{color:var(--wrong);border-color:rgba(224,92,92,.4);background:rgba(224,92,92,.08);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 </style>
 </head>
 <body>
@@ -878,6 +895,21 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
         <div class="module-footer"><div class="module-stat"><span>105</span> questions available</div><div class="lock-badge" id="mod3-badge">✦ Upgrade to Unlock</div></div>
       </div>
     </div>
+
+    <!-- Final Exam Simulation Banner -->
+    <div class="sim-banner locked" id="sim-card" onclick="startFinalExam()">
+      <div class="sim-banner-info">
+        <div class="sim-banner-tag">Final Exam Simulation &middot; Premium</div>
+        <div class="sim-banner-title">California DRE Exam Simulation</div>
+        <div class="sim-banner-desc">150 questions drawn from all three modules. Timed at 3 hours — just like the real exam. See if you're ready.</div>
+      </div>
+      <div class="sim-stats">
+        <div class="sim-stat"><div class="sim-stat-num">150</div><div class="sim-stat-lbl">Questions</div></div>
+        <div class="sim-stat"><div class="sim-stat-num">3h</div><div class="sim-stat-lbl">Time Limit</div></div>
+        <div class="sim-stat"><div class="sim-stat-num">70%</div><div class="sim-stat-lbl">Pass Score</div></div>
+        <div class="lock-badge" id="sim-badge">✦ Upgrade to Unlock</div>
+      </div>
+    </div>
   </div>
 
   <div id="view-topics" class="view">
@@ -901,6 +933,7 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
         <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
       </div>
       <div class="exam-stats">
+        <div class="sim-timer" id="sim-timer">⏱ <span id="timer-display">3:00:00</span></div>
         <div class="stat-badge correct" id="stat-correct">+ 0</div>
         <div class="stat-badge wrong" id="stat-wrong">- 0</div>
         <div class="stat-badge streak" id="stat-streak">🔥 0</div>
@@ -1915,6 +1948,10 @@ function updatePlanUI(){
     if(b2){ b2.outerHTML = '<button class="btn btn-gold" onclick="handleLockedModule(2)">Start Practice</button>'; }
     const b3 = document.getElementById('mod3-badge');
     if(b3){ b3.outerHTML = '<button class="btn btn-gold" onclick="handleLockedModule(3)">Start Practice</button>'; }
+    const simCard = document.getElementById('sim-card');
+    if(simCard){ simCard.classList.remove('locked'); }
+    const simBadge = document.getElementById('sim-badge');
+    if(simBadge){ simBadge.outerHTML = '<button class="btn btn-gold" onclick="startFinalExam()">Start Simulation →</button>'; }
   }
   const cancelSection = document.getElementById('cancel-sub-section');
   if(cancelSection) cancelSection.style.display = isPremium ? '' : 'none';
@@ -1925,6 +1962,49 @@ function handleLockedModule(moduleNum){
   if(moduleNum === 2){ showTopicSelect2(); }
   else if(moduleNum === 3){ showTopicSelect3(); }
 }
+// ═══════════════════════════════════════════
+// FINAL EXAM SIMULATION
+// ═══════════════════════════════════════════
+let simTimerInterval = null;
+function startFinalExam(){
+  if(currentUserPlan !== 'premium'){ showUpgrade(); return; }
+  const pick=(arr,n)=>shuffle([...arr]).slice(0,n);
+  const q1=pick(QB,50).map(q=>({...q,simModule:1}));
+  const q2=pick(QB2,50).map(q=>({...q,simModule:2}));
+  const q3=pick(QB3,50).map(q=>({...q,simModule:3}));
+  exam.simQB=shuffle([...q1,...q2,...q3]);
+  exam.currentModule=4;
+  exam.questions=exam.simQB;
+  exam.current=0;exam.answers=new Array(150).fill(null);
+  exam.sessionXP=0;exam.ansStreak=0;exam.bestAnsStreak=0;
+  exam.correctCount=0;exam.wrongCount=0;exam.comebackWrongRun=0;exam.comebackCorrectRun=0;
+  exam.comebackAchieved=false;exam.isWeakDrill=false;exam.selectedTopics=[];
+  const{cur}=getLevelInfo(SAVE.totalXP);exam.prevLevelNum=cur.lvl;
+  showInHome('view-exam');
+  renderQuestion();
+  startSimTimer(3*60*60);
+}
+function startSimTimer(seconds){
+  clearInterval(simTimerInterval);
+  let remaining=seconds;
+  const timerEl=document.getElementById('sim-timer');
+  const displayEl=document.getElementById('timer-display');
+  timerEl.className='sim-timer active';
+  const fmt=s=>{const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;};
+  displayEl.textContent=fmt(remaining);
+  simTimerInterval=setInterval(()=>{
+    remaining--;
+    displayEl.textContent=fmt(remaining);
+    if(remaining<=300)timerEl.className='sim-timer active warning';
+    if(remaining<=0){clearInterval(simTimerInterval);finishExam();}
+  },1000);
+}
+function stopSimTimer(){
+  clearInterval(simTimerInterval);
+  const timerEl=document.getElementById('sim-timer');
+  if(timerEl)timerEl.className='sim-timer';
+}
+
 function showTopicSelect2(){
   exam.currentModule=2;
   exam.selectedTopics=TOPICS2.map((_,i)=>i);
@@ -2250,7 +2330,7 @@ let exam={
 function setCount(n,el){exam.questionCount=n;document.querySelectorAll('#count-pills .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
 function setMode(m,el){exam.mode=m;document.querySelectorAll('#mode-pills .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
 function setOrder(o,el){exam.order=o;document.querySelectorAll('#order-pills .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
-function activeQB(){return exam.currentModule===3?QB3:exam.currentModule===2?QB2:QB;}
+function activeQB(){return exam.currentModule===4?exam.simQB:exam.currentModule===3?QB3:exam.currentModule===2?QB2:QB;}
 function activeTopics(){return exam.currentModule===3?TOPICS3:exam.currentModule===2?TOPICS2:TOPICS;}
 function buildTopicGrid(){
   const topics=activeTopics();const qb=activeQB();
@@ -2275,6 +2355,7 @@ function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.ra
 // START EXAM
 // ═══════════════════════════════════════════
 function startExam(){
+  if(exam.currentModule===4){showInHome('view-exam');renderQuestion();return;}
   if(exam.selectedTopics.length===0){alert('Please select at least one topic.');return;}
   const qb=activeQB();
   let pool=qb.filter(q=>exam.selectedTopics.includes(q.t));
@@ -2391,7 +2472,7 @@ function nextQ(isWeak){if(exam.current<exam.questions.length-1){exam.current++;r
 function prevQ(isWeak){if(exam.current>0){exam.current--;renderQuestion(!!isWeak);window.scrollTo({top:0,behavior:'smooth'});}}
 function confirmQuit(){document.getElementById('quit-modal').classList.remove('hidden');}
 function closeModal(){document.getElementById('quit-modal').classList.add('hidden');}
-function doQuit(){closeModal();showTopicSelect();}
+function doQuit(){closeModal();stopSimTimer();if(exam.currentModule===4){exam.currentModule=1;showModules();}else{showTopicSelect();}}
 
 // ═══════════════════════════════════════════
 // FINISH EXAM
@@ -2408,7 +2489,9 @@ function finishExam(){
   if(exam.bestAnsStreak>SAVE.bestAnswerStreak)SAVE.bestAnswerStreak=exam.bestAnsStreak;
   if(exam.sessionXP>SAVE.bestXPTest)SAVE.bestXPTest=exam.sessionXP;
   if(!SAVE.testHistory)SAVE.testHistory=[];
-  SAVE.testHistory.push({date:new Date().toLocaleDateString(),pct,correct,total,xp:exam.sessionXP,topics:exam.selectedTopics.map(i=>activeTopics()[i])});
+  stopSimTimer();
+  const histTopics=exam.currentModule===4?['Final Exam Simulation']:exam.selectedTopics.map(i=>activeTopics()[i]);
+  SAVE.testHistory.push({date:new Date().toLocaleDateString(),pct,correct,total,xp:exam.sessionXP,topics:histTopics});
   if(SAVE.testHistory.length>50)SAVE.testHistory=SAVE.testHistory.slice(-50);
   persist(SAVE);
   const newBadges=checkBadges({score:pct,total,bestAnsStreak:exam.bestAnsStreak,comebackAchieved:exam.comebackAchieved});
