@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
       console.log('Kit subscriber added:', normalized);
     }
 
-    res.json({ success: true, kitStatus: kitRes.status, kitData });
+    res.json({ success: true });
   } catch (err) {
     console.error('subscribe error:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
