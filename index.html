@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RealPrep Academy — License Exam Study Guide</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230d1018'/><rect width='32' height='32' rx='7' fill='url(%23g)'/><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23c9a84c'/><stop offset='1' stop-color='%237a5510'/></linearGradient></defs><text x='16' y='23' font-family='Georgia,serif' font-weight='700' font-size='20' fill='%230d1018' text-anchor='middle'>R</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
 :root{
   --bg:#0d1018;--surface:#141820;--surface2:#1a2030;--surface3:#202840;
@@ -103,7 +107,7 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
 .module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity .3s;}
 .module-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.45);}
 .module-card:hover::before{opacity:1;}
-.module-card.locked{opacity:.4;cursor:not-allowed;pointer-events:none;}
+.module-card.locked{opacity:.5;cursor:pointer;}
 .module-tag{font-family:'DM Mono',monospace;font-size:.61rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
 .module-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;margin-bottom:.65rem;}
 .topic-list{list-style:none;margin-bottom:1rem;}
@@ -373,6 +377,39 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
 #login-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;padding:1.5rem;}
 #login-screen.hidden{display:none;}
 
+/* UPGRADE OVERLAY */
+#upgrade-overlay{position:fixed;inset:0;z-index:500;background:rgba(13,16,24,.97);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto;}
+#upgrade-overlay.hidden{display:none;}
+.upgrade-wrap{max-width:760px;width:100%;text-align:center;}
+.upgrade-close{position:fixed;top:1.5rem;right:1.5rem;background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;transition:all .2s;}
+.upgrade-close:hover{border-color:var(--gold);color:var(--gold);}
+.upgrade-logo-mark{width:56px;height:56px;background:linear-gradient(135deg,var(--gold),#7a5510);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:28px;color:#0d1018;margin:0 auto 1.25rem;}
+.upgrade-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:700;color:var(--text);margin-bottom:.5rem;}
+.upgrade-sub{color:var(--text-muted);font-size:1rem;margin-bottom:2rem;}
+.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2rem;}
+@media(max-width:560px){.plan-grid{grid-template-columns:1fr;}}
+.plan-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.75rem 1.5rem;text-align:left;position:relative;}
+.plan-card.premium{border-color:var(--gold);background:linear-gradient(160deg,var(--surface2),var(--surface));}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:#0d1018;font-family:'DM Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.1em;padding:3px 12px;border-radius:20px;}
+.plan-name{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem;}
+.plan-price{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--text);margin-bottom:1.25rem;}
+.plan-price span{font-size:1rem;font-family:'Crimson Pro',serif;color:var(--text-muted);}
+.plan-features{list-style:none;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:.5rem;}
+.plan-features li{font-size:.92rem;color:var(--text-muted);}
+.plan-features li:not(.locked-feature){color:var(--text);}
+.locked-feature{opacity:.45;}
+.plan-current{display:inline-block;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);border:1px solid var(--border);padding:4px 12px;border-radius:20px;}
+.upgrade-stripe-btn{width:100%;padding:.85rem;font-size:1rem;}
+.access-code-section{border-top:1px solid var(--border);padding-top:1.75rem;margin-top:.5rem;}
+.access-code-label{font-size:.88rem;color:var(--text-muted);margin-bottom:.75rem;}
+.access-code-row{display:flex;gap:.75rem;max-width:400px;margin:0 auto;}
+.access-code-row .login-input{flex:1;}
+.access-code-msg{font-size:.85rem;margin-top:.6rem;min-height:1.2em;}
+.access-code-msg.success{color:var(--correct);}
+.access-code-msg.error{color:var(--wrong);}
+#hdr-upgrade-btn{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),#7a5510);color:#0d1018;border:none;border-radius:20px;padding:6px 14px;cursor:pointer;font-weight:500;white-space:nowrap;transition:opacity .2s;}
+#hdr-upgrade-btn:hover{opacity:.85;}
+
 /* SPLASH SCREEN */
 #splash-screen{position:fixed;inset:0;z-index:1000;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity .8s ease;}
 #splash-screen.fade-out{opacity:0;pointer-events:none;}
@@ -382,7 +419,7 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
 .splash-content{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.25rem;}
 .splash-logo-mark{width:64px;height:64px;background:linear-gradient(135deg,var(--gold),#7a5510);border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:32px;color:#0d1018;box-shadow:0 8px 40px rgba(201,168,76,.4);animation:splashPop .8s cubic-bezier(.34,1.56,.64,1) .3s both;}
 .splash-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.2rem);font-weight:700;color:#fff;letter-spacing:.02em;text-shadow:0 2px 20px rgba(0,0,0,.5);animation:splashFadeUp .8s ease .5s both;}
-.splash-subtitle{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);text-shadow:0 1px 10px rgba(0,0,0,.5);animation:splashFadeUp .8s ease .7s both;}
+.splash-subtitle{font-family:'DM Mono',monospace;font-size:.9rem;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);text-shadow:0 1px 16px rgba(0,0,0,.6);animation:splashFadeUp .8s ease .7s both;}
 .splash-skip{position:absolute;bottom:2rem;right:2rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);background:none;border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;cursor:pointer;transition:all .2s;z-index:2;}
 .splash-skip:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.5);}
 @keyframes splashPop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
@@ -422,7 +459,7 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
   <div class="splash-content">
     <div class="splash-logo-mark">R</div>
     <div class="splash-title">RealPrep Academy</div>
-    <div class="splash-subtitle">License Exam Preparation</div>
+    <div class="splash-subtitle">California Real Estate License Exam Preparation</div>
   </div>
   <button class="splash-skip" onclick="endSplash()">Skip →</button>
 </div>
@@ -434,7 +471,7 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
       <div class="login-logo-mark">R</div>
       <div>
         <div class="login-logo-text">RealPrep Academy</div>
-        <div class="login-logo-sub">License Exam Preparation</div>
+        <div class="login-logo-sub">California Real Estate License Exam Preparation</div>
       </div>
     </div>
     <div class="login-card">
@@ -444,15 +481,16 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
       </div>
       <!-- Sign In -->
       <div id="panel-signin">
-        <div class="login-field"><label class="login-label">Username</label><input class="login-input" id="si-user" type="text" placeholder="Enter your username" autocomplete="username"></div>
+        <div class="login-field"><label class="login-label">Email</label><input class="login-input" id="si-email" type="email" placeholder="Enter your email" autocomplete="email"></div>
         <div class="login-field"><label class="login-label">Password</label><input class="login-input" id="si-pass" type="password" placeholder="Enter your password" autocomplete="current-password"></div>
         <button class="login-btn" onclick="doSignIn()">Sign In →</button>
-        <div class="login-error" id="si-error">Username or password is incorrect.</div>
+        <div class="login-error" id="si-error">Email or password is incorrect.</div>
         <div class="login-footer">Don't have an account? <span style="color:var(--gold);cursor:pointer;" onclick="showLoginTab('register')">Create one free.</span></div>
       </div>
       <!-- Register -->
       <div id="panel-register" style="display:none;">
         <div class="login-field"><label class="login-label">Full Name</label><input class="login-input" id="reg-name" type="text" placeholder="Your name"></div>
+        <div class="login-field"><label class="login-label">Email</label><input class="login-input" id="reg-email" type="email" placeholder="Your email address" autocomplete="email"></div>
         <div class="login-field"><label class="login-label">Username</label><input class="login-input" id="reg-user" type="text" placeholder="Choose a username"></div>
         <div class="login-field"><label class="login-label">Password</label><input class="login-input" id="reg-pass" type="password" placeholder="Choose a password" autocomplete="new-password"></div>
         <div class="login-field"><label class="login-label">Confirm Password</label><input class="login-input" id="reg-pass2" type="password" placeholder="Confirm your password" autocomplete="new-password"></div>
@@ -464,13 +502,60 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
   </div>
 </div>
 
+<!-- ══ UPGRADE OVERLAY ══ -->
+<div id="upgrade-overlay" class="hidden">
+  <button class="upgrade-close" onclick="hideUpgrade()">✕</button>
+  <div class="upgrade-wrap">
+    <div class="upgrade-logo-mark">R</div>
+    <h2 class="upgrade-title">Unlock Full Access</h2>
+    <p class="upgrade-sub">Get all modules, advanced content, and exam simulations.</p>
+    <div class="plan-grid">
+      <div class="plan-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0</div>
+        <ul class="plan-features">
+          <li>✓ Module 1 — Foundations (100 Qs)</li>
+          <li>✓ Weak Spot Tracking</li>
+          <li>✓ Flashcards &amp; Stats</li>
+          <li>✓ XP &amp; Badge System</li>
+          <li class="locked-feature">✗ Module 2 — Market &amp; Valuation</li>
+          <li class="locked-feature">✗ Module 3 — California Law &amp; Practice</li>
+          <li class="locked-feature">✗ Final Exam Simulation</li>
+        </ul>
+        <div class="plan-current">Current Plan</div>
+      </div>
+      <div class="plan-card premium">
+        <div class="plan-badge">RECOMMENDED</div>
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">$10<span>/mo</span></div>
+        <ul class="plan-features">
+          <li>✓ Everything in Free</li>
+          <li>✓ Module 2 — Market &amp; Valuation</li>
+          <li>✓ Module 3 — California Law &amp; Practice</li>
+          <li>✓ Final Exam Simulation</li>
+          <li>✓ All Future Modules</li>
+        </ul>
+        <button class="btn btn-gold upgrade-stripe-btn" onclick="startCheckout()" id="checkout-btn">Subscribe — $10/month</button>
+      </div>
+    </div>
+    <div class="access-code-section">
+      <p class="access-code-label">Have an access code?</p>
+      <div class="access-code-row">
+        <input class="login-input" id="access-code-input" type="text" placeholder="Enter access code">
+        <button class="btn btn-gold" onclick="redeemCode()">Redeem</button>
+      </div>
+      <div class="access-code-msg" id="access-code-msg"></div>
+    </div>
+  </div>
+</div>
+
 <header>
   <div class="header-inner">
     <div class="logo" onclick="goHome()">
       <div class="logo-mark">R</div>
       <div>
         <div class="logo-text">RealPrep Academy</div>
-        <div class="logo-sub">License Exam Preparation</div>
+        <div class="logo-sub">California Real Estate License Exam Preparation</div>
       </div>
     </div>
     <div class="header-xp">
@@ -484,13 +569,14 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
           <div class="xp-label" id="hdr-xp-label">0 XP</div>
         </div>
       </div>
+      <button id="hdr-upgrade-btn" onclick="showUpgrade()" style="display:none;">Upgrade ✦</button>
       <button class="logout-btn" onclick="doLogout()">Sign Out</button>
     </div>
   </div>
   <div class="nav-tabs">
     <button class="nav-tab active" data-tab="home" onclick="switchTab('home')">Modules</button>
     <button class="nav-tab" data-tab="study" onclick="switchTab('study')">Study</button>
-    <button class="nav-tab" data-tab="weak" onclick="switchTab('weak')">Weak Spots<span class="tab-badge" id="weak-badge" style="display:none">0</span></button>
+    <button class="nav-tab" data-tab="weak" onclick="switchTabOrUpgrade('weak')">Weak Spots<span class="tab-badge" id="weak-badge" style="display:none">0</span></button>
     <button class="nav-tab" data-tab="stats" onclick="switchTab('stats')">Dashboard</button>
   </div>
 </header>
@@ -534,25 +620,37 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
         </ul>
         <div class="module-footer"><div class="module-stat"><span>100</span> questions available</div><button class="btn btn-gold">Start Practice</button></div>
       </div>
-      <div class="module-card locked">
-        <div class="module-tag">Module 02 · Coming Soon</div><div class="module-title">Market &amp; Valuation</div>
-        <ul class="topic-list"><li>Property Valuation Methods</li><li>Real Estate Markets &amp; Analysis</li><li>Listing &amp; Selling Procedures</li><li>Investment &amp; Tax Concepts</li><li>Fair Housing Laws</li></ul>
-        <div class="module-footer"><div class="module-stat">Topics: <span>5</span></div><div class="lock-badge">Locked</div></div>
+      <div class="module-card locked" id="module-2-card" onclick="handleLockedModule(2)">
+        <div class="module-tag">Module 02 · Premium</div><div class="module-title">Transactions &amp; Finance</div>
+        <ul class="topic-list">
+          <li>Real Estate Agency Relationships</li><li>Listing Agreements &amp; Property Disclosure</li><li>Listing Regulations</li>
+          <li>Evaluating &amp; Pricing Property</li><li>Sales Techniques &amp; Practices</li><li>Preparing &amp; Negotiating Offers</li>
+          <li>Purchase Agreements</li><li>Contingent Transactions</li><li>Loan Qualifying</li>
+          <li>Financing Programs</li><li>Closing the Transaction</li><li>Property Management</li>
+        </ul>
+        <div class="module-footer"><div class="module-stat"><span>104</span> questions available</div><div class="lock-badge" id="mod2-badge">✦ Upgrade to Unlock</div></div>
       </div>
-      <div class="module-card locked">
-        <div class="module-tag">Module 03 · Coming Soon</div><div class="module-title">Advanced Practice</div>
-        <ul class="topic-list"><li>Escrow &amp; Title Insurance</li><li>Property Management</li><li>Commercial Real Estate</li><li>Ethics &amp; License Law</li><li>Final Exam Simulation</li></ul>
-        <div class="module-footer"><div class="module-stat">Topics: <span>5</span></div><div class="lock-badge">Locked</div></div>
+      <div class="module-card locked" id="module-3-card" onclick="handleLockedModule(3)">
+        <div class="module-tag">Module 03 · Premium</div><div class="module-title">California Law &amp; Practice</div>
+        <ul class="topic-list">
+          <li>Law Overview</li><li>Characteristics of Real Property</li><li>Estates and Ownership</li>
+          <li>Land Use Control</li><li>Agency Law and Disclosure</li><li>Law of Contracts</li>
+          <li>Relationship Agreements</li><li>Sale and Lease Contracts</li>
+          <li>Conveyances and Disclosures</li><li>Liens and Encumbrances</li>
+          <li>Finance and Financing Laws</li><li>Escrow and Closings</li>
+          <li>Fair Housing Laws</li><li>Landlord and Tenant Relations</li><li>Licensing and Regulations</li>
+        </ul>
+        <div class="module-footer"><div class="module-stat"><span>105</span> questions available</div><div class="lock-badge" id="mod3-badge">✦ Upgrade to Unlock</div></div>
       </div>
     </div>
   </div>
 
   <div id="view-topics" class="view">
     <button class="back-btn" onclick="showModules()">← Back</button>
-    <div class="section-header"><div class="overline">Module 01</div><h2>Configure Your Practice Test</h2><p>Select topics, question count, and test mode.</p></div>
+    <div class="section-header"><div class="overline" id="module-select-label">Module 01</div><h2>Configure Your Practice Test</h2><p>Select topics, question count, and test mode.</p></div>
     <div class="config-panel">
       <div class="config-title">Test Settings</div>
-      <div class="config-row"><div class="config-label">Questions</div><div class="pill-group" id="count-pills"><button class="pill" onclick="setCount(10,this)">10</button><button class="pill active" onclick="setCount(20,this)">20</button><button class="pill" onclick="setCount(50,this)">50</button><button class="pill" onclick="setCount(100,this)">All 100</button></div></div>
+      <div class="config-row"><div class="config-label">Questions</div><div class="pill-group" id="count-pills"><button class="pill" onclick="setCount(10,this)">10</button><button class="pill active" onclick="setCount(20,this)">20</button><button class="pill" onclick="setCount(50,this)">50</button><button class="pill" onclick="setCount(999,this)">All</button></div></div>
       <div class="config-row"><div class="config-label">Mode</div><div class="pill-group" id="mode-pills"><button class="pill active" onclick="setMode('tutor',this)">Tutor (show answers)</button><button class="pill" onclick="setMode('exam',this)">Exam (reveal at end)</button></div></div>
       <div class="config-row"><div class="config-label">Order</div><div class="pill-group" id="order-pills"><button class="pill active" onclick="setOrder('random',this)">Randomized</button><button class="pill" onclick="setOrder('sequential',this)">Sequential</button></div></div>
     </div>
@@ -707,6 +805,11 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
   <div class="stat-card" style="margin-bottom:1.2rem;"><div class="stat-card-title">Topic Accuracy Breakdown</div><div class="topic-bars" id="topic-bars"></div></div>
   <div class="stat-card" style="margin-bottom:1.2rem;"><div class="stat-card-title">Badges</div><div class="badges-grid" id="badges-grid"></div></div>
   <div class="stat-card"><div class="stat-card-title">Test History</div><div id="history-wrap"></div></div>
+  <div id="cancel-sub-section" style="display:none;margin-top:1.5rem;padding:1.2rem;background:var(--surface2);border-radius:12px;border:1px solid var(--border);">
+    <div style="font-size:.9rem;font-weight:600;margin-bottom:.4rem;color:var(--text);">Manage Subscription</div>
+    <div style="font-size:.82rem;color:var(--text-muted);margin-bottom:1rem;">You are on the Premium plan. If you cancel, you keep access until the end of your current billing period.</div>
+    <button id="cancel-sub-btn" onclick="cancelSubscription()" style="background:transparent;border:1px solid #c0392b;color:#c0392b;padding:8px 18px;border-radius:8px;font-size:.82rem;cursor:pointer;">Cancel Subscription</button>
+  </div>
 </div>
 </main>
 
@@ -723,6 +826,277 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
 // CONSTANTS
 // ═══════════════════════════════════════════
 const TOPICS = ["Nature of Real Property","Estates in Land & Holding Title","Transfer of Real Property","Encumbrances","Public Restrictions on Land","Contract Law","Types of Real Estate Contracts","Real Estate Agency Law","Principles of RE Financing","Applying for a Residential Loan"];
+const TOPICS2 = ["Real Estate Agency Relationships","Listing Agreements & Property Disclosure","Listing Regulations","Evaluating & Pricing Property","Sales Techniques & Practices","Preparing & Negotiating Offers","Purchase Agreements","Contingent Transactions","Loan Qualifying","Financing Programs","Closing the Transaction","Property Management","Study Practice Exam","Final Exam"];
+const TOPICS3 = ["Law Overview","Characteristics of Real Property","Estates and Ownership","Land Use Control","Agency Law and Disclosure","Law of Contracts","Relationship Agreements","Sale and Lease Contracts","Conveyances and Disclosures","Liens and Encumbrances","Finance and Financing Laws","Escrow and Closings","Fair Housing Laws","Landlord and Tenant Relations","Licensing and Regulations"];
+const QB2 = [
+  // Topic 0 – Real Estate Agency Relationships
+  {t:0,q:"Which of the following BEST describes a fiduciary duty?",o:["Acting in the client's best interest above all others","Disclosing all properties listed","Collecting the highest commission possible","Representing both buyer and seller simultaneously"],a:0,e:"A fiduciary duty requires the agent to place the client's interests above their own."},
+  {t:0,q:"A seller's agent discovers the buyer is willing to pay $20,000 more. What must the agent do?",o:["Keep it confidential from the seller","Tell the seller immediately","Tell both parties","Ignore the information"],a:1,e:"A seller's agent has a fiduciary duty of loyalty and must disclose material information to the seller."},
+  {t:0,q:"Dual agency occurs when:",o:["Two agents share a commission","One broker represents both buyer and seller","Two brokers co-list a property","A buyer uses two agents"],a:1,e:"Dual agency means one broker (or brokerage) represents both sides of the transaction."},
+  {t:0,q:"Which duty requires an agent to keep the client's information confidential?",o:["Obedience","Disclosure","Confidentiality","Accounting"],a:2,e:"Confidentiality is one of the six fiduciary duties an agent owes their client."},
+  {t:0,q:"A subagent represents:",o:["The listing broker","The buyer","The seller through cooperation with another broker","The lender"],a:2,e:"A subagent is an agent of the listing broker who still represents the seller's interests."},
+  {t:0,q:"Informed consent for dual agency must be given:",o:["After closing","Before the agent begins representing both parties","Only by the seller","Only in writing by the buyer"],a:1,e:"California law requires informed written consent from both parties before dual agency can proceed."},
+  {t:0,q:"Which agency relationship requires the MOST disclosure to the client?",o:["Buyer's agency","Seller's agency","Dual agency","Subagency"],a:2,e:"Dual agency carries the highest disclosure burden because the agent represents competing interests."},
+
+  // Topic 1 – Listing Agreements & Property Disclosure
+  {t:1,q:"An exclusive right-to-sell listing guarantees the broker a commission if:",o:["Only the broker finds the buyer","The property sells during the listing period regardless of who finds the buyer","The seller finds the buyer directly","The listing expires"],a:1,e:"With an exclusive right-to-sell, the broker earns a commission no matter who procures the buyer."},
+  {t:1,q:"The Transfer Disclosure Statement (TDS) is required for:",o:["Commercial properties only","All residential 1–4 unit sales","New construction only","Vacant land"],a:1,e:"California requires a TDS for the sale of residential property with 1–4 units."},
+  {t:1,q:"An open listing allows the seller to:",o:["List with multiple brokers simultaneously","Only work with one broker","Cancel without penalty anytime","Bypass the MLS"],a:0,e:"An open listing lets the seller list with multiple brokers; commission goes to whoever finds the buyer."},
+  {t:1,q:"The seller's agent has a duty to disclose known material facts:",o:["Only if the buyer asks","Even if the seller instructs them not to","Only after an offer is accepted","Only verbally"],a:1,e:"Agents must disclose material defects they know about regardless of seller instructions."},
+  {t:1,q:"A Natural Hazard Disclosure (NHD) report informs the buyer about:",o:["Zoning changes","Flood zones, fire hazard areas, and earthquake zones","School district boundaries","HOA rules"],a:1,e:"The NHD discloses natural hazard zones that may affect the property."},
+  {t:1,q:"Which listing type gives the broker the LEAST protection?",o:["Exclusive right-to-sell","Exclusive agency","Open listing","Net listing"],a:2,e:"In an open listing the broker only earns a commission if they are the procuring cause, making it the least protective for brokers."},
+  {t:1,q:"A net listing is generally considered:",o:["Best practice","Illegal in California","Ethical and encouraged","Required for luxury homes"],a:1,e:"Net listings are illegal in California because they create a conflict of interest."},
+
+  // Topic 2 – Listing Regulations
+  {t:2,q:"A property listed on the MLS must be submitted within how many days of the listing date in California?",o:["1 business day","2 business days","5 business days","10 business days"],a:1,e:"California MLS rules generally require submission within 2 business days of the listing date."},
+  {t:2,q:"Steering potential buyers toward or away from neighborhoods based on race is called:",o:["Redlining","Steering","Blockbusting","Panic selling"],a:1,e:"Steering is the illegal practice of directing buyers based on protected characteristics."},
+  {t:2,q:"Blockbusting involves:",o:["Investors buying entire city blocks","Inducing owners to sell by exploiting fears about demographic change","Bulk purchasing of foreclosures","Zoning violations"],a:1,e:"Blockbusting is illegal and involves persuading owners to sell by suggesting a neighborhood is changing."},
+  {t:2,q:"Under the Fair Housing Act, which is NOT a protected class?",o:["Race","Religion","Income level","National origin"],a:2,e:"Income level is not a federally protected class under the Fair Housing Act, though some states add protections."},
+  {t:2,q:"An agent who advertises a property in only one language to target a specific ethnic group is most likely violating:",o:["Contract law","Fair Housing laws","MLS rules","Escrow regulations"],a:1,e:"Advertising targeted to or excluding certain ethnic groups violates Fair Housing laws."},
+  {t:2,q:"The do-not-call registry primarily applies to:",o:["Door-to-door solicitation","Unsolicited telephone solicitation","Email marketing","Print advertising"],a:1,e:"The National Do Not Call Registry restricts unsolicited telemarketing phone calls."},
+  {t:2,q:"A 'For Sale' sign placed without seller permission is a violation of:",o:["Fair Housing laws","Agency law","Listing regulations","Zoning ordinances"],a:2,e:"Agents must have seller consent before placing a sign on a property — this is a listing regulation requirement."},
+
+  // Topic 3 – Evaluating & Pricing Property
+  {t:3,q:"The sales comparison approach is MOST useful for valuing:",o:["Industrial warehouses","Single-family residences","Income-producing apartment buildings","Unique properties with no comparables"],a:1,e:"The sales comparison approach works best for residential properties where recent comparable sales exist."},
+  {t:3,q:"In the income approach, NOI stands for:",o:["Net Operating Income","New Offer Income","Nominal Operating Index","Net Ownership Interest"],a:0,e:"NOI (Net Operating Income) is gross income minus operating expenses, used in the income approach."},
+  {t:3,q:"Functional obsolescence refers to:",o:["Wear and tear from use","Loss in value due to poor floor plan or outdated features","External factors reducing value","Physical deterioration of the structure"],a:1,e:"Functional obsolescence is a loss in value caused by outdated or poor design features within the property."},
+  {t:3,q:"A CMA (Comparative Market Analysis) is prepared by:",o:["A licensed appraiser","A real estate agent","The county assessor","A home inspector"],a:1,e:"A CMA is a tool agents use to estimate market value; it is not a formal appraisal."},
+  {t:3,q:"The principle of substitution states that:",o:["A buyer will pay no more than the cost of acquiring an equally desirable substitute","A property's value depends on its location","Highest value is achieved at peak demand","Improvements always add value"],a:0,e:"Substitution underpins all three appraisal approaches — buyers won't overpay when alternatives exist."},
+  {t:3,q:"Which factor does NOT directly affect a property's market value?",o:["Location","Interest rates","The seller's original purchase price","Current supply and demand"],a:2,e:"The seller's original purchase price is irrelevant to current market value."},
+  {t:3,q:"Economic obsolescence (external obsolescence) is caused by:",o:["Worn-out roof shingles","A new freeway built adjacent to the property","An outdated kitchen layout","Foundation cracks"],a:1,e:"External obsolescence stems from outside the property — like nearby nuisances, economic downturns, or infrastructure changes."},
+
+  // Topic 4 – Sales Techniques & Practices
+  {t:4,q:"A prospect who says 'I need to think about it' is expressing a:",o:["Buying signal","Stall or objection","Contract acceptance","Counter-offer"],a:1,e:"'I need to think about it' is a common stall objection that the agent should address with more information."},
+  {t:4,q:"The BEST way to handle a buyer objection is to:",o:["Ignore it and move on","Acknowledge it and provide factual information","Lower the price immediately","Tell the buyer they are wrong"],a:1,e:"Acknowledging and addressing objections with facts builds trust and moves the sale forward."},
+  {t:4,q:"An assumptive close involves the agent:",o:["Asking the buyer if they want to buy","Acting as though the buyer has already decided to purchase","Offering a discount","Presenting multiple offers"],a:1,e:"The assumptive close assumes the sale and moves toward logistics like 'Which day works for closing?'"},
+  {t:4,q:"AIDA in sales stands for:",o:["Ask, Inform, Discuss, Agree","Attention, Interest, Desire, Action","Advertise, Inquire, Deal, Accept","Approach, Investigate, Demonstrate, Agree"],a:1,e:"AIDA is a classic sales model: Attention → Interest → Desire → Action."},
+  {t:4,q:"When showing a property, an agent should generally:",o:["Talk constantly to fill silence","Let the buyer explore while being available for questions","Point out every flaw immediately","Rush through each room"],a:1,e:"Allowing buyers to explore at their own pace while remaining available creates a positive showing experience."},
+  {t:4,q:"A listing presentation should include:",o:["Only the listing price","CMA, marketing plan, agent credentials, and commission structure","A guaranteed sale date","Personal information about other sellers"],a:1,e:"A strong listing presentation covers market analysis, marketing strategy, the agent's experience, and compensation."},
+  {t:4,q:"The term 'farming' in real estate refers to:",o:["Agricultural property sales","Focusing marketing efforts on a specific geographic area or demographic","Growing your social media following","Harvesting expired listings"],a:1,e:"Farming is a prospecting strategy where an agent consistently markets to a defined neighborhood or group."},
+
+  // Topic 5 – Preparing & Negotiating Offers
+  {t:5,q:"An offer becomes a contract when it is:",o:["Signed by the buyer","Signed by both parties and communicated to the offeror","Submitted to escrow","Approved by the lender"],a:1,e:"A contract is formed when acceptance is signed by all parties AND communicated back to the offering party."},
+  {t:5,q:"A counter-offer legally:",o:["Keeps the original offer open","Terminates the original offer and creates a new offer","Requires a 3-day acceptance period","Must be in writing only in California"],a:1,e:"A counter-offer rejects the original offer and substitutes a new offer — the original offer is no longer valid."},
+  {t:5,q:"Earnest money (good faith deposit) is held by:",o:["The seller","The seller's agent","A neutral third party (usually escrow)","The buyer's lender"],a:2,e:"The deposit is held in escrow or by the broker's trust account — not by either party directly."},
+  {t:5,q:"Which is NOT typically a negotiable term in an offer?",o:["Purchase price","Closing date","Seller's mortgage balance","Contingencies"],a:2,e:"The seller's existing mortgage balance is not a term the buyer controls or negotiates."},
+  {t:5,q:"Multiple offers must be:",o:["Disclosed in detail to all buyers","Presented to the seller; the existence of multiple offers may be disclosed","Rejected and a new listing started","Accepted in the order received"],a:1,e:"Agents must present all offers to the seller. They may disclose that multiple offers exist but need not reveal specific terms."},
+  {t:5,q:"An escalation clause allows the buyer to:",o:["Back out if prices rise","Automatically increase their offer up to a set cap to beat competing offers","Lower their offer after inspection","Extend the closing date"],a:1,e:"An escalation clause automatically raises the buyer's offer by a set increment above competing offers, up to a maximum."},
+  {t:5,q:"If the seller does not respond to an offer before the acceptance deadline, the offer:",o:["Automatically becomes a contract","Expires and is no longer valid","Must be resubmitted","Converts to a counter-offer"],a:1,e:"An offer expires if not accepted by the stated deadline — no contract is formed."},
+
+  // Topic 6 – Purchase Agreements
+  {t:6,q:"In California, the standard residential purchase agreement is published by:",o:["The Department of Real Estate","The California Association of REALTORS® (CAR)","The state legislature","The NAR"],a:1,e:"CAR publishes the widely used Residential Purchase Agreement (RPA) form used across California."},
+  {t:6,q:"Which element is NOT required for a valid real estate contract?",o:["Mutual consent","Lawful object","Consideration","Notarization"],a:3,e:"Notarization is NOT required for a purchase agreement to be valid; it is required for recording deeds."},
+  {t:6,q:"'Time is of the essence' in a contract means:",o:["The contract expires in 30 days automatically","Deadlines must be strictly met or the breaching party may be in default","The agent must respond within 24 hours","Escrow must close by end of month"],a:1,e:"'Time is of the essence' makes contract deadlines strict and enforceable."},
+  {t:6,q:"Liquidated damages in a residential purchase agreement refer to:",o:["The buyer's right to sue for any amount","A pre-agreed penalty (typically the deposit) if the buyer defaults","The seller's right to keep the property","Attorney fees"],a:1,e:"Liquidated damages limit the seller's remedy to the deposit amount if the buyer defaults, provided both parties initialed the clause."},
+  {t:6,q:"Which party typically pays the transfer tax in California?",o:["Buyer","Seller","Lender","Escrow company"],a:1,e:"By custom in California, the seller typically pays the county and city transfer taxes, though it is negotiable."},
+  {t:6,q:"A contract signed under duress is:",o:["Valid and enforceable","Voidable by the party under duress","Void from the start","Illegal"],a:1,e:"A contract signed under duress is voidable — the injured party can choose to affirm or rescind it."},
+  {t:6,q:"Personal property is typically transferred via a:",o:["Grant deed","Bill of sale","Quitclaim deed","Trust deed"],a:1,e:"Personal property (appliances, fixtures not attached) is transferred via a bill of sale, not a deed."},
+
+  // Topic 7 – Contingent Transactions
+  {t:7,q:"A loan contingency protects the buyer by allowing them to cancel if:",o:["The property appraises low","They cannot obtain financing on the specified terms","The seller won't make repairs","The title has a cloud"],a:1,e:"The loan contingency lets the buyer cancel and recover their deposit if they cannot secure the loan described in the contract."},
+  {t:7,q:"An appraisal contingency allows the buyer to renegotiate or cancel if:",o:["The appraisal comes in above the purchase price","The appraisal comes in below the purchase price","The inspector finds issues","The seller backs out"],a:1,e:"An appraisal contingency protects the buyer when the property appraises below the agreed purchase price."},
+  {t:7,q:"Active removal of a contingency in California means:",o:["The contingency expires automatically","The buyer signs a contingency removal form to waive the protection","The seller cancels the contract","Escrow is extended"],a:1,e:"California uses active contingency removal — buyers must sign a written form to remove each contingency."},
+  {t:7,q:"A Notice to Perform is used to:",o:["Demand the seller make repairs","Remind a party to fulfill a contractual obligation within a set time","Cancel escrow","Request an extension"],a:1,e:"A Notice to Perform (NBP) gives the other party a defined period to meet a contractual obligation or face cancellation."},
+  {t:7,q:"The inspection contingency typically gives the buyer the right to:",o:["Force the seller to make any repairs","Approve the property's condition or cancel the contract","Extend closing by 30 days","Reduce the price by 10%"],a:1,e:"The inspection contingency lets the buyer review the inspection report and cancel if unsatisfied."},
+  {t:7,q:"A 'bump clause' (right of first refusal) allows the seller to:",o:["Back out if a better offer comes in","Accept a second offer contingent on the first buyer removing contingencies","Raise the price after acceptance","Waive the appraisal"],a:1,e:"A bump clause lets the seller accept a backup offer and notify the first buyer to remove contingencies within a set time or lose the deal."},
+  {t:7,q:"What happens to the buyer's deposit if they cancel within a valid contingency period?",o:["The seller keeps it","The buyer forfeits half","The buyer receives a full refund","The broker keeps it"],a:2,e:"If the buyer cancels within an active contingency period, they are entitled to a full refund of their deposit."},
+
+  // Topic 8 – Loan Qualifying
+  {t:8,q:"The front-end (housing) debt-to-income ratio compares:",o:["Total monthly debt to gross income","Monthly housing costs to gross monthly income","Net income to loan amount","Credit score to loan amount"],a:1,e:"The front-end DTI = monthly housing costs (PITI) ÷ gross monthly income."},
+  {t:8,q:"PITI stands for:",o:["Principal, Interest, Taxes, Insurance","Property, Interest, Title, Inspection","Principal, Income, Taxes, Insurance","Payment, Interest, Term, Index"],a:0,e:"PITI is the total monthly mortgage payment: Principal + Interest + Taxes + Insurance."},
+  {t:8,q:"A conventional loan generally requires a minimum credit score of:",o:["500","580","620","700"],a:2,e:"Most conventional loan programs require a minimum credit score of 620."},
+  {t:8,q:"Which ratio is the back-end DTI?",o:["Housing costs ÷ gross income","All monthly debt payments ÷ gross monthly income","Loan amount ÷ property value","Net income ÷ total debt"],a:1,e:"The back-end DTI includes all monthly debt obligations (housing + other debts) divided by gross monthly income."},
+  {t:8,q:"A borrower's gross monthly income is $8,000. A lender uses a 28% front-end ratio. Maximum monthly housing payment is:",o:["$1,600","$2,240","$2,800","$3,200"],a:1,e:"$8,000 × 0.28 = $2,240 maximum housing payment."},
+  {t:8,q:"Pre-approval differs from pre-qualification in that pre-approval:",o:["Is a verbal estimate only","Involves verified documentation and a credit check","Guarantees the loan","Is only for FHA loans"],a:1,e:"Pre-approval involves verified income, assets, and a hard credit pull — it carries more weight than pre-qualification."},
+  {t:8,q:"Which item is NOT typically used to verify income for loan qualification?",o:["W-2 forms","Tax returns","Bank statements","Vehicle registration"],a:3,e:"Vehicle registration does not verify income. Lenders use W-2s, tax returns, pay stubs, and bank statements."},
+
+  // Topic 9 – Financing Programs
+  {t:9,q:"An FHA loan is insured by:",o:["Fannie Mae","The Federal Housing Administration","Private mortgage companies","The VA"],a:1,e:"FHA loans are insured by the Federal Housing Administration, allowing lower down payments and credit scores."},
+  {t:9,q:"VA loans are available to:",o:["All first-time buyers","Eligible veterans, active-duty service members, and surviving spouses","Government employees only","Any buyer with good credit"],a:1,e:"VA loans are a benefit for eligible veterans and service members, offering no down payment and no PMI."},
+  {t:9,q:"A conventional loan conforming limit is set by:",o:["The FHA","FHFA (Federal Housing Finance Agency)","Individual lenders","The Federal Reserve"],a:1,e:"The FHFA sets the conforming loan limits that define conventional loans eligible for purchase by Fannie Mae/Freddie Mac."},
+  {t:9,q:"A 5/1 ARM means:",o:["5% rate fixed for 1 year","Fixed rate for 5 years, then adjusts annually","5 payments then balloon","Rate adjusts 5 times over 1 year"],a:1,e:"A 5/1 ARM has a fixed rate for the first 5 years, then adjusts every 1 year based on an index."},
+  {t:9,q:"Private Mortgage Insurance (PMI) is typically required when the down payment is:",o:["Less than 5%","Less than 20%","Less than 25%","Less than 10%"],a:1,e:"PMI is required on conventional loans when the buyer puts less than 20% down."},
+  {t:9,q:"A CalHFA loan is designed for:",o:["Commercial real estate investors","First-time homebuyers in California","Jumbo loan borrowers","Real estate developers"],a:1,e:"California Housing Finance Agency (CalHFA) programs help first-time homebuyers with down payment assistance and below-market rates."},
+  {t:9,q:"A hard money loan is typically characterized by:",o:["Low interest rates from banks","Short-term, high-interest loans secured by real property","Government-backed guarantees","Fixed 30-year terms"],a:1,e:"Hard money loans are short-term, asset-based loans from private lenders — common in fix-and-flip investing."},
+
+  // Topic 10 – Closing the Transaction
+  {t:10,q:"Proration in escrow means:",o:["Splitting the commission","Dividing ongoing costs like taxes and HOA fees between buyer and seller based on the closing date","Calculating the loan payoff","Adjusting the purchase price"],a:1,e:"Prorations fairly allocate ongoing expenses (taxes, HOA, rent) between buyer and seller at closing."},
+  {t:10,q:"Which document transfers title from seller to buyer?",o:["Deed of trust","Promissory note","Grant deed","Bill of sale"],a:2,e:"A grant deed (or quitclaim deed) transfers ownership of real property from seller to buyer."},
+  {t:10,q:"RESPA requires lenders to provide borrowers with a Loan Estimate within:",o:["1 day of application","3 business days of application","7 days of closing","10 days of application"],a:1,e:"Under RESPA/TRID, the Loan Estimate must be provided within 3 business days of receiving a complete loan application."},
+  {t:10,q:"Title insurance protects against:",o:["Future property damage","Defects in title that occurred before the purchase","HOA disputes","Market value decreases"],a:1,e:"Title insurance protects the buyer (and lender) against hidden title defects like liens, fraud, or recording errors from before closing."},
+  {t:10,q:"In California, escrow is considered closed when:",o:["Both parties sign the closing documents","The deed is recorded with the county","The funds are wired","The buyer receives the keys"],a:1,e:"Escrow closes — and ownership officially transfers — when the deed is recorded with the county recorder."},
+  {t:10,q:"The HUD-1 has been replaced for most transactions by the:",o:["Closing Disclosure (CD)","Loan Estimate","Good Faith Estimate","RESPA form"],a:0,e:"The Closing Disclosure (CD) replaced the HUD-1 Settlement Statement under the TRID rules effective 2015."},
+  {t:10,q:"A cloud on title refers to:",o:["A weather-related property issue","Any claim or encumbrance that may affect the owner's clear title","An HOA restriction","A zoning violation"],a:1,e:"A cloud on title is any outstanding claim, lien, or encumbrance that could challenge the owner's right to the property."},
+
+  // Topic 11 – Property Management
+  {t:11,q:"A property manager's PRIMARY duty is to:",o:["Maximize the owner's investment return","Keep tenants happy at all costs","Minimize vacancies regardless of rent level","Manage their own fees"],a:0,e:"The property manager is a fiduciary for the owner and must act to maximize the property's return on investment."},
+  {t:11,q:"In California, a landlord must give how much notice to raise rent by more than 10%?",o:["15 days","30 days","60 days","90 days"],a:2,e:"California law requires 60 days' notice for rent increases exceeding 10%."},
+  {t:11,q:"A security deposit for an unfurnished residential rental in California is limited to:",o:["One month's rent","Two months' rent","Three months' rent","No limit"],a:1,e:"California limits security deposits to 2 months' rent for unfurnished units (1 month for furnished units as of recent law changes — note: AB 12 reduced this to 1 month effective 2024)."},
+  {t:11,q:"The Gross Rent Multiplier (GRM) is calculated as:",o:["Purchase Price ÷ Annual Gross Rent","Annual NOI ÷ Cap Rate","Gross Rent ÷ Expenses","Purchase Price ÷ Monthly Rent"],a:0,e:"GRM = Purchase Price ÷ Annual Gross Rent. It's a quick way to compare income properties."},
+  {t:11,q:"Which lease type requires the tenant to pay some or all operating expenses?",o:["Gross lease","Net lease","Percentage lease","Month-to-month lease"],a:1,e:"In a net lease, the tenant pays base rent plus some or all of taxes, insurance, and maintenance costs."},
+  {t:11,q:"A capitalization rate (cap rate) is used to:",o:["Determine loan amounts","Estimate property value based on income","Calculate agent commissions","Set rental rates"],a:1,e:"Cap Rate = NOI ÷ Property Value. It's the primary tool for valuing income-producing properties."},
+  {t:11,q:"Under California's AB 1482, most residential tenants are entitled to:",o:["Free utilities","Just cause eviction protections and rent caps","First right of refusal to buy","Automatic lease renewals"],a:1,e:"AB 1482 (Tenant Protection Act of 2019) provides just cause eviction protections and limits annual rent increases for qualifying properties."},
+
+  // Topic 12 – Study Practice Exam (mixed)
+  {t:12,q:"An agent who represents neither the buyer nor the seller but facilitates the transaction is known as a:",o:["Dual agent","Transaction coordinator","Facilitator/Non-agent","Subagent"],a:2,e:"A facilitator or non-agent assists both parties without representing either — allowed in some states."},
+  {t:12,q:"The market value of a property is BEST defined as:",o:["The assessed value for tax purposes","The price a willing buyer and willing seller agree upon in an arm's length transaction","The appraised value plus 10%","The owner's asking price"],a:1,e:"Market value is the most probable price in a competitive and open market between knowledgeable, willing parties."},
+  {t:12,q:"Escheat refers to:",o:["An illegal transfer of property","Property reverting to the state when an owner dies without heirs or a will","A type of easement","Condemnation of a property"],a:1,e:"Escheat is the legal process by which property reverts to the government when there is no heir or valid will."},
+  {t:12,q:"A buyer who makes an offer subject to the sale of their current home is using a:",o:["Loan contingency","Sale contingency","Inspection contingency","Title contingency"],a:1,e:"A sale contingency makes the purchase conditional on the buyer successfully selling their existing property."},
+  {t:12,q:"Which type of deed offers the MOST protection to the buyer?",o:["Quitclaim deed","Grant deed","General warranty deed","Sheriff's deed"],a:2,e:"A general warranty deed provides the broadest protection, with the seller warranting title against all defects ever."},
+  {t:12,q:"The Sherman Antitrust Act prohibits real estate agents from:",o:["Using lockboxes without permission","Fixing commission rates by agreement among competitors","Advertising on multiple platforms","Representing buyers and sellers"],a:1,e:"Commission fixing between competing brokers is an antitrust violation — each agent must set rates independently."},
+  {t:12,q:"A lis pendens is a recorded notice that:",o:["The property is for sale","A lawsuit affecting the property is pending","The seller has paid off the mortgage","The property passed inspection"],a:1,e:"Lis pendens ('suit pending') is a recorded notice that warns potential buyers of pending litigation affecting the property."},
+  {t:12,q:"Depreciation for income property is calculated over how many years for tax purposes?",o:["15 years","27.5 years","39 years","50 years"],a:1,e:"Residential income property is depreciated over 27.5 years under IRS rules."},
+  {t:12,q:"An easement appurtenant benefits:",o:["A specific individual person","The dominant tenement (a neighboring parcel)","The government","The holder of a license"],a:1,e:"An easement appurtenant attaches to and benefits a dominant parcel — it runs with the land."},
+  {t:12,q:"Which is an example of functional obsolescence?",o:["A noisy highway nearby","A one-bathroom home in a market where buyers expect two","Roof damage from a storm","A neighborhood in decline"],a:1,e:"A one-bathroom home in a two-bathroom market suffers functional obsolescence — an internal feature buyers don't want."},
+
+  // Topic 13 – Final Exam (mixed)
+  {t:13,q:"A buyer's agent has a duty of loyalty to the buyer. This means the agent should:",o:["Disclose the buyer's maximum budget to the seller","Negotiate the best possible terms for the buyer","Split loyalty between buyer and seller","Prioritize the commission amount"],a:1,e:"Loyalty requires the agent to put the buyer's interests first, including negotiating the best possible terms."},
+  {t:13,q:"Under Proposition 13, property taxes in California are limited to an annual increase of:",o:["1%","2%","3%","5%"],a:1,e:"Prop 13 caps annual property tax increases at 2% of the assessed value."},
+  {t:13,q:"The term 'procuring cause' refers to:",o:["The reason a property was listed","The uninterrupted series of events that led to a completed sale","The agent who holds the listing","The buyer's lender"],a:1,e:"Procuring cause determines which agent earned the commission by being the unbroken causal link to the completed transaction."},
+  {t:13,q:"An option contract gives the buyer:",o:["The obligation to purchase","The right but not the obligation to purchase within a set period","Immediate ownership","An easement on the property"],a:1,e:"An option gives the buyer the right to purchase at a fixed price within a time period — but they are not obligated to do so."},
+  {t:13,q:"Which of the following is NOT a method of terminating a contract?",o:["Mutual rescission","Performance","Novation","Ratification"],a:3,e:"Ratification is the approval of a previously voidable act — it creates/confirms a contract, it does not terminate one."},
+  {t:13,q:"A 1031 exchange allows an investor to:",o:["Defer capital gains taxes by reinvesting in like-kind property","Avoid property taxes permanently","Exchange residential for commercial property tax-free forever","Sell without a real estate agent"],a:0,e:"IRC Section 1031 allows investors to defer capital gains taxes by rolling proceeds into a like-kind replacement property."},
+  {t:13,q:"An agent who advertises their services as free but collects undisclosed referral fees is guilty of:",o:["Puffery","Misrepresentation and a fiduciary breach","Blockbusting","Steering"],a:1,e:"Concealing referral fees or compensation from a client is a breach of fiduciary duty and potentially fraudulent misrepresentation."},
+  {t:13,q:"Which document does a buyer sign to acknowledge receipt of the Natural Hazard Disclosure?",o:["Purchase agreement","NHD acknowledgment within the TDS or as a separate form","Escrow instructions","Title report"],a:1,e:"The buyer signs an NHD acknowledgment confirming they received and reviewed the natural hazard disclosure report."},
+  {t:13,q:"A real estate license in California is issued by:",o:["The California Association of REALTORS®","The Department of Real Estate (DRE)","The Bureau of Real Estate Appraisers","The State Bar"],a:1,e:"The California Department of Real Estate (DRE) licenses and regulates real estate agents and brokers."},
+  {t:13,q:"The statute of frauds requires real estate contracts to be:",o:["Notarized","In writing","Filed with the county","Reviewed by an attorney"],a:1,e:"The statute of frauds requires real estate contracts (and leases over one year) to be in writing to be enforceable."}
+];
+const QB3 = [
+  // Topic 0 – Law Overview
+  {t:0,q:"Which body of law is created by elected legislatures and codified into statutes?",o:["A. Common law","B. Statutory law","C. Administrative law","D. Case law"],a:1,e:"Statutory law is enacted by Congress or state legislatures and codified in codes such as California's Business and Professions Code."},
+  {t:0,q:"California's real estate licensees are primarily governed by which code?",o:["A. California Civil Code","B. California Penal Code","C. California Business and Professions Code","D. California Health and Safety Code"],a:2,e:"The California Business and Professions Code, Division 4 (the Real Estate Law) governs real estate licensees, their conduct, and the DRE."},
+  {t:0,q:"Which of the following BEST describes common law?",o:["A. Laws passed by the state legislature","B. Regulations issued by government agencies","C. Legal principles developed through court decisions","D. Laws found in the California Civil Code"],a:2,e:"Common law (case law) consists of legal principles and precedents established by court decisions over time."},
+  {t:0,q:"The Statute of Frauds requires certain contracts to be:",o:["A. Notarized by a public official","B. In writing and signed by the party to be charged","C. Filed with the county recorder","D. Reviewed by an attorney"],a:1,e:"The Statute of Frauds requires real estate contracts (and leases over one year) to be in writing and signed to be enforceable."},
+  {t:0,q:"Administrative law in real estate is primarily created by:",o:["A. The California Supreme Court","B. The California Legislature","C. The California Department of Real Estate (DRE)","D. The National Association of REALTORS®"],a:2,e:"Administrative law consists of rules and regulations issued by agencies like the DRE to implement and enforce statutes."},
+  {t:0,q:"'Stare decisis' is a legal doctrine that means:",o:["A. Let the decision stand — courts follow established precedents","B. Each case must be decided on its unique facts alone","C. Statutes override all prior court rulings","D. Administrative rules supersede common law"],a:0,e:"Stare decisis (Latin: 'to stand by things decided') requires courts to follow established precedents for consistency and predictability."},
+  {t:0,q:"Which California code governs most aspects of real property ownership, transfers, and contracts?",o:["A. California Commercial Code","B. California Civil Code","C. California Government Code","D. California Labor Code"],a:1,e:"The California Civil Code covers property rights, contracts, obligations, and real property transactions including conveyances and liens."},
+
+  // Topic 1 – Characteristics of Real Property
+  {t:1,q:"Which physical characteristic of real estate means it cannot be relocated?",o:["A. Indestructibility","B. Non-homogeneity","C. Immobility","D. Scarcity"],a:2,e:"Immobility means each parcel of land has a fixed, permanent geographic location that cannot be moved."},
+  {t:1,q:"The economic characteristic of 'area preference' (also called situs) refers to:",o:["A. The physical size of a parcel","B. People's preference for a specific location or neighborhood","C. The price per square foot of land","D. A government zoning designation"],a:1,e:"Area preference (situs) reflects people's collective preference for certain locations, which drives demand and value."},
+  {t:1,q:"Scarcity as an economic characteristic of real estate means:",o:["A. All land is of poor quality","B. The supply of desirable land is limited","C. Land cannot be destroyed","D. No two parcels are identical"],a:1,e:"Scarcity refers to the limited supply of land, especially in desirable locations, which supports and sustains real estate value."},
+  {t:1,q:"Indestructibility as a physical characteristic of land means:",o:["A. Improvements can never be destroyed","B. The physical land itself cannot be annihilated","C. Real property cannot be seized by government","D. Land values never decline"],a:1,e:"Indestructibility (permanence) means the physical land itself persists — it cannot be destroyed, even though improvements can be."},
+  {t:1,q:"Non-homogeneity (uniqueness) of real estate means:",o:["A. Real estate values are always increasing","B. No two parcels of real estate are exactly alike","C. All land is regulated by the same zoning","D. Properties in the same area always sell for the same price"],a:1,e:"Every parcel is unique in location, soil, topography, and surrounding environment — no two properties are ever truly identical."},
+  {t:1,q:"The durability of improvements makes real estate:",o:["A. Immune from depreciation","B. A suitable short-term investment only","C. A long-term investment asset","D. Exempt from property taxes"],a:2,e:"The long life span of improvements (buildings, infrastructure) supports real estate's role as a durable, long-term investment."},
+  {t:1,q:"Which of the following is classified as real property?",o:["A. A portable shed on skids","B. A harvested crop removed from the land","C. A built-in swimming pool","D. A parked mobile home not on a permanent foundation"],a:2,e:"A built-in swimming pool is permanently attached to the land and meets the fixture test — it is classified as real property."},
+
+  // Topic 2 – Estates and Ownership
+  {t:2,q:"Fee simple absolute is best described as:",o:["A. Ownership limited by a life estate","B. The most complete form of ownership with no conditions","C. An ownership that reverts to the grantor if a condition is broken","D. A leasehold interest in commercial property"],a:1,e:"Fee simple absolute is the highest estate: unlimited duration, no conditions, and freely transferable."},
+  {t:2,q:"In joint tenancy, when one co-owner dies, their share:",o:["A. Passes to their heirs through probate","B. Is divided equally among all remaining co-owners","C. Automatically passes to the surviving joint tenants","D. Must be sold within 12 months"],a:2,e:"The right of survivorship is the defining feature of joint tenancy — the deceased's share passes automatically to the surviving co-owners."},
+  {t:2,q:"The four unities required to create a joint tenancy are:",o:["A. Time, Title, Interest, Possession","B. Location, Value, Duration, Ownership","C. Deed, Recording, Consideration, Acceptance","D. Agency, Financing, Escrow, Closing"],a:0,e:"Joint tenancy requires TTIP: Time (same acquisition), Title (same instrument), Interest (equal shares), Possession (same right to whole property)."},
+  {t:2,q:"Community property in California means:",o:["A. Property owned by a city or county","B. Each spouse owns an equal undivided half of property acquired during marriage","C. A co-op housing arrangement","D. Property held by a homeowners association"],a:1,e:"In California's community property system, each spouse owns an equal, undivided one-half interest in property acquired during the marriage."},
+  {t:2,q:"A life estate grants ownership:",o:["A. Indefinitely, like a fee simple","B. For a fixed term of years","C. Only for the duration of a specified person's life","D. Until the property is sold"],a:2,e:"A life estate is a freehold estate limited to the duration of the measuring life — it cannot be inherited by the life tenant's heirs."},
+  {t:2,q:"How does tenancy in common differ from joint tenancy?",o:["A. Tenants in common must all be married","B. Tenancy in common has no right of survivorship and allows unequal shares","C. Joint tenancy allows fractional interests only","D. Tenancy in common requires simultaneous acquisition"],a:1,e:"In tenancy in common, each co-owner's share passes to their heirs (no survivorship), and shares can be unequal."},
+  {t:2,q:"A leasehold estate gives the tenant:",o:["A. Fee simple title to the property","B. A permanent ownership interest","C. The right to possess property for a specific period","D. An ownership interest that passes to heirs"],a:2,e:"A leasehold estate is a non-freehold interest — the tenant has the right to possess and use the property for the lease term only."},
+
+  // Topic 3 – Land Use Control
+  {t:3,q:"Zoning ordinances are an exercise of the government's:",o:["A. Eminent domain power","B. Police power","C. Escheat power","D. Taxation power"],a:1,e:"Zoning is a police power — the government's authority to regulate land use to protect public health, safety, and welfare."},
+  {t:3,q:"A variance allows a property owner to:",o:["A. Change the zoning classification permanently","B. Deviate from strict zoning requirements due to undue hardship","C. Build without a building permit","D. Subdivide land without government approval"],a:1,e:"A variance grants relief from specific zoning requirements when strict enforcement causes undue hardship not created by the owner."},
+  {t:3,q:"Eminent domain allows the government to:",o:["A. Regulate land use through zoning","B. Take private property for public use with just compensation","C. Require developers to build affordable housing","D. Impose deed restrictions on land"],a:1,e:"Eminent domain (condemnation) is the government's inherent power to take private property for public use, with payment of just compensation."},
+  {t:3,q:"CC&Rs (Covenants, Conditions & Restrictions) are:",o:["A. Government-imposed zoning regulations","B. Lender requirements for mortgage approval","C. Private deed restrictions that run with the land","D. Temporary use permits"],a:2,e:"CC&Rs are private restrictions recorded in deeds or subdivision documents that bind all current and future owners of the affected parcels."},
+  {t:3,q:"A legal nonconforming use is a use that:",o:["A. Violates current zoning but was legally established before the zone change","B. Has never been permitted in the zone","C. Is always allowed to expand indefinitely","D. Must be terminated immediately when discovered"],a:0,e:"A legal nonconforming (grandfathered) use existed lawfully before a zoning change — it may continue but typically cannot be expanded."},
+  {t:3,q:"The Subdivision Map Act in California requires:",o:["A. Developers to pay a 10% sales tax","B. State and local government approval before land is divided and sold","C. All lots to be at least one acre","D. Subdivisions to be built within 2 years of approval"],a:1,e:"The Subdivision Map Act requires tentative and final map approval from local agencies before any division of land can be recorded and sold."},
+  {t:3,q:"A conditional use permit (CUP) is needed when:",o:["A. A property owner wants to repaint their house","B. A use is not ordinarily allowed in a zone but may be permitted under specific conditions","C. A tenant wants to sublet the property","D. The property is listed on the MLS"],a:1,e:"A CUP allows uses that would otherwise not be permitted in a zoning district, subject to conditions designed to mitigate their impact."},
+
+  // Topic 4 – Agency Law and Disclosure
+  {t:4,q:"In California, the Agency Disclosure form must be provided:",o:["A. At closing only","B. Before entering into a listing or buyer-broker agreement, or before presenting an offer","C. Only if dual agency is present","D. After the purchase contract is signed"],a:1,e:"California requires the agency disclosure (AD) form to be provided as early as practicable — before taking a listing or presenting an offer."},
+  {t:4,q:"The fiduciary duties owed to a principal are remembered by the acronym OLD CAR, which stands for:",o:["A. Obedience, Loyalty, Disclosure, Confidentiality, Accounting, Reasonable Care","B. Offer, Listing, Deed, Contract, Agency, Recording","C. Ownership, Leasehold, Disclosure, Commission, Agency, Representation","D. Obligation, License, Duty, Care, Accountability, Representation"],a:0,e:"OLD CAR: Obedience, Loyalty, Disclosure, Confidentiality, Accounting, and Reasonable Care — the six fiduciary duties."},
+  {t:4,q:"Undisclosed dual agency in California is:",o:["A. Allowed if the broker has years of experience","B. Required for commercial transactions","C. Illegal — both parties must give written informed consent","D. Permitted when only one agent is involved"],a:2,e:"Dual agency without the written informed consent of both buyer and seller is illegal in California."},
+  {t:4,q:"A buyer's agent owes the seller:",o:["A. Full fiduciary duties","B. Honesty, fair dealing, and disclosure of known material facts","C. No duties whatsoever","D. The same duties as the listing agent"],a:1,e:"While the buyer's agent owes full fiduciary duties only to the buyer, they owe the seller honesty, fair dealing, and disclosure of known material facts."},
+  {t:4,q:"Which of the following must always be disclosed to a buyer?",o:["A. The seller's asking-price motivation","B. The buyer's financial limit shared with their agent","C. Any material fact that could affect the property's value or desirability","D. The commission split between cooperating brokers"],a:2,e:"Material facts — anything that would affect a reasonable buyer's decision or the property's value — must always be disclosed."},
+  {t:4,q:"Agency by ratification occurs when a principal:",o:["A. Signs a listing agreement","B. Accepts and approves an agent's unauthorized act after the fact","C. Terminates an agency relationship","D. Pays a commission to an unlicensed person"],a:1,e:"Ratification creates an agency relationship retroactively when a principal accepts the results of an agent's previously unauthorized actions."},
+  {t:4,q:"The fiduciary duty of 'obedience' requires an agent to:",o:["A. Always agree with the client's opinions","B. Follow all lawful instructions from the principal, even if the agent disagrees","C. Obey court orders only","D. Disclose all personal financial information to the client"],a:1,e:"Obedience requires the agent to follow the principal's lawful instructions even if the agent personally disagrees — but never unlawful ones."},
+
+  // Topic 5 – Law of Contracts
+  {t:5,q:"Which of the following is NOT an essential element of a valid contract?",o:["A. Mutual consent (offer and acceptance)","B. Consideration","C. Notarization","D. Lawful object"],a:2,e:"Notarization is not required for contract validity — the essential elements are mutual consent, consideration, lawful object, and competent parties."},
+  {t:5,q:"A voidable contract is one that:",o:["A. Has no legal effect whatsoever","B. Can be affirmed or rescinded by one party (e.g., due to fraud or incapacity)","C. Is always cancelled by operation of law","D. Requires a court order to enforce"],a:1,e:"A voidable contract is valid until the injured party (e.g., a minor or fraud victim) elects to affirm or disaffirm it."},
+  {t:5,q:"Specific performance as a remedy for breach of contract means:",o:["A. The breaching party pays monetary damages","B. The contract is cancelled and both parties are released","C. The court compels the breaching party to fulfill the exact contract terms","D. The non-breaching party receives the deposit only"],a:2,e:"Specific performance is unique to real estate because each parcel is unique — money damages may be inadequate, so courts can compel performance."},
+  {t:5,q:"The Statute of Frauds requires that to be enforceable, contracts for the sale of real property must be:",o:["A. Witnessed by two people","B. Recorded at the county","C. In writing and signed by the party to be charged","D. Approved by a licensed attorney"],a:2,e:"The Statute of Frauds requires real estate sales contracts to be in writing and signed by the party against whom enforcement is sought."},
+  {t:5,q:"Consideration in a contract refers to:",o:["A. The physical condition of the property","B. The agent's commission","C. Something of value exchanged between parties","D. The care taken when signing the contract"],a:2,e:"Consideration is something of legal value exchanged by both parties — it may be money, a promise, an act, or forbearance."},
+  {t:5,q:"Mutual consent in a contract is also referred to as:",o:["A. Lawful object","B. Meeting of the minds — offer and acceptance","C. Adequate consideration","D. Promissory estoppel"],a:1,e:"Mutual consent — the 'meeting of the minds' — requires a valid offer and an unqualified acceptance of all terms."},
+  {t:5,q:"Novation replaces an existing contract with:",o:["A. A cash payment","B. A modified version of the same contract","C. A new contract that extinguishes the prior obligation","D. A court judgment"],a:2,e:"Novation substitutes a new contract (or a new party) for an old one, discharging the original obligation entirely."},
+
+  // Topic 6 – Relationship Agreements
+  {t:6,q:"An exclusive right-to-sell listing guarantees the broker a commission if:",o:["A. Only the broker produces the buyer","B. The property sells during the listing period, regardless of who finds the buyer","C. The seller cancels the listing before the end date","D. The buyer pays cash"],a:1,e:"With an exclusive right-to-sell, the broker earns a commission no matter who finds the buyer — even the seller themselves."},
+  {t:6,q:"Which listing type allows a seller to work with multiple brokers simultaneously?",o:["A. Exclusive right-to-sell","B. Exclusive agency","C. Open listing","D. Net listing"],a:2,e:"An open listing allows multiple brokers to compete — commission goes only to the broker who is the procuring cause of the sale."},
+  {t:6,q:"A protection period (safety clause) in a listing agreement protects the broker from:",o:["A. Market value declines","B. Sellers who use the broker's efforts and then sell to a known buyer after expiration","C. Buyers who back out of the deal","D. Title defects discovered after closing"],a:1,e:"The safety clause entitles the broker to a commission if the property sells to a buyer the broker introduced, within a set period after listing expiration."},
+  {t:6,q:"A net listing is generally regarded as:",o:["A. The most common listing type in California","B. Illegal in California due to conflict of interest","C. Required for land sales","D. Used only for commercial properties"],a:1,e:"Net listings are illegal in California because the broker's incentive to maximize their own net conflicts with the fiduciary duty to the seller."},
+  {t:6,q:"A buyer representation agreement establishes:",o:["A. The listing price of a property","B. The agency relationship, duties owed, and compensation for buyer representation","C. The terms of the purchase contract","D. The escrow instructions"],a:1,e:"A buyer-broker agreement formalizes the agency relationship between an agent and buyer, defining duties, exclusivity, and compensation."},
+  {t:6,q:"In California, a valid listing agreement MUST include:",o:["A. An automatic renewal clause","B. A definite commencement and termination date","C. A minimum commission of 6%","D. Notarization by both parties"],a:1,e:"California law requires listing agreements to have a definite end date — automatic renewal clauses are not permitted in exclusive listings."},
+  {t:6,q:"An exclusive agency listing differs from an exclusive right-to-sell in that:",o:["A. Multiple brokers may be used simultaneously","B. The seller may sell directly without owing the broker a commission","C. No commission is ever required","D. The broker controls all advertising exclusively"],a:1,e:"In an exclusive agency, the broker earns a commission unless the seller finds the buyer themselves — the seller retains the right to sell directly."},
+
+  // Topic 7 – Sale and Lease Contracts
+  {t:7,q:"An option contract gives the optionee (buyer):",o:["A. The obligation to purchase the property","B. The right but not the obligation to purchase at a fixed price within a set period","C. Immediate title to the property","D. An easement over the property"],a:1,e:"An option is a unilateral contract — the seller is bound, but the buyer can choose whether or not to exercise the option."},
+  {t:7,q:"A gross lease requires:",o:["A. The tenant to pay all operating expenses","B. The landlord to pay most or all property operating expenses","C. Annual rent increases tied to the CPI","D. The tenant to pay a percentage of business revenue"],a:1,e:"In a gross lease, the landlord collects a flat rent and pays the property's operating expenses (taxes, insurance, maintenance)."},
+  {t:7,q:"Under a triple-net (NNN) lease, the tenant pays:",o:["A. Base rent only","B. Base rent plus property taxes, insurance, and maintenance costs","C. A percentage of gross sales only","D. Rent only during profitable months"],a:1,e:"A NNN lease requires the tenant to pay base rent plus all three nets: property taxes, insurance, and maintenance/repair costs."},
+  {t:7,q:"A lease with a term longer than one year must be:",o:["A. Recorded at the county","B. In writing to be enforceable under the Statute of Frauds","C. Approved by a licensed attorney","D. Filed with the DRE"],a:1,e:"The Statute of Frauds requires leases for more than one year to be in writing and signed to be enforceable."},
+  {t:7,q:"A right of first refusal in a lease gives the tenant:",o:["A. The right to purchase the property immediately at any time","B. The right to match any purchase offer before the property is sold to another","C. Priority over other tenants for new leases","D. The right to cancel the lease at any time without penalty"],a:1,e:"A right of first refusal (ROFR) lets the holder match any bona fide third-party offer before the seller can accept it."},
+  {t:7,q:"A percentage lease is most commonly used in:",o:["A. Single-family residential rentals","B. Ground leases on raw land","C. Retail and commercial properties","D. Agricultural leases"],a:2,e:"Percentage leases are common in retail — the tenant pays base rent plus a percentage of gross sales above a natural breakpoint."},
+  {t:7,q:"A sale-leaseback arrangement occurs when:",o:["A. A property is listed for sale and rent simultaneously","B. The owner sells the property and simultaneously leases it back from the buyer","C. A lender sells the loan and leases the collateral","D. A tenant purchases the building from the landlord"],a:1,e:"In a sale-leaseback, a business sells its property to an investor and immediately leases it back, converting equity to working capital while retaining occupancy."},
+
+  // Topic 8 – Conveyances and Disclosures
+  {t:8,q:"A grant deed in California contains which implied covenants?",o:["A. The grantor guarantees title against all future claims forever","B. The grantor has not previously conveyed the property and title is free from undisclosed encumbrances made by the grantor","C. The property is free of all physical defects","D. The grantee receives an absolute warranty of title"],a:1,e:"A grant deed implies: (1) the grantor has not previously conveyed the property, and (2) title is free from undisclosed encumbrances made by the grantor."},
+  {t:8,q:"A quitclaim deed is most commonly used for:",o:["A. Standard residential purchase transactions","B. Clearing a title cloud or transferring between family members","C. Conveying a warranty of clear title","D. Bank-owned (REO) property sales"],a:1,e:"Quitclaim deeds are ideal when the grantor's interest is uncertain or to remove a possible claim — they make no warranties about title quality."},
+  {t:8,q:"Recording a deed provides:",o:["A. Physical delivery of title to the grantee","B. Constructive notice to the world of the transfer","C. Automatic title insurance coverage","D. Legal validity of the deed between grantor and grantee"],a:1,e:"Recording provides constructive notice — the public is legally presumed to know of any interest that has been properly recorded."},
+  {t:8,q:"The Transfer Disclosure Statement (TDS) is required for sales of:",o:["A. All real property in California","B. Commercial properties only","C. Residential property with 1 to 4 units","D. Properties valued over $500,000"],a:2,e:"California Civil Code requires a TDS for residential property (1–4 units) — the seller must disclose all known material facts about the property."},
+  {t:8,q:"The Natural Hazard Disclosure (NHD) report informs buyers of:",o:["A. Property tax assessment history","B. Flood, fire, earthquake, and other natural hazard zones affecting the property","C. HOA bylaws and rules","D. School district assignments"],a:1,e:"The NHD discloses whether the property lies within a designated natural hazard zone, such as a FEMA flood zone or state fire hazard severity zone."},
+  {t:8,q:"A material fact that must be disclosed includes:",o:["A. The seller's personal reason for moving","B. The buyer's pre-approval loan amount","C. A leaking roof that the seller is aware of","D. The commission rate charged by the listing agent"],a:2,e:"Material facts are facts that would affect the value or desirability of the property — a known leaking roof is a classic example."},
+  {t:8,q:"Legal title passes from seller to buyer when:",o:["A. The purchase contract is signed by both parties","B. The buyer's loan is approved by the lender","C. The deed is delivered and accepted by the grantee","D. The property is recorded at the county"],a:2,e:"Legal title transfers upon delivery of the deed by the grantor with intent to pass title and acceptance by the grantee."},
+
+  // Topic 9 – Liens and Encumbrances
+  {t:9,q:"A specific lien attaches only to:",o:["A. All property owned by the debtor statewide","B. A specific parcel of real property","C. Personal property of the debtor","D. All property in the county where filed"],a:1,e:"A specific lien (e.g., mortgage or property tax lien) attaches only to a particular described property, unlike a general lien."},
+  {t:9,q:"In California, the instrument used to pledge real property as security for a loan involves three parties and is called:",o:["A. A mortgage","B. A promissory note","C. A deed of trust","D. A land contract"],a:2,e:"California primarily uses deeds of trust: the trustor (borrower), trustee (neutral third party), and beneficiary (lender)."},
+  {t:9,q:"A mechanic's lien can be filed by:",o:["A. Only licensed general contractors","B. Any person who provided labor or materials to improve real property and was not paid","C. The property owner only","D. County assessors for unpaid taxes"],a:1,e:"California's mechanic's lien law allows contractors, subcontractors, laborers, and materials suppliers to lien a property for non-payment."},
+  {t:9,q:"A judgment lien is a:",o:["A. Voluntary lien on a specific property","B. Specific lien on the judgment debtor's vehicles","C. General lien on all real property the debtor owns in the county where recorded","D. Lien on the judgment debtor's bank accounts only"],a:2,e:"A recorded court judgment becomes a general lien on all real property the judgment debtor owns or later acquires in that county."},
+  {t:9,q:"An easement appurtenant:",o:["A. Belongs to a specific individual and is extinguished at their death","B. Attaches to the dominant tenement and transfers automatically when the land is sold","C. Is a temporary permission to use land that can be revoked","D. Requires renewal every 10 years to remain valid"],a:1,e:"An easement appurtenant runs with the land — it benefits the dominant estate and automatically transfers to any new owner of that parcel."},
+  {t:9,q:"Subordination in real estate means:",o:["A. A junior lien is paid off first at foreclosure","B. A senior lienholder agrees to allow a newer lien to have higher priority","C. A lien is automatically removed after 10 years","D. The lender demands full repayment immediately upon default"],a:1,e:"A subordination agreement allows a lender to accept a lower lien position — common when refinancing so the new first mortgage takes priority."},
+  {t:9,q:"Property tax liens in California are classified as:",o:["A. Voluntary and general","B. Involuntary and general","C. Involuntary and specific","D. Voluntary and specific"],a:2,e:"Property tax liens are involuntary (not created by the owner's consent) and specific (attach only to the taxed property)."},
+
+  // Topic 10 – Finance and Financing Laws
+  {t:10,q:"RESPA (Real Estate Settlement Procedures Act) primarily prohibits:",o:["A. Adjustable-rate mortgages for first-time buyers","B. Kickbacks and unearned fees among settlement service providers","C. Down payments below 20% on conventional loans","D. All prepayment penalties on residential loans"],a:1,e:"RESPA bans kickbacks, fee-splitting, and unearned charges in federally related mortgage transactions to reduce consumer closing costs."},
+  {t:10,q:"Regulation Z, enacted under the Truth in Lending Act (TILA), requires lenders to disclose the:",o:["A. Appraised value of the property","B. Borrower's credit score to the applicant","C. Annual Percentage Rate (APR) and total cost of borrowing","D. Lender's internal profit margin"],a:2,e:"Regulation Z requires disclosure of the APR (which includes fees and charges) so borrowers can compare loan costs accurately."},
+  {t:10,q:"Under TRID (TILA-RESPA Integrated Disclosure), the Closing Disclosure must be provided to the borrower at least:",o:["A. 1 business day before closing","B. 3 business days before consummation","C. 7 business days before closing","D. 10 calendar days before closing"],a:1,e:"TRID requires the Closing Disclosure to be delivered at least 3 business days before loan consummation so borrowers can review final costs."},
+  {t:10,q:"The Equal Credit Opportunity Act (ECOA) prohibits lenders from discriminating based on:",o:["A. Credit score or debt-to-income ratio","B. Race, sex, religion, national origin, age, or marital status","C. Employment history or income level","D. Down payment amount or property location"],a:1,e:"ECOA prohibits credit discrimination based on protected characteristics — lenders must evaluate applications on financial merit alone."},
+  {t:10,q:"HMDA (Home Mortgage Disclosure Act) requires lenders to:",o:["A. Offer loans to all applicants regardless of credit","B. Collect and publicly report data on mortgage applications to identify lending patterns","C. Hire minority loan officers in proportion to demographics","D. Set maximum interest rates for all residential loans"],a:1,e:"HMDA requires financial institutions to report loan application data (including demographics) to help regulators detect discriminatory lending."},
+  {t:10,q:"A prepayment penalty is a fee charged when:",o:["A. The buyer makes a late mortgage payment","B. The borrower pays off the loan before the scheduled term ends","C. The lender unilaterally increases the interest rate","D. The property fails to appraise at the purchase price"],a:1,e:"A prepayment penalty compensates the lender for lost interest income when a borrower pays off or significantly reduces the loan early."},
+  {t:10,q:"The Community Reinvestment Act (CRA) requires banks to:",o:["A. Charge equal interest rates to all borrowers","B. Make loans only within their home state","C. Meet the credit needs of all communities they serve, including low- and moderate-income areas","D. Offer only fixed-rate mortgages to first-time buyers"],a:2,e:"The CRA was enacted to prevent redlining by encouraging banks to lend equitably across all income levels in their designated service areas."},
+
+  // Topic 11 – Escrow and Closings
+  {t:11,q:"In a California real estate transaction, escrow is considered legally closed when:",o:["A. Both parties sign the closing documents","B. The buyer's funds are wired to escrow","C. The deed is recorded with the county recorder","D. The buyer receives the keys to the property"],a:2,e:"In California, title officially transfers — and escrow is legally closed — when the grant deed is recorded with the county recorder."},
+  {t:11,q:"Proration at closing means:",o:["A. Calculating the broker's commission split","B. Dividing ongoing costs (taxes, HOA, rent) between buyer and seller based on the closing date","C. Splitting escrow fees equally between parties","D. Adjusting the purchase price for inspection repairs"],a:1,e:"Prorations ensure each party pays only for their period of ownership — costs are divided as of the closing date."},
+  {t:11,q:"A preliminary title report discloses:",o:["A. The property's structural and physical condition","B. The current state of title including liens, easements, and encumbrances","C. The buyer's creditworthiness and debt ratios","D. The escrow officer's fee schedule"],a:1,e:"The preliminary report (prelim) shows all recorded matters affecting title so the parties can review and address issues before closing."},
+  {t:11,q:"Under RESPA/TRID, the Loan Estimate must be provided to the borrower within:",o:["A. 1 business day of application","B. 3 business days of receiving a complete loan application","C. 7 days of the purchase contract date","D. 10 business days of the appraisal completion"],a:1,e:"TRID requires lenders to deliver the Loan Estimate within 3 business days of receiving a complete mortgage application."},
+  {t:11,q:"An impound (escrow) account held by a lender is used to:",o:["A. Hold the buyer's down payment until closing","B. Collect and pay property taxes and insurance on the borrower's behalf","C. Escrow the earnest money deposit during the contract period","D. Fund the broker's commission at closing"],a:1,e:"Lender impound accounts collect a monthly portion of property taxes and insurance premiums so the lender can pay them directly when due."},
+  {t:11,q:"Lender's title insurance (ALTA policy) protects against:",o:["A. Physical damage to the property after purchase","B. Title defects that arose before the current transaction","C. Future zoning changes affecting the property","D. The buyer's default on the loan"],a:1,e:"Lender's title insurance protects the lender's lien position against pre-existing title defects not discovered in the title search."},
+  {t:11,q:"When property taxes have been prepaid by the seller and escrow closes mid-year, the:",o:["A. Buyer credits the seller for the unused prepaid portion","B. Buyer receives a credit from the lender","C. Taxes are refunded directly by the county","D. Both parties pay equal amounts regardless of the closing date"],a:0,e:"If the seller prepaid taxes beyond the close date, the buyer reimburses the seller for the unused portion — shown as a seller credit on the settlement statement."},
+
+  // Topic 12 – Fair Housing Laws
+  {t:12,q:"The federal Fair Housing Act of 1968 originally prohibited discrimination based on:",o:["A. Race, color, national origin, and religion","B. Race, color, national origin, religion, sex, familial status, and disability","C. Income level, age, and sexual orientation","D. Race and national origin only"],a:0,e:"The original 1968 Act covered race, color, national origin, and religion. Amendments added sex (1974), familial status and disability (1988)."},
+  {t:12,q:"Under the Fair Housing Act, 'familial status' protection means landlords generally cannot:",o:["A. Require a minimum income from applicants","B. Refuse to rent to families with children under 18","C. Require a credit and background check","D. Set any occupancy limits on a unit"],a:1,e:"Familial status protects families with children under 18 from being refused housing — though reasonable, non-discriminatory occupancy standards may still apply."},
+  {t:12,q:"Steering in real estate refers to:",o:["A. Driving clients to property showings","B. Directing buyers toward or away from neighborhoods based on protected class characteristics","C. A marketing technique focused on luxury homebuyers","D. Negotiating the purchase price on behalf of a client"],a:1,e:"Steering is illegal — it guides buyers based on race, religion, or other protected characteristics rather than their stated needs and preferences."},
+  {t:12,q:"The 'Mrs. Murphy' exemption to the Fair Housing Act applies to:",o:["A. Any sale or rental conducted without a real estate broker","B. Owner-occupied buildings of 4 or fewer units, where no broker is used and no discriminatory advertising is made","C. All commercial property transactions","D. Properties sold through foreclosure or probate"],a:1,e:"The Mrs. Murphy exemption allows owner-occupants of small buildings (1–4 units) some latitude, but only when no broker is involved and no discriminatory ads are used."},
+  {t:12,q:"Blockbusting is illegal because it:",o:["A. Prevents agents from marketing to specific neighborhoods","B. Induces property owners to sell by exploiting fears about protected class changes in the neighborhood","C. Requires agents to disclose neighborhood demographics to buyers","D. Restricts an agent's ability to show properties in certain areas"],a:1,e:"Blockbusting (panic peddling) manipulates owners by suggesting neighborhood demographics are changing, causing panic sales — it is a federal Fair Housing violation."},
+  {t:12,q:"Redlining refers to the illegal practice of:",o:["A. Using red ink to mark parcel boundaries on a plat map","B. Refusing to make loans or provide insurance in certain neighborhoods based on racial composition","C. Drawing attendance boundaries for public schools","D. Marking properties with liens in the title report"],a:1,e:"Redlining is the discriminatory denial of financial services (loans, insurance) to entire neighborhoods based on their racial or ethnic composition."},
+  {t:12,q:"Under the ADA, a landlord of a commercial place of public accommodation must:",o:["A. Sell the property to any disabled applicant at market rate","B. Remove physical barriers to access where readily achievable","C. Charge lower rent to disabled tenants","D. Provide a personal assistant to all disabled employees"],a:1,e:"The ADA requires removal of barriers in places of public accommodation where it is readily achievable — to ensure equal access for people with disabilities."},
+
+  // Topic 13 – Landlord and Tenant Relations
+  {t:13,q:"Under California AB 1482 (Tenant Protection Act of 2019), annual rent increases for covered units are capped at:",o:["A. 3% per year flat","B. Local CPI only, with no floor","C. 5% plus local CPI, not to exceed 10% total","D. 10% regardless of CPI"],a:2,e:"AB 1482 caps annual rent increases on covered units at 5% + local CPI, with a 10% maximum, providing statewide rent stabilization for qualifying properties."},
+  {t:13,q:"In California, the maximum security deposit for an unfurnished residential rental unit is:",o:["A. One month's rent","B. Two months' rent","C. Three months' rent","D. Four months' rent"],a:1,e:"California Civil Code limits security deposits for unfurnished residential units to no more than two months' rent."},
+  {t:13,q:"A landlord in California must return a security deposit within:",o:["A. 14 days after the tenant vacates","B. 21 days after the tenant vacates","C. 30 days of the lease end date","D. 60 days of receiving written vacate notice"],a:1,e:"California Civil Code §1950.5 requires landlords to return the deposit (or an itemized statement of deductions) within 21 calendar days after the tenant vacates."},
+  {t:13,q:"Unlawful detainer is the legal process used to:",o:["A. Recover unpaid rent from a former tenant in small claims court","B. Evict a tenant who remains in possession without the legal right to do so","C. Report a tenant's nonpayment to a credit bureau","D. Terminate a lease early without cause outside the court system"],a:1,e:"An unlawful detainer (UD) action is the summary legal proceeding a California landlord must use to regain possession from a holdover or defaulting tenant."},
+  {t:13,q:"The implied warranty of habitability in California requires landlords to:",o:["A. Keep rent below market rate for long-term tenants","B. Maintain the rental unit in a livable, safe, and sanitary condition","C. Allow tenants to sublet without prior approval","D. Provide furniture and appliances in all rental units"],a:1,e:"California's implied warranty of habitability (Civil Code §1941) requires landlords to keep rental units safe, clean, and suitable for human habitation throughout the tenancy."},
+  {t:13,q:"A California landlord terminating a month-to-month tenancy must generally give:",o:["A. 10 days' written notice","B. 30 days' notice (or 60 days if tenant has lived there 1+ year)","C. 90 days' notice in all cases","D. No notice is required after the lease term has expired"],a:1,e:"California requires 30 days' notice for tenants in possession less than one year, and 60 days' notice for tenants of one year or more."},
+  {t:13,q:"Constructive eviction occurs when:",o:["A. The landlord provides formal written notice of eviction proceedings","B. The landlord's actions or neglect make the property uninhabitable, forcing the tenant to leave","C. A tenant is removed by a court order after an unlawful detainer judgment","D. A tenant abandons the property and stops paying rent voluntarily"],a:1,e:"Constructive eviction occurs when landlord conduct (or inaction) so severely deprives the tenant of quiet enjoyment that the tenant is effectively forced to vacate."},
+
+  // Topic 14 – Licensing and Regulations
+  {t:14,q:"To obtain a California real estate salesperson license, an applicant must complete:",o:["A. 45 hours of pre-license education and pass the state exam","B. 135 hours of DRE-approved courses and pass the state exam","C. 200 hours of education and pass a background check only","D. An apprenticeship under a licensed broker for 2 years"],a:1,e:"California requires 135 hours of pre-license education (Real Estate Principles, Practice, and one elective) plus passing the DRE state exam."},
+  {t:14,q:"A California real estate broker license requires, among other things:",o:["A. 45 hours of coursework and 1 year of experience","B. A college degree in business or finance","C. At least 2 years of full-time salesperson experience and 8 statutory college-level real estate courses","D. Passing the salesperson exam a second time at broker level"],a:2,e:"Broker applicants must have 2 years of full-time licensed salesperson experience (or equivalent) and complete 8 statutory college-level real estate courses."},
+  {t:14,q:"The California Department of Real Estate (DRE) is primarily responsible for:",o:["A. Setting commission rates for all California real estate transactions","B. Licensing and regulating real estate licensees, subdivisions, and certain real estate businesses","C. Appraising all properties sold in California","D. Managing California's multiple listing service (MLS) systems"],a:1,e:"The DRE licenses agents and brokers, enforces the Real Estate Law, approves subdivisions, and protects the public from fraud in real estate transactions."},
+  {t:14,q:"Continuing education for California license renewal requires:",o:["A. 20 hours every 2 years","B. 30 hours every 4 years","C. 45 hours every 4 years","D. 60 hours every 5 years"],a:2,e:"California licensees must complete 45 clock hours of DRE-approved continuing education every 4 years to renew their license."},
+  {t:14,q:"A real estate licensee acting as a principal (buying or selling for their own account) must:",o:["A. Pay double the normal commission to their broker","B. Disclose their licensed status to the other party","C. Obtain a special permit from the DRE","D. Use a licensed attorney to represent them in the transaction"],a:1,e:"Whenever a licensee has a financial interest in a transaction, they must disclose their licensed status to all parties to avoid any conflict of interest."},
+  {t:14,q:"Which action would most likely result in license suspension or revocation by the DRE?",o:["A. Failing to close a sale due to unfavorable market conditions","B. Misrepresentation or fraud in a real estate transaction","C. Advertising on social media without a disclaimer","D. Representing a buyer without a signed buyer-broker agreement"],a:1,e:"Fraud, misrepresentation, dishonest dealing, and moral turpitude are all grounds for DRE disciplinary action including license suspension or revocation."},
+  {t:14,q:"An unlicensed person who performs acts requiring a real estate license is subject to:",o:["A. A written warning from the DRE only","B. Criminal prosecution and denial of any compensation for services rendered","C. Suspension of future license applications for 1 year only","D. A civil fine of $100 per transaction"],a:1,e:"Practicing real estate without a license in California is a criminal misdemeanor — the unlicensed person is also barred from collecting any compensation."}
+];
 const LEVELS = [{lvl:1,title:"Open House Visitor",xp:0},{lvl:2,title:"Prospective Buyer",xp:150},{lvl:3,title:"First-Time Buyer",xp:350},{lvl:4,title:"Licensed Salesperson",xp:700},{lvl:5,title:"Junior Agent",xp:1200},{lvl:6,title:"Seasoned Agent",xp:2000},{lvl:7,title:"Lead Negotiator",xp:3200},{lvl:8,title:"Senior Broker",xp:5000},{lvl:9,title:"Branch Director",xp:7500},{lvl:10,title:"Regional Manager",xp:11000},{lvl:11,title:"Real Estate Investor",xp:16000},{lvl:12,title:"Property Mogul",xp:22000}];
 const BADGES_DEF = [
   {id:"first_correct",name:"First Step",desc:"Answer your first question correctly",icon:"★"},
@@ -1112,15 +1486,33 @@ QB.push(
 );
 
 // ═══════════════════════════════════════════
+// FIREBASE CONFIG — replace with your values
+// ═══════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyBvDJQdfbSN3sNuS7LGAFIFYh9jzEnDuQE",
+  authDomain: "real-perp-academy.firebaseapp.com",
+  projectId: "real-perp-academy",
+  storageBucket: "real-perp-academy.firebasestorage.app",
+  messagingSenderId: "632198712519",
+  appId: "1:632198712519:web:31f9881467ff90d8b0c2e2",
+  measurementId: "G-7TBL8YT62G"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// ═══════════════════════════════════════════
+// STRIPE PUBLISHABLE KEY — replace with yours
+// ═══════════════════════════════════════════
+const STRIPE_PUBLISHABLE_KEY = 'pk_test_51TEwElRRuCK2Q2RMYxVbr5Ht5uEW07sxy6YalOs6Pm0fXkg7ogiwZaDoaRqHwsRLaE5T2IRBgWjX7Sx7RVMjWO9K00AFF8Pusg';
+
+// ═══════════════════════════════════════════
 // AUTH SYSTEM
 // ═══════════════════════════════════════════
-const ACCOUNTS_KEY='realprep_accounts';
-const SESSION_KEY='realprep_session';
-let currentUser=null;
+let currentUser = null;
+let currentUserPlan = 'free';
 
-function getAccounts(){try{return JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'{}');}catch(e){return{};}}
-function saveAccounts(a){localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(a));}
-function getSaveKey(username){return'realprep_v3_'+username;}
+function getSaveKey(uid){ return 'realprep_v3_' + uid; }
 
 function showLoginTab(tab){
   document.getElementById('tab-signin').classList.toggle('active',tab==='signin');
@@ -1131,55 +1523,80 @@ function showLoginTab(tab){
   document.getElementById('reg-error').classList.remove('show');
 }
 
-function doSignIn(){
-  const user=document.getElementById('si-user').value.trim().toLowerCase();
-  const pass=document.getElementById('si-pass').value;
-  const err=document.getElementById('si-error');
+async function doSignIn(){
+  const email = document.getElementById('si-email').value.trim();
+  const pass = document.getElementById('si-pass').value;
+  const err = document.getElementById('si-error');
   err.classList.remove('show');
-  if(!user||!pass){err.textContent='Please enter your username and password.';err.classList.add('show');return;}
-  const accounts=getAccounts();
-  if(!accounts[user]||accounts[user].password!==btoa(pass)){err.textContent='Username or password is incorrect.';err.classList.add('show');return;}
-  loginAs(user,accounts[user].name);
+  if(!email||!pass){err.textContent='Please enter your email and password.';err.classList.add('show');return;}
+  try{
+    await auth.signInWithEmailAndPassword(email, pass);
+  } catch(e){
+    err.textContent = e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found'
+      ? 'Email or password is incorrect.' : e.message;
+    err.classList.add('show');
+  }
 }
 
-function doRegister(){
-  const name=document.getElementById('reg-name').value.trim();
-  const user=document.getElementById('reg-user').value.trim().toLowerCase();
-  const pass=document.getElementById('reg-pass').value;
-  const pass2=document.getElementById('reg-pass2').value;
-  const err=document.getElementById('reg-error');
+async function doRegister(){
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const user = document.getElementById('reg-user').value.trim().toLowerCase();
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  const err = document.getElementById('reg-error');
   err.classList.remove('show');
-  if(!name||!user||!pass){err.textContent='Please fill in all fields.';err.classList.add('show');return;}
+  if(!name||!email||!user||!pass){err.textContent='Please fill in all fields.';err.classList.add('show');return;}
   if(user.length<3){err.textContent='Username must be at least 3 characters.';err.classList.add('show');return;}
   if(pass.length<6){err.textContent='Password must be at least 6 characters.';err.classList.add('show');return;}
   if(pass!==pass2){err.textContent='Passwords do not match.';err.classList.add('show');return;}
   if(!/^[a-z0-9_]+$/.test(user)){err.textContent='Username can only contain letters, numbers, and underscores.';err.classList.add('show');return;}
-  const accounts=getAccounts();
-  if(accounts[user]){err.textContent='That username is already taken.';err.classList.add('show');return;}
-  accounts[user]={name,password:btoa(pass),created:new Date().toISOString()};
-  saveAccounts(accounts);
-  loginAs(user,name);
+  try{
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    await cred.user.updateProfile({ displayName: name });
+    await db.doc('users/' + cred.user.uid).set({
+      username: user, name, email, plan: 'free', created: new Date().toISOString()
+    });
+  } catch(e){
+    err.textContent = e.code === 'auth/email-already-in-use'
+      ? 'An account with that email already exists.' : e.message;
+    err.classList.add('show');
+  }
 }
 
-function loginAs(username,name){
-  currentUser=username;
-  localStorage.setItem(SESSION_KEY,username);
-  const saveKey=getSaveKey(username);
-  try{const raw=localStorage.getItem(saveKey);SAVE=raw?Object.assign(defaultSave(),JSON.parse(raw)):defaultSave();}
-  catch(e){SAVE=defaultSave();}
-  const greet=document.getElementById('hdr-user-greeting');
-  if(greet)greet.innerHTML=`<span style="color:var(--text-dim);">Hi,</span>&nbsp;${name.split(' ')[0]}`;
+async function loginAs(firebaseUser){
+  currentUser = firebaseUser.uid;
+  const docSnap = await db.doc('users/' + firebaseUser.uid).get();
+  const userData = docSnap.exists ? docSnap.data() : {};
+  currentUserPlan = userData.plan || 'free';
+  const displayName = firebaseUser.displayName || userData.name || 'Student';
+
+  const saveKey = getSaveKey(currentUser);
+  try{ const raw=localStorage.getItem(saveKey); SAVE=raw?Object.assign(defaultSave(),JSON.parse(raw)):defaultSave(); }
+  catch(e){ SAVE=defaultSave(); }
+
+  const greet = document.getElementById('hdr-user-greeting');
+  if(greet) greet.innerHTML = `<span style="color:var(--text-dim);">Hi,</span>&nbsp;${displayName.split(' ')[0]}`;
   document.getElementById('login-screen').classList.add('hidden');
-  checkDailyStreak();persist(SAVE);
-  updateHeader();updateReadinessUI();
+  updatePlanUI();
+  checkDailyStreak(); persist(SAVE);
+  updateHeader(); updateReadinessUI();
+
+  // Handle Stripe payment redirect
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('payment') === 'success'){
+    history.replaceState(null,'',window.location.pathname);
+    if(currentUserPlan !== 'premium') pollForPremium();
+    else showPremiumActivated();
+  }
 }
 
 function doLogout(){
-  localStorage.removeItem(SESSION_KEY);
-  currentUser=null;SAVE=defaultSave();
+  auth.signOut();
+  currentUser = null; currentUserPlan = 'free'; SAVE = defaultSave();
   document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('si-user').value='';
-  document.getElementById('si-pass').value='';
+  document.getElementById('si-email').value = '';
+  document.getElementById('si-pass').value = '';
   document.getElementById('si-error').classList.remove('show');
   showLoginTab('signin');
 }
@@ -1188,6 +1605,150 @@ function doLogout(){
 function persist(d){
   if(!currentUser)return;
   try{localStorage.setItem(getSaveKey(currentUser),JSON.stringify(d));}catch(e){}
+}
+
+// Firebase auth state listener — replaces the localStorage session check
+auth.onAuthStateChanged(user => {
+  if(user){ loginAs(user); }
+  else { document.getElementById('login-screen').classList.remove('hidden'); }
+});
+
+// ═══════════════════════════════════════════
+// PLAN / UPGRADE SYSTEM
+// ═══════════════════════════════════════════
+function updatePlanUI(){
+  const isPremium = currentUserPlan === 'premium';
+  const upgradeBtn = document.getElementById('hdr-upgrade-btn');
+  if(upgradeBtn) upgradeBtn.style.display = isPremium ? 'none' : '';
+
+  const mod2 = document.getElementById('module-2-card');
+  const mod3 = document.getElementById('module-3-card');
+  if(isPremium){
+    [mod2, mod3].forEach(el => {
+      if(el){ el.classList.remove('locked'); }
+    });
+    const b2 = document.getElementById('mod2-badge');
+    if(b2){ b2.outerHTML = '<button class="btn btn-gold" onclick="handleLockedModule(2)">Start Practice</button>'; }
+    const b3 = document.getElementById('mod3-badge');
+    if(b3){ b3.outerHTML = '<button class="btn btn-gold" onclick="handleLockedModule(3)">Start Practice</button>'; }
+  }
+  const cancelSection = document.getElementById('cancel-sub-section');
+  if(cancelSection) cancelSection.style.display = isPremium ? '' : 'none';
+}
+
+function handleLockedModule(moduleNum){
+  if(currentUserPlan !== 'premium'){ showUpgrade(); return; }
+  if(moduleNum === 2){ showTopicSelect2(); }
+  else if(moduleNum === 3){ showTopicSelect3(); }
+}
+function showTopicSelect2(){
+  exam.currentModule=2;
+  exam.selectedTopics=TOPICS2.map((_,i)=>i);
+  document.getElementById('module-select-label').textContent='Module 02';
+  buildTopicGrid();showInHome('view-topics');
+}
+function showTopicSelect3(){
+  exam.currentModule=3;
+  exam.selectedTopics=TOPICS3.map((_,i)=>i);
+  document.getElementById('module-select-label').textContent='Module 03';
+  buildTopicGrid();showInHome('view-topics');
+}
+
+function showUpgrade(){
+  document.getElementById('upgrade-overlay').classList.remove('hidden');
+}
+function hideUpgrade(){
+  document.getElementById('upgrade-overlay').classList.add('hidden');
+  document.getElementById('access-code-msg').textContent = '';
+  document.getElementById('access-code-msg').className = 'access-code-msg';
+  document.getElementById('access-code-input').value = '';
+}
+
+async function startCheckout(){
+  const btn = document.getElementById('checkout-btn');
+  btn.textContent = 'Loading...'; btn.disabled = true;
+  try{
+    const token = await auth.currentUser.getIdToken();
+    const res = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    if(data.url){ window.location.href = data.url; }
+    else { throw new Error((data.error || 'Failed to create checkout') + (data.type ? ` [${data.type}]` : '') + (data.code ? ` (${data.code})` : '')); }
+  } catch(e){
+    alert('Checkout error: ' + e.message);
+    btn.textContent = 'Subscribe — $10/month'; btn.disabled = false;
+  }
+}
+
+async function redeemCode(){
+  const code = document.getElementById('access-code-input').value.trim();
+  const msg = document.getElementById('access-code-msg');
+  msg.className = 'access-code-msg'; msg.textContent = '';
+  if(!code){ msg.className='access-code-msg error'; msg.textContent='Please enter a code.'; return; }
+  msg.textContent = 'Checking...';
+  try{
+    const token = await auth.currentUser.getIdToken();
+    const res = await fetch('/api/redeem-code', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json();
+    if(data.success){
+      currentUserPlan = 'premium';
+      msg.className = 'access-code-msg success'; msg.textContent = '✓ Access granted! Premium unlocked.';
+      updatePlanUI();
+      setTimeout(hideUpgrade, 1800);
+    } else {
+      msg.className = 'access-code-msg error'; msg.textContent = data.error || 'Invalid access code.';
+    }
+  } catch(e){
+    msg.className = 'access-code-msg error'; msg.textContent = 'Something went wrong. Try again.';
+  }
+}
+
+async function pollForPremium(attempts=0){
+  if(attempts > 8) return;
+  const docSnap = await db.doc('users/' + currentUser).get();
+  const plan = docSnap.exists ? docSnap.data().plan : 'free';
+  if(plan === 'premium'){
+    currentUserPlan = 'premium';
+    updatePlanUI();
+    showPremiumActivated();
+  } else {
+    setTimeout(() => pollForPremium(attempts + 1), 2000);
+  }
+}
+
+async function cancelSubscription(){
+  if(!confirm('Are you sure you want to cancel? You keep access until the end of your billing period.')) return;
+  const btn = document.getElementById('cancel-sub-btn');
+  btn.textContent = 'Cancelling...'; btn.disabled = true;
+  try{
+    const token = await auth.currentUser.getIdToken();
+    const res = await fetch('/api/cancel-subscription', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    if(data.success){
+      btn.textContent = 'Cancelled — access until end of billing period';
+      btn.style.color = 'var(--text-muted)';
+      btn.style.borderColor = 'var(--border)';
+    } else {
+      alert('Error: ' + (data.error || 'Could not cancel subscription.'));
+      btn.textContent = 'Cancel Subscription'; btn.disabled = false;
+    }
+  } catch(e){
+    alert('Error: ' + e.message);
+    btn.textContent = 'Cancel Subscription'; btn.disabled = false;
+  }
+}
+
+function showPremiumActivated(){
+  alert('🎉 Premium activated! All modules are now unlocked.');
 }
 
 // ═══════════════════════════════════════════
@@ -1365,6 +1926,10 @@ function updateHeader(){
 // NAVIGATION
 // ═══════════════════════════════════════════
 let currentTab='home';
+function switchTabOrUpgrade(tab){
+  if(tab === 'weak' && currentUserPlan !== 'premium'){ showUpgrade(); return; }
+  switchTab(tab);
+}
 function switchTab(tab){
   currentTab=tab;
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
@@ -1381,7 +1946,7 @@ function showInHome(id){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function showModules(){showInHome('view-home');updateReadinessUI();}
-function showTopicSelect(){exam.currentModule=1;buildTopicGrid();showInHome('view-topics');}
+function showTopicSelect(){exam.currentModule=1;exam.selectedTopics=TOPICS.map((_,i)=>i);document.getElementById('module-select-label').textContent='Module 01';buildTopicGrid();showInHome('view-topics');}
 function goHome(){switchTab('home');showModules();}
 function showDeckList(){
   document.querySelectorAll('#tab-study .view').forEach(v=>v.classList.remove('active'));
@@ -1401,10 +1966,13 @@ let exam={
 function setCount(n,el){exam.questionCount=n;document.querySelectorAll('#count-pills .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
 function setMode(m,el){exam.mode=m;document.querySelectorAll('#mode-pills .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
 function setOrder(o,el){exam.order=o;document.querySelectorAll('#order-pills .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
+function activeQB(){return exam.currentModule===3?QB3:exam.currentModule===2?QB2:QB;}
+function activeTopics(){return exam.currentModule===3?TOPICS3:exam.currentModule===2?TOPICS2:TOPICS;}
 function buildTopicGrid(){
+  const topics=activeTopics();const qb=activeQB();
   const grid=document.getElementById('topic-grid');grid.innerHTML='';
-  TOPICS.forEach((t,i)=>{
-    const count=QB.filter(q=>q.t===i).length;
+  topics.forEach((t,i)=>{
+    const count=qb.filter(q=>q.t===i).length;
     const div=document.createElement('div');
     div.className='topic-checkbox'+(exam.selectedTopics.includes(i)?' checked':'');
     div.innerHTML=`<div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#0d1018" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="topic-label">${i+1}. ${t} <span style="color:var(--text-dim);font-size:.7rem;">(${count}q)</span></div>`;
@@ -1413,8 +1981,9 @@ function buildTopicGrid(){
 }
 function toggleTopic(i,el){const idx=exam.selectedTopics.indexOf(i);if(idx===-1){exam.selectedTopics.push(i);el.classList.add('checked');}else{exam.selectedTopics.splice(idx,1);el.classList.remove('checked');}}
 function toggleAll(){
-  if(exam.selectedTopics.length===TOPICS.length){exam.selectedTopics=[];document.querySelectorAll('.topic-checkbox').forEach(el=>el.classList.remove('checked'));}
-  else{exam.selectedTopics=TOPICS.map((_,i)=>i);document.querySelectorAll('.topic-checkbox').forEach(el=>el.classList.add('checked'));}
+  const topics=activeTopics();
+  if(exam.selectedTopics.length===topics.length){exam.selectedTopics=[];document.querySelectorAll('.topic-checkbox').forEach(el=>el.classList.remove('checked'));}
+  else{exam.selectedTopics=topics.map((_,i)=>i);document.querySelectorAll('.topic-checkbox').forEach(el=>el.classList.add('checked'));}
 }
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
 
@@ -1423,9 +1992,10 @@ function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.ra
 // ═══════════════════════════════════════════
 function startExam(){
   if(exam.selectedTopics.length===0){alert('Please select at least one topic.');return;}
-  let pool=QB.filter(q=>exam.selectedTopics.includes(q.t));
+  const qb=activeQB();
+  let pool=qb.filter(q=>exam.selectedTopics.includes(q.t));
   if(exam.order==='random')pool=shuffle([...pool]);
-  exam.questions=pool.slice(0,exam.questionCount).map((q,i)=>({...q,origIdx:QB.indexOf(q)}));
+  exam.questions=pool.slice(0,exam.questionCount).map((q,i)=>({...q,origIdx:qb.indexOf(q)}));
   exam.current=0;exam.answers=new Array(exam.questions.length).fill(null);
   exam.sessionXP=0;exam.ansStreak=0;exam.bestAnsStreak=0;
   exam.correctCount=0;exam.wrongCount=0;exam.comebackWrongRun=0;exam.comebackCorrectRun=0;
@@ -1452,15 +2022,14 @@ function selectAnswer(choice){
     if(exam.ansStreak>exam.bestAnsStreak)exam.bestAnsStreak=exam.ansStreak;
     if(exam.comebackCorrectRun>=5&&!exam.comebackAchieved)exam.comebackAchieved=true;
     const xpGain=calcXPGain();exam.sessionXP+=xpGain;SAVE.totalXP+=xpGain;SAVE.totalCorrect++;
-    // Check weak spot graduation
-    if(markCorrectInWeak(origIdx)){persist(SAVE);}
+    if(exam.currentModule===1&&markCorrectInWeak(origIdx)){persist(SAVE);}
   } else {
     exam.wrongCount++;exam.ansStreak=0;exam.comebackWrongRun++;
     if(exam.comebackWrongRun>=3)exam.comebackCorrectRun=0;
-    markWrong(origIdx);
+    if(exam.currentModule===1)markWrong(origIdx);
   }
-  SAVE.totalQ++;SAVE.topicTotal[q.t]++;
-  if(correct)SAVE.topicCorrect[q.t]++;
+  SAVE.totalQ++;
+  if(exam.currentModule===1){SAVE.topicTotal[q.t]++;if(correct)SAVE.topicCorrect[q.t]++;}
   persist(SAVE);updateHeader();renderQuestion(exam.isWeakDrill);
 }
 
@@ -1488,7 +2057,7 @@ function renderQuestion(isWeak=false){
   }
   const already=exam.answers[idx];const answered=already!==null;
   const letters=['A','B','C','D'];
-  const origIdx=q.origIdx!==undefined?q.origIdx:QB.findIndex(x=>x.q===q.q);
+  const origIdx=q.origIdx!==undefined?q.origIdx:activeQB().findIndex(x=>x.q===q.q);
   const ws=SAVE.weakSpots&&SAVE.weakSpots[origIdx];
   const weakTag=ws&&ws.active?`<div class="q-weak-tag">Weak Spot · ${ws.consecutiveCorrect}/3</div>`:'';
   let optHTML=q.o.map((opt,oi)=>{
@@ -1519,7 +2088,7 @@ function renderQuestion(isWeak=false){
     }
   }
   const area=document.getElementById(isWeak?'weak-question-area':'question-area');
-  area.innerHTML=`<div class="question-card"><div class="q-meta"><div class="q-number">Question ${idx+1} / ${total}</div><div style="display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;"><div class="q-topic-tag">${TOPICS[q.t]}</div>${weakTag}</div></div><div class="question-text">${q.q}</div><ul class="options-list">${optHTML}</ul>${explHTML}</div>`;
+  area.innerHTML=`<div class="question-card"><div class="q-meta"><div class="q-number">Question ${idx+1} / ${total}</div><div style="display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;"><div class="q-topic-tag">${activeTopics()[q.t]}</div>${weakTag}</div></div><div class="question-text">${q.q}</div><ul class="options-list">${optHTML}</ul>${explHTML}</div>`;
   renderActions(isWeak);
 }
 
@@ -1555,7 +2124,7 @@ function finishExam(){
   if(exam.bestAnsStreak>SAVE.bestAnswerStreak)SAVE.bestAnswerStreak=exam.bestAnsStreak;
   if(exam.sessionXP>SAVE.bestXPTest)SAVE.bestXPTest=exam.sessionXP;
   if(!SAVE.testHistory)SAVE.testHistory=[];
-  SAVE.testHistory.push({date:new Date().toLocaleDateString(),pct,correct,total,xp:exam.sessionXP,topics:exam.selectedTopics.map(i=>TOPICS[i])});
+  SAVE.testHistory.push({date:new Date().toLocaleDateString(),pct,correct,total,xp:exam.sessionXP,topics:exam.selectedTopics.map(i=>activeTopics()[i])});
   if(SAVE.testHistory.length>50)SAVE.testHistory=SAVE.testHistory.slice(-50);
   persist(SAVE);
   const newBadges=checkBadges({score:pct,total,bestAnsStreak:exam.bestAnsStreak,comebackAchieved:exam.comebackAchieved});
@@ -1885,26 +2454,17 @@ function initSplash(){
   // Start splash
   initSplash();
   // Add keyboard support for login forms
-  ['si-pass','si-user'].forEach(id=>{
+  ['si-pass','si-email'].forEach(id=>{
     const el=document.getElementById(id);
     if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')doSignIn();});
   });
-  ['reg-name','reg-user','reg-pass','reg-pass2'].forEach(id=>{
+  ['reg-name','reg-email','reg-user','reg-pass','reg-pass2'].forEach(id=>{
     const el=document.getElementById(id);
     if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
   });
-  // Auto-login if session exists
-  const savedSession=localStorage.getItem(SESSION_KEY);
-  if(savedSession){
-    const accounts=getAccounts();
-    if(accounts[savedSession]){
-      loginAs(savedSession,accounts[savedSession].name);
-      return;
-    }
-  }
-  // Otherwise show login screen
-  document.getElementById('login-screen').classList.remove('hidden');
+  // Auth state is managed by auth.onAuthStateChanged above
 })();
 </script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
