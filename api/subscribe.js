@@ -25,14 +25,28 @@ module.exports = async (req, res) => {
   const normalized = email.toLowerCase().trim();
 
   try {
+    // 1. Save to Firestore
     initAdmin();
     const db = admin.firestore();
-    // Doc ID = email so re-submits are silent no-ops
     await db.collection('email_leads').doc(normalized).set({
       email: normalized,
       source: 'landing_page',
       subscribedAt: admin.firestore.FieldValue.serverTimestamp(),
     }, { merge: true });
+
+    // 2. Add to Kit (ConvertKit)
+    await fetch(
+      `https://api.kit.com/v4/forms/${process.env.KIT_FORM_ID}/subscribers`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Kit-Api-Key': process.env.KIT_API_KEY,
+        },
+        body: JSON.stringify({ email_address: normalized }),
+      }
+    );
+
     res.json({ success: true });
   } catch (err) {
     console.error('subscribe error:', err);
