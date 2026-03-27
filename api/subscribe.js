@@ -34,16 +34,16 @@ module.exports = async (req, res) => {
       subscribedAt: admin.firestore.FieldValue.serverTimestamp(),
     }, { merge: true });
 
-    // 2. Add to Kit
+    // 2. Add to Kit using v3 API
     const kitRes = await fetch(
-      `https://api.kit.com/v4/forms/${process.env.KIT_FORM_ID}/subscribers`,
+      `https://api.convertkit.com/v3/forms/${process.env.KIT_FORM_ID}/subscribe`,
       {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Kit-Api-Key': process.env.KIT_API_KEY,
-        },
-        body: JSON.stringify({ email_address: normalized }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          api_key: process.env.KIT_API_KEY,
+          email: normalized,
+        }),
       }
     );
     const kitData = await kitRes.json();
