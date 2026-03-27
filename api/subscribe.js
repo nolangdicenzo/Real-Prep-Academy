@@ -34,8 +34,8 @@ module.exports = async (req, res) => {
       subscribedAt: admin.firestore.FieldValue.serverTimestamp(),
     }, { merge: true });
 
-    // 2. Add to Kit (ConvertKit)
-    await fetch(
+    // 2. Add to Kit
+    const kitRes = await fetch(
       `https://api.kit.com/v4/forms/${process.env.KIT_FORM_ID}/subscribers`,
       {
         method: 'POST',
@@ -46,8 +46,14 @@ module.exports = async (req, res) => {
         body: JSON.stringify({ email_address: normalized }),
       }
     );
+    const kitData = await kitRes.json();
+    if (!kitRes.ok) {
+      console.error('Kit API error:', JSON.stringify(kitData));
+    } else {
+      console.log('Kit subscriber added:', normalized);
+    }
 
-    res.json({ success: true });
+    res.json({ success: true, kitStatus: kitRes.status, kitData });
   } catch (err) {
     console.error('subscribe error:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
