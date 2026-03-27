@@ -501,6 +501,12 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
 .landing-price-features{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin-bottom:.25rem;}
 .landing-price-features li{font-size:.92rem;color:var(--text-muted);font-weight:300;}
 .landing-price-features li::before{content:'';display:none;}
+.optin-row{display:flex;gap:.75rem;flex-wrap:wrap;}
+.optin-input{flex:1;min-width:220px;}
+.optin-btn{white-space:nowrap;padding:10px 22px;}
+.optin-msg{font-family:'DM Mono',monospace;font-size:.7rem;margin-top:.75rem;letter-spacing:.06em;display:none;}
+.optin-msg.success{color:var(--correct);display:block;}
+.optin-msg.error{color:var(--wrong);display:block;}
 .landing-footer-cta{padding:4.5rem 2rem;background:linear-gradient(160deg,rgba(201,168,76,.06),var(--bg));}
 .landing-footer{padding:1.5rem 2rem;border-top:1px solid var(--border);}
 </style>
@@ -657,8 +663,24 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
     </div>
   </div>
 
+  <!-- Email opt-in -->
+  <div class="landing-section" id="landing-optin">
+    <div class="landing-section-inner" style="max-width:600px;">
+      <div class="overline" style="text-align:center;margin-bottom:.5rem;">Free Study Tips</div>
+      <h2 class="landing-section-h2" style="margin-bottom:.6rem;">Get weekly exam tips &amp; question drops.</h2>
+      <p style="text-align:center;color:var(--text-muted);font-size:.95rem;font-weight:300;margin-bottom:2rem;">No spam. Just useful material for the California DRE exam, straight to your inbox.</p>
+      <div class="optin-form" id="optin-form">
+        <div class="optin-row">
+          <input class="login-input optin-input" id="optin-email" type="email" placeholder="Your email address" autocomplete="email">
+          <button class="btn btn-gold optin-btn" onclick="submitEmailOptIn()">Get Free Tips &rarr;</button>
+        </div>
+        <div class="optin-msg" id="optin-msg"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Pricing -->
-  <div class="landing-section" id="landing-pricing">
+  <div class="landing-section alt" id="landing-pricing">
     <div class="landing-section-inner">
       <div class="overline" style="text-align:center;margin-bottom:.5rem;">Pricing</div>
       <h2 class="landing-section-h2">Start free. Upgrade when you&rsquo;re ready.</h2>
@@ -1839,6 +1861,41 @@ function goToSignIn(){
   document.getElementById('login-screen').classList.remove('hidden');
   showLoginTab('signin');
 }
+async function submitEmailOptIn(){
+  const input = document.getElementById('optin-email');
+  const msg   = document.getElementById('optin-msg');
+  const btn   = document.querySelector('.optin-btn');
+  const email = input.value.trim();
+  msg.className = 'optin-msg';
+  if(!email || !email.includes('@') || !email.includes('.')){
+    msg.textContent = 'Please enter a valid email address.';
+    msg.className = 'optin-msg error';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+  try{
+    const r = await fetch('/api/subscribe',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email})
+    });
+    const data = await r.json();
+    if(data.success){
+      input.value = '';
+      msg.textContent = 'You\'re in! Watch your inbox for exam tips.';
+      msg.className = 'optin-msg success';
+      btn.textContent = 'Done ✓';
+    } else {
+      throw new Error(data.error || 'Unknown error');
+    }
+  }catch(e){
+    msg.textContent = e.message || 'Something went wrong. Please try again.';
+    msg.className = 'optin-msg error';
+    btn.disabled = false;
+    btn.textContent = 'Get Free Tips →';
+  }
+}
 
 // ═══════════════════════════════════════════
 // PLAN / UPGRADE SYSTEM
@@ -2689,6 +2746,8 @@ function initSplash(){
     const el=document.getElementById(id);
     if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
   });
+  const optinEl=document.getElementById('optin-email');
+  if(optinEl)optinEl.addEventListener('keydown',e=>{if(e.key==='Enter')submitEmailOptIn();});
   // Auth state is managed by auth.onAuthStateChanged above
 })();
 </script>
