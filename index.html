@@ -3398,6 +3398,11 @@ function initSplash(){
   video.addEventListener('ended',()=>clearTimeout(fallback));
   // If video fails to load, skip immediately
   video.addEventListener('error',endSplash);
+  // Skip on spacebar or any key press
+  const onKey=e=>{if(e.code==='Space'||e.key===' '){e.preventDefault();endSplash();document.removeEventListener('keydown',onKey);}};
+  document.addEventListener('keydown',onKey);
+  // Also remove listener once splash ends naturally
+  splash.addEventListener('transitionend',()=>document.removeEventListener('keydown',onKey),{once:true});
 }
 
 // ═══════════════════════════════════════════
