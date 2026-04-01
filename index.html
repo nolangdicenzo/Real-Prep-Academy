@@ -3003,7 +3003,8 @@ function renderQuestion(isWeak=false){
   let optHTML=q.o.map((opt,oi)=>{
     let cls='option-btn';
     if(answered){if(oi===q.a)cls+=' correct';else if(oi===already)cls+=' wrong';}
-    return`<li><button class="${cls}" onclick="selectAnswer(${oi})" ${answered?'disabled':''}><span class="option-letter">${letters[oi]}</span><span>${opt.substring(3)}</span></button></li>`;
+    const optText=/^[A-D]\.\s/.test(opt)?opt.substring(3):opt;
+    return`<li><button class="${cls}" onclick="selectAnswer(${oi})" ${answered?'disabled':''}><span class="option-letter">${letters[oi]}</span><span>${optText}</span></button></li>`;
   }).join('');
   let explHTML='';
   if(answered&&exam.mode==='tutor'){
