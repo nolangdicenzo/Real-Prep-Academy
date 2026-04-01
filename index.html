@@ -3114,8 +3114,9 @@ function buildReview(){
   exam.questions.forEach((q,i)=>{
     const ua=exam.answers[i];const ok=ua===q.a;
     html+=`<div class="review-item ${ok?'ok':'no'}"><div class="review-q">${i+1}. ${q.q}</div><div class="review-detail">`;
-    if(!ok)html+=`<span class="your">Your answer: ${ua!==null?letters[ua]+'. '+q.o[ua].substring(3):'Not answered'}</span><br>`;
-    html+=`<span class="right">Correct: ${letters[q.a]}. ${q.o[q.a].substring(3)}</span></div></div>`;
+    const stripPfx=s=>/^[A-D]\.\s/.test(s)?s.substring(3):s;
+    if(!ok)html+=`<span class="your">Your answer: ${ua!==null?letters[ua]+'. '+stripPfx(q.o[ua]):'Not answered'}</span><br>`;
+    html+=`<span class="right">Correct: ${letters[q.a]}. ${stripPfx(q.o[q.a])}</span></div></div>`;
   });
   document.getElementById('review-section').innerHTML=html;
 }
@@ -3193,7 +3194,7 @@ function renderWeakSpots(){
         const pips=Array(3).fill(0).map((_,i)=>`<div class="pip${i<w.consecutiveCorrect?' filled':''}"></div>`).join('');
         html+=`<div class="weak-q-item">
           <div class="weak-q-text">${q.q}</div>
-          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;margin:.4rem 0;font-size:.82rem;color:var(--correct);">Correct: ${letters[q.a]}. ${q.o[q.a].substring(3)}</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;margin:.4rem 0;font-size:.82rem;color:var(--correct);">Correct: ${letters[q.a]}. ${/^[A-D]\.\s/.test(q.o[q.a])?q.o[q.a].substring(3):q.o[q.a]}</div>
           <div style="font-size:.8rem;color:var(--text-muted);font-weight:300;line-height:1.5;margin:.25rem 0;">${q.e}</div>
           <div class="weak-q-meta">
             <div style="display:flex;align-items:center;gap:.4rem;"><span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;">Progress to graduation</span><div class="streak-pips">${pips}</div><span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text-dim);">${w.consecutiveCorrect}/3</span></div>
