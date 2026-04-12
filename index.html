@@ -3807,10 +3807,10 @@ async function teachStartAudio(){
       audioUrl=URL.createObjectURL(blob);
       teachAudioCache[cacheKey]=audioUrl;
     }catch(err){
+      // Fallback to Web Speech API
       teachIsPlaying=false;teachSetPlayIcon(false);
       if(vs)vs.innerHTML='';
-      const n=document.getElementById('teachTtsNote');
-      if(n){n.textContent='Audio unavailable — check your connection.';setTimeout(()=>{if(n)n.textContent='';},4000);}
+      teachStartBrowserTTS();
       return;
     }
   }
@@ -3847,8 +3847,49 @@ async function teachStartAudio(){
 
 function teachStopAudio(){
   if(teachAudio){teachAudio.pause();teachAudio.currentTime=0;}
+  if(window.speechSynthesis)window.speechSynthesis.cancel();
   teachIsPlaying=false;teachSetPlayIcon(false);
   const vs=document.getElementById('teachVoiceStatus');if(vs)vs.innerHTML='';
+}
+
+function teachStartBrowserTTS(){
+  const synth=window.speechSynthesis;
+  if(!synth)return;
+  synth.cancel();
+  const lesson=TEACH_CHAPTERS[teachCurrentChapter].lessons[teachCurrentLesson];
+  const sec=lesson.sections[teachCurrentSection];
+  const utt=new SpeechSynthesisUtterance(sec.text);
+  utt.rate=teachSpeechRate;utt.pitch=1.0;
+  // Pick best available English voice
+  const voices=synth.getVoices();
+  const pick=['aria online','jenny online','google us english','samantha'];
+  for(const p of pick){const v=voices.find(v=>v.name.toLowerCase().includes(p)&&v.lang.startsWith('en'));if(v){utt.voice=v;break;}}
+  const vs=document.getElementById('teachVoiceStatus');
+  const words=sec.text.split(' ').length;
+  const total=Math.max(5,Math.round(words/(180*utt.rate/60)));
+  let elapsed=0,timer=null;
+  utt.onstart=()=>{
+    teachIsPlaying=true;teachSetPlayIcon(true);
+    const tt=document.getElementById('teachTimeTotal');
+    if(vs)vs.innerHTML='<span class="teach-speaking-dot"></span><span>Playing</span>';
+    if(tt)tt.textContent=teachFmtTime(total);
+    timer=setInterval(()=>{
+      elapsed=Math.min(elapsed+1,total);
+      const pf=document.getElementById('teachProgressFill');
+      const te=document.getElementById('teachTimeElapsed');
+      if(pf)pf.style.width=((elapsed/total)*100)+'%';
+      if(te)te.textContent=teachFmtTime(elapsed);
+    },1000);
+  };
+  utt.onend=()=>{
+    teachIsPlaying=false;teachSetPlayIcon(false);clearInterval(timer);
+    const pf=document.getElementById('teachProgressFill');
+    const te=document.getElementById('teachTimeElapsed');
+    if(pf)pf.style.width='100%';if(te)te.textContent=teachFmtTime(total);
+    if(vs)vs.innerHTML='<span style="color:var(--correct);font-size:.58rem;font-family:\'DM Mono\',monospace">Done</span>';
+  };
+  utt.onerror=()=>{teachIsPlaying=false;teachSetPlayIcon(false);clearInterval(timer);if(vs)vs.innerHTML='';};
+  synth.speak(utt);
 }
 
 function teachSeekAudio(e){
