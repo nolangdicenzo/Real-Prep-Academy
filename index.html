@@ -382,8 +382,8 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
   .logout-btn{font-size:.65rem;padding:4px 8px;}
 
   /* ── Nav tabs ── */
-  .nav-tabs{padding:0;}
-  .nav-tab{flex:1;padding:11px 4px;font-size:.55rem;letter-spacing:.06em;text-align:center;}
+  .nav-tabs{padding:0;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .nav-tab{flex:0 0 auto;padding:11px 10px;font-size:.55rem;letter-spacing:.06em;text-align:center;}
 
   /* ── Main content ── */
   main{padding:1.25rem .75rem 4rem;}
@@ -568,6 +568,70 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
 .sim-timer.active{display:flex;}
 .sim-timer.warning{color:var(--wrong);border-color:rgba(224,92,92,.4);background:rgba(224,92,92,.08);animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* ══ TEACH TAB ══ */
+.teach-chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:.5rem;}
+.teach-ch-card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:1.4rem 1.6rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.teach-ch-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+.teach-ch-card.locked{opacity:.5;cursor:default;pointer-events:none;}
+.teach-ch-num{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.teach-ch-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;margin-bottom:.4rem;line-height:1.35;}
+.teach-ch-meta{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:var(--text-dim);}
+.teach-ch-badge{position:absolute;top:1rem;right:1rem;font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;}
+.teach-ch-badge.coming{background:var(--border);color:var(--text-dim);}
+.teach-top-bar{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.teach-lesson-sel{flex:1;min-width:200px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.06em;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);cursor:pointer;}
+.teach-mode-btns{display:flex;gap:4px;}
+.teach-mode-btn{padding:7px 16px;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border2);border-radius:8px;background:none;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.teach-mode-btn:hover{background:var(--surface2);}
+.teach-mode-btn.active{background:var(--gold);color:#0d1018;border-color:transparent;}
+.teach-lecture-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem 1.75rem;margin-bottom:1rem;}
+.teach-sec-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem;}
+.teach-body-text{font-size:1rem;line-height:1.9;color:var(--text);font-weight:300;}
+.teach-sec-dots{display:flex;gap:6px;margin-top:1.25rem;flex-wrap:wrap;}
+.teach-sec-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);cursor:pointer;transition:background .15s;border:1px solid var(--border);}
+.teach-sec-dot.active{background:var(--gold);border-color:var(--gold);}
+.teach-sec-dot.visited{background:var(--correct);border-color:var(--correct);}
+.teach-key-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.75rem;margin-bottom:1rem;}
+.teach-key-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.85rem;}
+.teach-key-item{display:flex;gap:10px;align-items:baseline;padding:6px 0;font-size:.9rem;color:var(--text-muted);border-bottom:1px solid var(--border);}
+.teach-key-item:last-child{border-bottom:none;}
+.teach-key-item b{color:var(--text);font-weight:600;min-width:190px;flex-shrink:0;font-family:'Crimson Pro',serif;}
+.teach-audio-bar{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:1rem;}
+.teach-play-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s;}
+.teach-play-btn:hover{border-color:var(--gold);}
+.teach-play-btn svg{width:13px;height:13px;fill:var(--text);}
+.teach-progress-wrap{flex:1;display:flex;flex-direction:column;gap:4px;}
+.teach-progress-track{height:3px;background:var(--border2);border-radius:2px;cursor:pointer;position:relative;}
+.teach-progress-fill{height:3px;border-radius:2px;background:var(--gold);width:0%;transition:width .3s linear;pointer-events:none;}
+.teach-time-row{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.58rem;color:var(--text-dim);}
+.teach-speed-btn{padding:5px 10px;font-family:'DM Mono',monospace;font-size:.62rem;border:1px solid var(--border2);border-radius:6px;background:none;color:var(--text-muted);cursor:pointer;}
+.teach-speed-btn:hover{background:var(--surface);}
+.teach-nav-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:1rem;}
+.teach-nav-btn{padding:8px 18px;font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border2);border-radius:8px;background:none;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.teach-nav-btn:hover{background:var(--surface2);color:var(--text);}
+.teach-nav-btn.primary{background:var(--gold);color:#0d1018;border-color:transparent;}
+.teach-nav-btn.primary:hover{filter:brightness(1.1);}
+.teach-progress-pills{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end;}
+.teach-pill{width:9px;height:9px;border-radius:50%;background:var(--border2);border:1px solid var(--border);}
+.teach-pill.done{background:var(--correct);border-color:rgba(76,175,125,.5);}
+.teach-pill.current{background:var(--gold);border-color:rgba(201,168,76,.5);}
+.teach-quiz-area{display:flex;flex-direction:column;gap:14px;}
+.teach-quiz-topic{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);}
+.teach-quiz-q{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;line-height:1.55;color:var(--text);}
+.teach-quiz-opts{display:flex;flex-direction:column;gap:8px;}
+.teach-quiz-opt{padding:12px 16px;font-family:'Crimson Pro',serif;font-size:.95rem;border:1px solid var(--border2);border-radius:9px;cursor:pointer;background:var(--surface);color:var(--text);text-align:left;line-height:1.5;transition:all .15s;}
+.teach-quiz-opt:hover:not(:disabled){background:var(--surface2);}
+.teach-quiz-opt.correct{background:var(--correct-bg);border-color:rgba(76,175,125,.4);color:var(--correct);}
+.teach-quiz-opt.wrong{background:var(--wrong-bg);border-color:rgba(224,92,92,.4);color:var(--wrong);}
+.teach-quiz-feedback{padding:12px 16px;border-radius:9px;font-size:.9rem;line-height:1.65;font-weight:300;}
+.teach-feedback-correct{background:var(--correct-bg);color:var(--correct);border:1px solid rgba(76,175,125,.3);}
+.teach-feedback-wrong{background:var(--wrong-bg);color:var(--wrong);border:1px solid rgba(224,92,92,.3);}
+.teach-new-q-btn{padding:7px 16px;font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border2);border-radius:8px;background:none;color:var(--text-muted);cursor:pointer;align-self:flex-start;}
+.teach-new-q-btn:hover{background:var(--surface2);}
+.teach-done-banner{background:var(--correct-bg);border:1px solid rgba(76,175,125,.3);border-radius:10px;padding:1.25rem 1.5rem;font-size:.95rem;color:var(--correct);line-height:1.6;text-align:center;}
+.teach-tts-note{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text-dim);text-align:center;padding:3px 0;min-height:16px;}
+.teach-speaking-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:5px;animation:pulse 1s infinite;vertical-align:middle;}
 </style>
 </head>
 <body>
@@ -872,6 +936,7 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
     <button class="nav-tab" data-tab="study" onclick="switchTab('study')">Study</button>
     <button class="nav-tab" data-tab="weak" onclick="switchTabOrUpgrade('weak')">Weak Spots<span class="tab-badge" id="weak-badge" style="display:none">0</span></button>
     <button class="nav-tab" data-tab="stats" onclick="switchTab('stats')">Dashboard</button>
+    <button class="nav-tab" data-tab="teach" onclick="switchTab('teach')">Teach</button>
   </div>
 </header>
 
@@ -1127,6 +1192,56 @@ main{max-width:1140px;margin:0 auto;padding:2.5rem 2rem 5rem;}
     <div style="font-size:.9rem;font-weight:600;margin-bottom:.4rem;color:var(--text);">Manage Subscription</div>
     <div style="font-size:.82rem;color:var(--text-muted);margin-bottom:1rem;">You are on the Premium plan. If you cancel, you keep access until the end of your current billing period.</div>
     <button id="cancel-sub-btn" onclick="cancelSubscription()" style="background:transparent;border:1px solid #c0392b;color:#c0392b;padding:8px 18px;border-radius:8px;font-size:.82rem;cursor:pointer;">Cancel Subscription</button>
+  </div>
+</div>
+
+<!-- ══ TEACH TAB ══ -->
+<div id="tab-teach" class="view">
+  <div id="teach-chapter-list" class="view active">
+    <div class="section-header" style="margin-bottom:1.5rem;">
+      <div class="overline">Learn at Your Own Pace</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;">Teach Mode</h2>
+      <p style="color:var(--text-muted);font-size:1rem;margin-top:.4rem;font-weight:300;">Structured lessons with key terms and quizzes for all 9 exam chapters.</p>
+    </div>
+    <div class="teach-chapter-grid" id="teach-chapter-grid"></div>
+  </div>
+
+  <div id="teach-viewer" class="view">
+    <button class="back-btn" onclick="showTeachChapterList()">← Back to Chapters</button>
+    <div class="section-header" style="margin-bottom:1rem;">
+      <div class="overline" id="teach-ch-overline">Chapter 1</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.1rem,3vw,1.5rem);font-weight:700;" id="teach-ch-title"></h2>
+    </div>
+    <div class="teach-top-bar">
+      <select class="teach-lesson-sel" id="teachLessonSel" onchange="teachLoadLesson()"></select>
+      <div class="teach-mode-btns">
+        <button class="teach-mode-btn active" id="tmb-lecture" onclick="teachSetMode('lecture')">Lecture</button>
+        <button class="teach-mode-btn" id="tmb-quiz" onclick="teachSetMode('quiz')">Quiz Me</button>
+      </div>
+    </div>
+    <div id="teach-stage"></div>
+    <div class="teach-audio-bar" id="teachAudioBar">
+      <button class="teach-play-btn" id="teachPlayBtn" onclick="teachTogglePlay()">
+        <svg id="teachPlayIcon" viewBox="0 0 16 16"><polygon points="3,2 13,8 3,14"/></svg>
+      </button>
+      <div class="teach-progress-wrap">
+        <div class="teach-progress-track" id="teachProgressTrack" onclick="teachSeekAudio(event)">
+          <div class="teach-progress-fill" id="teachProgressFill"></div>
+        </div>
+        <div class="teach-time-row">
+          <span id="teachTimeElapsed">0:00</span>
+          <div id="teachVoiceStatus" style="display:flex;align-items:center;"></div>
+          <span id="teachTimeTotal">0:00</span>
+        </div>
+      </div>
+      <button class="teach-speed-btn" id="teachSpeedBtn" onclick="teachCycleSpeed()">1x</button>
+    </div>
+    <div class="teach-nav-row">
+      <button class="teach-nav-btn" onclick="teachPrevSection()">← Prev</button>
+      <button class="teach-nav-btn primary" onclick="teachNextSection()">Next →</button>
+      <div class="teach-progress-pills" id="teachProgressPills"></div>
+    </div>
+    <div class="teach-tts-note" id="teachTtsNote"></div>
   </div>
 </div>
 </main>
@@ -2877,6 +2992,7 @@ function switchTab(tab){
   if(tab==='stats')renderStats();
   if(tab==='weak')renderWeakSpots();
   if(tab==='study')renderDecks();
+  if(tab==='teach')renderTeachChapterGrid();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function showInHome(id){
@@ -3426,6 +3542,403 @@ function initSplash(){
   if(optinEl)optinEl.addEventListener('keydown',e=>{if(e.key==='Enter')submitEmailOptIn();});
   // Auth state is managed by auth.onAuthStateChanged above
 })();
+
+// ═══════════════════════════════════════════
+// TEACH MODE
+// ═══════════════════════════════════════════
+const TEACH_CHAPTERS = [
+  {
+    id:'ch1', title:'Property and Property Interests',
+    lessons:[
+      {
+        id:'l1', title:'Real property vs personal property',
+        sections:[
+          {label:'What is real property?', text:'Real property is land and everything permanently attached to it — the surface within its boundaries, the airspace above, and everything beneath the ground, known as subsurface rights. Think of it as owning a vertical slice of the earth.'},
+          {label:'The bundle of rights', text:'Owning real property means owning a bundle of five rights. Possession — the right to physically occupy and use the land productively. Quiet enjoyment — freedom to use the land without interference, and also a responsibility not to interfere with your neighbors. Disposition — the right to transfer all or some of those rights to others. Exclusion — the right to stop others from using or entering. And control — the right to physically alter or change the property. A helpful acronym is PEQDC — Possession, Exclusion, Quiet enjoyment, Disposition, Control.'},
+          {label:'Threats to your rights', text:'Three concepts threaten these rights. A trespass is a physical invasion by a PERSON with no lawful right to enter. An encroachment is a physical OBJECT — not a person — that intrudes onto neighboring property, often because of a boundary mistake, like a fence built 2 feet over the line. A nuisance is anything that interferes with quiet enjoyment — noise, odors, unsightliness — coming from a neighbor\'s property. Importantly, a nuisance does NOT involve possession of your land.'},
+          {label:'Personal property', text:'Personal property — also called chattel or personalty — is any property that is NOT real property. It is moveable and not fixed to land. It can be tangible, like a car, a book, livestock, or harvested crops. Or intangible, like a lease, stock rights, or intellectual property. A key exam point: personal property does NOT transfer through a deed. It transfers through a separate bill of sale. The doctrine of emblements protects tenant farmers — they may harvest crops that were growing when their tenancy ended, through no fault of their own.'},
+        ],
+        keyTerms:[
+          {term:'Real property', def:'Land plus everything permanently attached to it'},
+          {term:'Bundle of rights', def:'PEQDC — Possession, Exclusion, Quiet enjoyment, Disposition, Control'},
+          {term:'Trespass', def:'Physical invasion by a PERSON with no lawful right to enter'},
+          {term:'Encroachment', def:'Physical OBJECT crossing onto neighboring property'},
+          {term:'Nuisance', def:'Interference with quiet enjoyment — no possession required'},
+          {term:'Chattel / Personalty', def:'Personal property; moveable; transfers by bill of sale'},
+          {term:'Emblements', def:'Doctrine protecting tenant farmers\' right to harvest growing crops'},
+        ],
+        quiz:[
+          {q:'Which of the following is NOT part of the bundle of rights?',opts:['Possession','Exclusion','Taxation','Disposition'],ans:2,exp:'Taxation is the government\'s right — not the owner\'s. The five bundle of rights are Possession, Quiet enjoyment, Disposition, Exclusion, and Control (PEQDC).'},
+          {q:'A neighbor\'s fence has been built 2 feet over your property line. This is best described as:',opts:['Trespass','Nuisance','Encroachment','Easement by prescription'],ans:2,exp:'An encroachment is a physical OBJECT intruding onto neighboring property, often due to a boundary mistake. Trespass involves a PERSON entering without right.'},
+          {q:'Personal property transfers through which document?',opts:['Deed','Mortgage','Bill of sale','Title report'],ans:2,exp:'Personal property is NOT transferred by deed. It transfers via a bill of sale. Deeds are used exclusively for real property.'},
+          {q:'Which statement about a nuisance is correct?',opts:['It requires physical invasion of the land','It involves a person trespassing','It interferes with quiet enjoyment without possession','It is always caused by physical objects'],ans:2,exp:'A nuisance is anything (noise, odors, unsightliness) that interferes with quiet enjoyment coming from a neighbor\'s property. Critically, it does NOT involve possession or physical invasion of your land.'},
+        ]
+      },
+      {
+        id:'l2', title:'Fixtures, appurtenances & water rights',
+        sections:[
+          {label:'Attachments and fixtures', text:'Attachments to land can be natural — like trees and plants — or manufactured, like fences and buildings. A manufactured attachment is called a fixture. A major fixture, like a building, is called an improvement. Unless otherwise agreed between buyer and seller, attachments transfer with the land when it is sold.'},
+          {label:'The fixture test', text:'Courts use three factors to decide whether something is a fixture or personal property. First — the manner of attachment: how permanently is it installed? Second — can it be removed without damaging the property? Third — was it custom-made or designed specifically for the property? One critical exam point: the VALUE of the item is NOT a factor in the fixture test. And written agreements between buyer and seller always carry the most weight.'},
+          {label:'Appurtenances and trade fixtures', text:'Appurtenances are rights associated with real property — like air rights, water rights, and mineral rights. They transfer with the land but can be severed and sold separately. Minerals are real property until they are extracted from the earth. A landowner may sell or lease mineral rights separately from the surface land. Trade fixtures are different — they are equipment installed by a COMMERCIAL TENANT for business purposes. Even though physically attached, trade fixtures remain the tenant\'s personal property and must be removed before the lease ends, or they risk becoming the landlord\'s property.'},
+          {label:'Water rights', text:'Water rights in California depend on the type of water. Riparian rights apply to land that physically touches a stream, creek, or river — running water. Littoral rights apply to land subject to the ebb and flow of tides — oceans, bays, and lakes. Appropriative rights require a government permit and are common in western states like California, particularly for crop irrigation. Four forces of nature also affect land: Erosion is the gradual loss of soil. Avulsion is the sudden tearing away of land, like in a mudslide. Accretion is the gradual addition of dry land through natural deposits. Reliction is the gradual receding of water that exposes more land.'},
+        ],
+        keyTerms:[
+          {term:'Fixture', def:'Manufactured attachment to land; transfers with property'},
+          {term:'Improvement', def:'A major fixture such as a building'},
+          {term:'Trade fixture', def:'Business equipment installed by a tenant; remains personal property'},
+          {term:'Appurtenance', def:'Rights tied to real property; can be severed and sold separately'},
+          {term:'Riparian rights', def:'Water rights for land touching a river or stream'},
+          {term:'Littoral rights', def:'Water rights for land touching an ocean, bay, or lake (tidal)'},
+          {term:'Appropriative rights', def:'Water rights requiring a government permit; common in western states'},
+          {term:'Accretion', def:'Gradual addition of land by natural deposits (alluvion)'},
+          {term:'Avulsion', def:'Sudden loss of land (flood, mudslide, earthquake)'},
+        ],
+        quiz:[
+          {q:'A commercial tenant installs a large walk-in freezer, bolted to the floor, for their restaurant. When the lease ends, this freezer is:',opts:['Real property belonging to the landlord','A fixture that transfers with a sale','A trade fixture the tenant must remove','An improvement permanently attached to the land'],ans:2,exp:'This is a trade fixture — equipment installed by a commercial tenant for business purposes. Even though physically attached, it remains the tenant\'s personal property and must be removed before the lease ends.'},
+          {q:'Which factor is NOT used in the fixture test?',opts:['Manner of attachment','The monetary value of the item','Whether removal causes damage','Whether it was custom-made for the property'],ans:1,exp:'Value is NOT one of the three fixture tests. Courts look at manner of attachment, ability to remove without damage, and whether it was custom-made for the property. Written agreements carry the most weight.'},
+          {q:'A property borders the Pacific Ocean. The water rights are classified as:',opts:['Riparian','Appropriative','Littoral','Prescriptive'],ans:2,exp:'Littoral rights apply to properties bordering oceans, bays, and lakes — any tidal body of water. Riparian applies to rivers and streams.'},
+          {q:'Gradual loss of soil due to wind or water is called:',opts:['Avulsion','Accretion','Reliction','Erosion'],ans:3,exp:'Erosion is the gradual loss of soil through wind, water, or other natural forces. Avulsion is the sudden loss of land. Accretion is the gradual addition of land.'},
+        ]
+      },
+      {
+        id:'l3', title:'Estates in real property',
+        sections:[
+          {label:'What is an estate?', text:'An estate is a possessory interest in real property — meaning the right to possess the property now or at some point in the future. Estates are divided into two main categories: freehold estates, which last for an uncertain or indefinite duration, and leasehold estates, which are temporary rights to exclusive possession.'},
+          {label:'Freehold estates', text:'The most common freehold estate is Fee Simple Absolute — the fullest possible interest in property. There are no conditions attached and no limitations on the owner\'s bundle of rights. Fee Simple Defeasible is similar but has conditions — if those conditions are violated, ownership could automatically revert to the original grantor. A Life Estate lasts only for the duration of a named person\'s life, called the measuring life. When that person dies, title passes either back to the grantor through a reversion, or to a third party called a remainderman. A life tenant CAN sell, mortgage, or lease their interest — but only what they actually own. They CANNOT lay waste to the property.'},
+          {label:'Life estates in detail', text:'In an ordinary life estate, the life tenant IS the measuring life — the estate lasts for their own lifetime. In a pur autre vie arrangement, the measuring life is someone OTHER than the life tenant. For example, a life estate may be given to Person A for as long as Person B is alive. When Person B dies, the estate ends — even though A is still living. This is an important distinction for the exam.'},
+          {label:'Leasehold estates', text:'The four leasehold estates are essential exam knowledge. An estate for years has a definite start and end date — it terminates automatically, no notice required, and is NOT ended by the death of either party or the sale of the property. A periodic estate auto-renews in like time periods and DOES require proper notice to terminate. An estate at will has no formal agreement and the owner simply permits occupancy with no set term. An estate at sufferance — also called a holdover tenancy — occurs when a lease ends but the tenant wrongfully remains. Exam tip: if a landlord accepts rent from a holdover tenant, a periodic tenancy may be created.'},
+        ],
+        keyTerms:[
+          {term:'Estate', def:'Possessory interest in real property (now or in the future)'},
+          {term:'Fee simple absolute', def:'Fullest ownership interest; no conditions or limitations'},
+          {term:'Fee simple defeasible', def:'Conditional ownership; can automatically revert to grantor'},
+          {term:'Life estate', def:'Interest lasting for the duration of a named measuring life'},
+          {term:'Pur autre vie', def:'Life estate where the measuring life is someone other than the life tenant'},
+          {term:'Remainderman', def:'Third party who receives title when a life estate ends'},
+          {term:'Estate for years', def:'Definite term; auto-terminates; no notice required; not ended by death'},
+          {term:'Periodic estate', def:'Auto-renews in like periods; requires notice to terminate'},
+          {term:'Estate at sufferance', def:'Holdover tenancy after lease expiration; wrongful possession'},
+        ],
+        quiz:[
+          {q:'An estate for years is best described as:',opts:['A leasehold that lasts exactly 12 months','A leasehold with a definite start and end date','A freehold estate with no expiration','An estate requiring 30 days notice to terminate'],ans:1,exp:'Despite the name, an estate for years simply means a leasehold with a definite start and end date — it does not have to be exactly one year. It terminates automatically with no notice required.'},
+          {q:'A life tenant may NOT:',opts:['Sell their interest in the property','Mortgage their interest','Lay waste to the property','Lease their interest to a tenant'],ans:2,exp:'A life tenant can sell, mortgage, or lease their interest — but they cannot lay waste to the property (cause permanent damage). Their interest is limited to the duration of the measuring life.'},
+          {q:'A lease expires but the tenant remains and the landlord begins accepting monthly rent. This creates:',opts:['An estate at sufferance','An estate at will','A periodic tenancy','A fee simple defeasible'],ans:2,exp:'When a landlord accepts rent from a holdover tenant, a periodic tenancy is typically created. Before the landlord accepted rent, the tenant was in an estate at sufferance.'},
+          {q:'In a pur autre vie life estate, the measuring life is:',opts:['The grantor','The life tenant','Someone other than the life tenant','The remainderman'],ans:2,exp:'Pur autre vie means "for the life of another." The measuring life is someone OTHER than the life tenant — the estate ends when that third person dies, even if the life tenant is still alive.'},
+        ]
+      },
+      {
+        id:'l4', title:'Easements and encumbrances',
+        sections:[
+          {label:'What is an encumbrance?', text:'An encumbrance is a claim, limitation, or liability attached to real estate that burdens the property owner\'s title. The holder of an encumbrance has a claim against the property but NO right to possess it. Encumbrances include easements, liens, deed restrictions, and encroachments. They run with the land, meaning they transfer to new owners when the property is sold.'},
+          {label:'Types of easements', text:'An easement is the right to USE another person\'s property for a specific purpose. When recorded in public records, it runs with the land. An easement appurtenant involves two parcels. The servient tenement is burdened by the easement. The dominant tenement benefits from it — for example, a landlocked parcel has an easement across a neighboring parcel for road access. An easement in gross benefits a person or company rather than a parcel of land. There is no dominant tenement. Utility company power line easements are a classic example of easement in gross.'},
+          {label:'How easements are created', text:'There are five ways easements are created. By express grant — language written into a deed when land is divided. By implication — a long-standing, apparent use that was reasonably necessary for the original owner\'s access. By necessity — when land would be completely useless without access; requires a court order. By condemnation — the government uses eminent domain to take an easement for public benefit. And by prescription — similar to adverse possession, through open, notorious, hostile, and adverse use of another\'s land for a period set by state law.'},
+          {label:'Licenses vs easements', text:'A license is similar to an easement but has four key differences. It is revocable at any time. It is non-assignable. It is temporary. And it does NOT run with the land. Think of a movie ticket or concert pass — that is a license to use the venue. One critical exam point: neither a license nor an encroachment is considered a legal encumbrance on title.'},
+        ],
+        keyTerms:[
+          {term:'Encumbrance', def:'Claim on property that burdens title; no right to possess'},
+          {term:'Easement', def:'Right to USE another\'s property for a specific purpose'},
+          {term:'Runs with the land', def:'Automatically transfers to new owners when recorded'},
+          {term:'Servient tenement', def:'The burdened parcel in an easement appurtenant'},
+          {term:'Dominant tenement', def:'The benefiting parcel in an easement appurtenant'},
+          {term:'Easement in gross', def:'Benefits a person or company, not a parcel; no dominant tenement'},
+          {term:'Prescriptive easement', def:'Created by open, notorious, hostile, adverse use over statutory period'},
+          {term:'Easement by necessity', def:'Required when land would be completely useless without access'},
+          {term:'License', def:'Revocable, non-assignable, temporary; does NOT run with the land'},
+        ],
+        quiz:[
+          {q:'A utility company has the right to run power lines across your property. This is:',opts:['Easement appurtenant','Easement in gross','License','Prescriptive easement'],ans:1,exp:'A utility company easement is an easement in gross — it benefits the company (an entity), not an adjacent parcel of land. There is no dominant tenement in an easement in gross.'},
+          {q:'Which of the following does NOT run with the land?',opts:['Easement appurtenant','Recorded easement in gross','License','Prescriptive easement'],ans:2,exp:'A license does NOT run with the land. It is revocable, non-assignable, and temporary — the opposite of a recorded easement in legal effect.'},
+          {q:'A neighbor has openly used a path across your property for 15 years without permission. They may have acquired:',opts:['Easement by necessity','Easement by implication','Prescriptive easement','Easement by express grant'],ans:2,exp:'A prescriptive easement is acquired through open, notorious, hostile, and adverse use of another\'s land for the statutory period. 15 years of open, unchallenged use could qualify.'},
+          {q:'Which of the following is NOT considered an encumbrance?',opts:['A recorded easement','A judgment lien','A license to park on the property','A deed restriction'],ans:2,exp:'A license is NOT an encumbrance. Neither is an encroachment. Easements, liens, and deed restrictions are all encumbrances that burden title.'},
+        ]
+      },
+      {
+        id:'l5', title:'Liens and lien priority',
+        sections:[
+          {label:'What is a lien?', text:'A lien is a financial encumbrance on someone\'s property. It provides security for a debt and may give the lienholder the right to foreclose — force the sale of the property — if the debt is not paid. An important exam point: a lien does NOT prevent the transfer of property. The seller is typically expected to clear all liens at closing, but the sale can technically occur with a lien on title.'},
+          {label:'Voluntary vs involuntary, general vs specific', text:'A voluntary lien is placed with the owner\'s consent — the most common example is a mortgage or deed of trust. An involuntary lien is placed WITHOUT the owner\'s consent, such as a property tax lien or judgment lien. A general lien attaches to ALL property — both real and personal — owned by the debtor. A specific lien attaches only to one particular piece of property. Most real estate liens are specific.'},
+          {label:'Types of liens to know', text:'A property tax lien is ad valorem — based on assessed value — and is involuntary and specific. A special assessment lien covers public improvements and only affects property owners who benefit from them. An income tax lien is involuntary and GENERAL — it attaches to all of the debtor\'s property. A mechanic\'s lien is filed by someone who did work or provided materials that were not paid for, and can force a sale of the property. A judgment lien is involuntary and general, placed by a court after a lawsuit. Lis pendens is NOT a lien — it is a notice of a pending lawsuit that alerts potential buyers.'},
+          {label:'Lien priority', text:'Lien priority determines who gets paid first when a property is foreclosed or sold. Property tax liens are always superior — they are paid first before any other lien, no matter when they were recorded. After property taxes, junior liens are paid in the order they were attached to the property. IRS federal income tax liens can jump ahead of most other liens — but they can NEVER outrank a property tax lien. Some states have homestead laws that protect a portion of the debtor\'s equity in their primary residence from judgment liens.'},
+        ],
+        keyTerms:[
+          {term:'Lien', def:'Financial encumbrance securing a debt; may allow foreclosure'},
+          {term:'Voluntary lien', def:'Placed with owner\'s consent — e.g., mortgage or deed of trust'},
+          {term:'Involuntary lien', def:'Placed without owner\'s consent — e.g., tax lien, judgment lien'},
+          {term:'General lien', def:'Attaches to ALL property (real and personal) of the debtor'},
+          {term:'Specific lien', def:'Attaches only to one specific piece of property'},
+          {term:'Ad valorem', def:'Taxed based on assessed value (property tax)'},
+          {term:'Mechanic\'s lien', def:'Filed for unpaid work or materials; involuntary, specific; can force sale'},
+          {term:'Lis pendens', def:'Notice of pending lawsuit — NOT a lien itself'},
+          {term:'Lien priority', def:'Property tax liens are always superior; paid first from proceeds'},
+        ],
+        quiz:[
+          {q:'Which lien attaches to ALL of a debtor\'s property — both real and personal?',opts:['Mechanic\'s lien','Property tax lien','Income tax lien','Special assessment lien'],ans:2,exp:'An income tax lien is an involuntary GENERAL lien — it attaches to all of the debtor\'s property, real and personal. Property tax, mechanic\'s, and special assessment liens are all specific liens.'},
+          {q:'When a property is foreclosed, which lien is paid first from the sale proceeds?',opts:['The first mortgage (deed of trust)','The IRS federal income tax lien','The property tax lien','The most recently recorded mechanic\'s lien'],ans:2,exp:'Property tax liens are ALWAYS superior to all other liens. They are paid first from foreclosure proceeds, before mortgages, IRS liens, judgment liens, and everything else.'},
+          {q:'A lis pendens is best described as:',opts:['A type of general judgment lien','A notice of a pending lawsuit affecting a property','A voluntary lien on personal property','A mechanic\'s lien filed before work begins'],ans:1,exp:'Lis pendens is a notice recorded in public records that a lawsuit is pending involving a specific property. It is NOT itself a lien — it alerts potential buyers that litigation is ongoing.'},
+          {q:'A mortgage is an example of which type of lien?',opts:['Involuntary and general','Voluntary and general','Involuntary and specific','Voluntary and specific'],ans:3,exp:'A mortgage is a voluntary lien — the owner consents to it as collateral for the loan — and it is a specific lien, attaching only to the mortgaged property, not all of the debtor\'s assets.'},
+        ]
+      },
+    ]
+  },
+  {id:'ch2', title:'Ownership and Title', lessons:[]},
+  {id:'ch3', title:'Measuring Land and Land Use', lessons:[]},
+  {id:'ch4', title:'Contracts', lessons:[]},
+  {id:'ch5', title:'Brokerage Agreements and Settlement', lessons:[]},
+  {id:'ch6', title:'Fair Housing and Consumer Protection', lessons:[]},
+  {id:'ch7', title:'Agency and the Practice of Real Estate', lessons:[]},
+  {id:'ch8', title:'Real Estate Financing', lessons:[]},
+  {id:'ch9', title:'Real Property Valuation', lessons:[]},
+];
+
+let teachCurrentChapter=0,teachCurrentLesson=0,teachCurrentMode='lecture',teachCurrentSection=0;
+let teachVisitedSections=new Set(),teachIsPlaying=false,teachUtterance=null,teachSpeechRate=1;
+let teachQuizAnswered=false,teachLectureTimer=null,teachLectureElapsed=0,teachLectureTotal=0;
+const teachSynth=window.speechSynthesis;
+
+function renderTeachChapterGrid(){
+  const grid=document.getElementById('teach-chapter-grid');
+  if(!grid)return;
+  grid.innerHTML=TEACH_CHAPTERS.map((ch,i)=>{
+    const has=ch.lessons.length>0;
+    return `<div class="teach-ch-card${has?'':' locked'}"${has?` onclick="openTeachChapter(${i})"`:''}>
+      <div class="teach-ch-num">Chapter ${i+1}</div>
+      <div class="teach-ch-title">${ch.title}</div>
+      <div class="teach-ch-meta">${has?`${ch.lessons.length} lesson${ch.lessons.length!==1?'s':''}  ·  Lecture + Quiz`:'Coming soon'}</div>
+      ${has?'':'<span class="teach-ch-badge coming">Coming Soon</span>'}
+    </div>`;
+  }).join('');
+}
+
+function openTeachChapter(idx){
+  teachCurrentChapter=idx;teachCurrentLesson=0;teachCurrentSection=0;
+  teachVisitedSections=new Set();teachQuizAnswered=false;teachCurrentMode='lecture';
+  const ch=TEACH_CHAPTERS[idx];
+  document.getElementById('teach-ch-overline').textContent=`Chapter ${idx+1}`;
+  document.getElementById('teach-ch-title').textContent=ch.title;
+  const sel=document.getElementById('teachLessonSel');
+  sel.innerHTML=ch.lessons.map((l,i)=>`<option value="${i}">${i+1}. ${l.title}</option>`).join('');
+  document.querySelectorAll('#tab-teach .view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('teach-viewer').classList.add('active');
+  document.getElementById('tmb-lecture').classList.add('active');
+  document.getElementById('tmb-quiz').classList.remove('active');
+  document.getElementById('teachAudioBar').style.display='flex';
+  teachRenderPills();teachRenderLecture();
+}
+
+function showTeachChapterList(){
+  teachStopAudio();
+  document.querySelectorAll('#tab-teach .view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('teach-chapter-list').classList.add('active');
+}
+
+function teachLoadLesson(){
+  teachCurrentLesson=parseInt(document.getElementById('teachLessonSel').value)||0;
+  teachCurrentSection=0;teachVisitedSections=new Set();teachQuizAnswered=false;
+  teachStopAudio();teachRenderPills();
+  if(teachCurrentMode==='lecture')teachRenderLecture();else teachRenderQuiz();
+}
+
+function teachSetMode(m){
+  teachCurrentMode=m;teachStopAudio();
+  document.getElementById('tmb-lecture').classList.toggle('active',m==='lecture');
+  document.getElementById('tmb-quiz').classList.toggle('active',m==='quiz');
+  document.getElementById('teachAudioBar').style.display=m==='lecture'?'flex':'none';
+  teachQuizAnswered=false;
+  if(m==='lecture')teachRenderLecture();else teachRenderQuiz();
+}
+
+function teachRenderLecture(){
+  document.getElementById('teachAudioBar').style.display='flex';
+  const lesson=TEACH_CHAPTERS[teachCurrentChapter].lessons[teachCurrentLesson];
+  const sec=lesson.sections[teachCurrentSection];
+  teachVisitedSections.add(teachCurrentSection);
+  const dots=lesson.sections.map((_,i)=>`<div class="teach-sec-dot ${i===teachCurrentSection?'active':teachVisitedSections.has(i)?'visited':''}" onclick="teachJumpSection(${i})" title="${lesson.sections[i].label}"></div>`).join('');
+  const terms=lesson.keyTerms.map(k=>`<div class="teach-key-item"><b>${k.term}</b><span>${k.def}</span></div>`).join('');
+  document.getElementById('teach-stage').innerHTML=`
+    <div class="teach-lecture-card">
+      <div class="teach-sec-label">Section ${teachCurrentSection+1} of ${lesson.sections.length} — ${sec.label}</div>
+      <div class="teach-body-text">${sec.text}</div>
+      <div class="teach-sec-dots">${dots}</div>
+    </div>
+    <div class="teach-key-box">
+      <div class="teach-key-label">Key terms — ${lesson.title}</div>
+      ${terms}
+    </div>`;
+  teachSetupAudioBar(sec.text);
+}
+
+function teachJumpSection(i){teachStopAudio();teachCurrentSection=i;teachRenderLecture();}
+
+function teachSetupAudioBar(text){
+  const words=text.split(' ').length;
+  teachLectureTotal=Math.max(5,Math.round(words/(180*teachSpeechRate/60)));
+  teachLectureElapsed=0;
+  const pf=document.getElementById('teachProgressFill');
+  const te=document.getElementById('teachTimeElapsed');
+  const tt=document.getElementById('teachTimeTotal');
+  const vs=document.getElementById('teachVoiceStatus');
+  if(pf)pf.style.width='0%';
+  if(te)te.textContent='0:00';
+  if(tt)tt.textContent=teachFmtTime(teachLectureTotal);
+  if(vs)vs.innerHTML='';
+  teachSetPlayIcon(false);
+}
+
+function teachTogglePlay(){if(teachIsPlaying)teachStopAudio();else teachStartAudio();}
+
+function teachStartAudio(){
+  if(!teachSynth){const n=document.getElementById('teachTtsNote');if(n)n.textContent='Text-to-speech not available in your browser.';return;}
+  teachStopAudio();
+  const lesson=TEACH_CHAPTERS[teachCurrentChapter].lessons[teachCurrentLesson];
+  const sec=lesson.sections[teachCurrentSection];
+  teachUtterance=new SpeechSynthesisUtterance(sec.text);
+  teachUtterance.rate=teachSpeechRate;teachUtterance.pitch=1.0;
+  const words=sec.text.split(' ').length;
+  teachLectureTotal=Math.max(5,Math.round(words/(180*teachSpeechRate/60)));
+  teachLectureElapsed=0;
+  teachUtterance.onstart=()=>{
+    teachIsPlaying=true;teachSetPlayIcon(true);
+    const vs=document.getElementById('teachVoiceStatus');
+    const tt=document.getElementById('teachTimeTotal');
+    if(vs)vs.innerHTML='<span class="teach-speaking-dot"></span><span>Playing</span>';
+    if(tt)tt.textContent=teachFmtTime(teachLectureTotal);
+    teachLectureTimer=setInterval(()=>{
+      teachLectureElapsed=Math.min(teachLectureElapsed+1,teachLectureTotal);
+      const pct=teachLectureTotal>0?(teachLectureElapsed/teachLectureTotal)*100:0;
+      const pf=document.getElementById('teachProgressFill');
+      const te=document.getElementById('teachTimeElapsed');
+      if(pf)pf.style.width=pct+'%';
+      if(te)te.textContent=teachFmtTime(teachLectureElapsed);
+    },1000);
+  };
+  teachUtterance.onend=()=>{
+    teachIsPlaying=false;teachSetPlayIcon(false);clearInterval(teachLectureTimer);
+    const pf=document.getElementById('teachProgressFill');
+    const te=document.getElementById('teachTimeElapsed');
+    const vs=document.getElementById('teachVoiceStatus');
+    if(pf)pf.style.width='100%';
+    if(te)te.textContent=teachFmtTime(teachLectureTotal);
+    if(vs)vs.innerHTML='<span style="color:var(--correct);font-size:.58rem;font-family:\'DM Mono\',monospace">Done</span>';
+  };
+  teachUtterance.onerror=()=>{teachIsPlaying=false;teachSetPlayIcon(false);clearInterval(teachLectureTimer);};
+  teachSynth.speak(teachUtterance);
+}
+
+function teachStopAudio(){
+  if(teachSynth)teachSynth.cancel();
+  teachIsPlaying=false;teachSetPlayIcon(false);clearInterval(teachLectureTimer);
+  const vs=document.getElementById('teachVoiceStatus');if(vs)vs.innerHTML='';
+}
+
+function teachSeekAudio(e){
+  const track=document.getElementById('teachProgressTrack');
+  const rect=track.getBoundingClientRect();
+  const pct=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+  teachLectureElapsed=Math.round(pct*teachLectureTotal);
+  const pf=document.getElementById('teachProgressFill');
+  const te=document.getElementById('teachTimeElapsed');
+  if(pf)pf.style.width=(pct*100)+'%';
+  if(te)te.textContent=teachFmtTime(teachLectureElapsed);
+  if(teachIsPlaying){teachStopAudio();teachStartAudio();}
+}
+
+function teachCycleSpeed(){
+  const speeds=[0.75,1,1.25,1.5],labels=['0.75x','1x','1.25x','1.5x'];
+  const cur=speeds.indexOf(teachSpeechRate),next=(cur+1)%speeds.length;
+  teachSpeechRate=speeds[next];
+  document.getElementById('teachSpeedBtn').textContent=labels[next];
+  if(teachIsPlaying){teachStopAudio();teachStartAudio();}
+}
+
+function teachSetPlayIcon(playing){
+  const icon=document.getElementById('teachPlayIcon');if(!icon)return;
+  icon.innerHTML=playing?'<rect x="2" y="2" width="4" height="12" rx="1"/><rect x="10" y="2" width="4" height="12" rx="1"/>':'<polygon points="3,2 13,8 3,14"/>';
+}
+
+function teachFmtTime(s){const m=Math.floor(s/60),sec=s%60;return `${m}:${sec<10?'0':''}${sec}`;}
+
+function teachRenderPills(){
+  const ch=TEACH_CHAPTERS[teachCurrentChapter];
+  document.getElementById('teachProgressPills').innerHTML=ch.lessons.map((_,i)=>`<div class="teach-pill ${i<teachCurrentLesson?'done':i===teachCurrentLesson?'current':''}"></div>`).join('');
+}
+
+function teachNextSection(){
+  teachStopAudio();
+  if(teachCurrentMode==='lecture'){
+    const ch=TEACH_CHAPTERS[teachCurrentChapter];
+    const lesson=ch.lessons[teachCurrentLesson];
+    if(teachCurrentSection<lesson.sections.length-1){
+      teachCurrentSection++;teachRenderLecture();
+    } else if(teachCurrentLesson<ch.lessons.length-1){
+      teachCurrentLesson++;teachCurrentSection=0;teachVisitedSections=new Set();
+      document.getElementById('teachLessonSel').value=teachCurrentLesson;
+      teachRenderPills();teachRenderLecture();
+    } else {
+      document.getElementById('teach-stage').innerHTML='<div class="teach-done-banner">You\'ve completed all lessons in this chapter!<br>Switch to <strong>Quiz Me</strong> mode to test your knowledge.</div>';
+      document.getElementById('teachAudioBar').style.display='none';
+    }
+  } else {
+    const ch=TEACH_CHAPTERS[teachCurrentChapter];
+    teachCurrentLesson=teachCurrentLesson<ch.lessons.length-1?teachCurrentLesson+1:0;
+    document.getElementById('teachLessonSel').value=teachCurrentLesson;
+    teachQuizAnswered=false;teachRenderQuiz();teachRenderPills();
+  }
+}
+
+function teachPrevSection(){
+  teachStopAudio();
+  if(teachCurrentMode==='lecture'){
+    if(teachCurrentSection>0){teachCurrentSection--;teachRenderLecture();}
+    else if(teachCurrentLesson>0){
+      teachCurrentLesson--;
+      document.getElementById('teachLessonSel').value=teachCurrentLesson;
+      const lesson=TEACH_CHAPTERS[teachCurrentChapter].lessons[teachCurrentLesson];
+      teachCurrentSection=lesson.sections.length-1;
+      teachVisitedSections=new Set([...Array(teachCurrentSection+1).keys()]);
+      teachRenderPills();teachRenderLecture();
+    }
+  } else {
+    if(teachCurrentLesson>0){
+      teachCurrentLesson--;
+      document.getElementById('teachLessonSel').value=teachCurrentLesson;
+    }
+    teachQuizAnswered=false;teachRenderQuiz();teachRenderPills();
+  }
+}
+
+function teachRenderQuiz(){
+  document.getElementById('teachAudioBar').style.display='none';
+  const lesson=TEACH_CHAPTERS[teachCurrentChapter].lessons[teachCurrentLesson];
+  const q=lesson.quiz[Math.floor(Math.random()*lesson.quiz.length)];
+  document.getElementById('teach-stage').innerHTML=`
+    <div class="teach-quiz-area">
+      <div class="teach-quiz-topic">Quiz — ${lesson.title}</div>
+      <div class="teach-quiz-q">${q.q}</div>
+      <div class="teach-quiz-opts" id="teachQuizOpts">
+        ${q.opts.map((o,i)=>`<button class="teach-quiz-opt" id="tqo${i}" onclick="teachAnswerQuiz(${i},${q.ans},'${teachEscQ(q.exp)}')">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+      </div>
+      <div id="teachQuizFeedback"></div>
+      <button class="teach-new-q-btn" onclick="teachRenderQuiz()">New question</button>
+    </div>`;
+  teachQuizAnswered=false;
+}
+
+function teachAnswerQuiz(chosen,correct,exp){
+  if(teachQuizAnswered)return;
+  teachQuizAnswered=true;
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('tqo'+i);if(!b)continue;
+    b.disabled=true;
+    if(i===correct)b.className='teach-quiz-opt correct';
+    else if(i===chosen&&chosen!==correct)b.className='teach-quiz-opt wrong';
+  }
+  const fb=document.getElementById('teachQuizFeedback');
+  if(fb)fb.innerHTML=chosen===correct
+    ?`<div class="teach-quiz-feedback teach-feedback-correct">Correct! ${exp}</div>`
+    :`<div class="teach-quiz-feedback teach-feedback-wrong">Not quite. ${exp}</div>`;
+}
+
+function teachEscQ(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
 </script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
