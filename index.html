@@ -3694,6 +3694,27 @@ let teachCurrentChapter=0,teachCurrentLesson=0,teachCurrentMode='lecture',teachC
 let teachVisitedSections=new Set(),teachIsPlaying=false,teachUtterance=null,teachSpeechRate=1;
 let teachQuizAnswered=false,teachLectureTimer=null,teachLectureElapsed=0,teachLectureTotal=0;
 const teachSynth=window.speechSynthesis;
+let teachVoice=null;
+
+function teachLoadVoice(){
+  const voices=teachSynth.getVoices();
+  if(!voices.length)return;
+  // Priority: Microsoft Neural (Edge) → Google (Chrome) → macOS Enhanced → any English
+  const priority=[
+    'microsoft aria online','microsoft jenny online','microsoft ana online',
+    'microsoft emma online','microsoft guy online','microsoft michelle online',
+    'microsoft zira online','microsoft david online',
+    'google us english','google uk english female',
+    'samantha','victoria','karen','moira','fiona',
+  ];
+  for(const p of priority){
+    const v=voices.find(v=>v.name.toLowerCase().includes(p)&&v.lang.startsWith('en'));
+    if(v){teachVoice=v;return;}
+  }
+  teachVoice=voices.find(v=>v.lang.startsWith('en-US'))||voices.find(v=>v.lang.startsWith('en'))||voices[0]||null;
+}
+if(teachSynth.onvoiceschanged!==undefined)teachSynth.onvoiceschanged=teachLoadVoice;
+teachLoadVoice();
 
 function renderTeachChapterGrid(){
   const grid=document.getElementById('teach-chapter-grid');
@@ -3792,6 +3813,8 @@ function teachStartAudio(){
   const lesson=TEACH_CHAPTERS[teachCurrentChapter].lessons[teachCurrentLesson];
   const sec=lesson.sections[teachCurrentSection];
   teachUtterance=new SpeechSynthesisUtterance(sec.text);
+  if(!teachVoice)teachLoadVoice();
+  if(teachVoice)teachUtterance.voice=teachVoice;
   teachUtterance.rate=teachSpeechRate;teachUtterance.pitch=1.0;
   const words=sec.text.split(' ').length;
   teachLectureTotal=Math.max(5,Math.round(words/(180*teachSpeechRate/60)));
