@@ -3691,30 +3691,9 @@ const TEACH_CHAPTERS = [
 ];
 
 let teachCurrentChapter=0,teachCurrentLesson=0,teachCurrentMode='lecture',teachCurrentSection=0;
-let teachVisitedSections=new Set(),teachIsPlaying=false,teachUtterance=null,teachSpeechRate=1;
-let teachQuizAnswered=false,teachLectureTimer=null,teachLectureElapsed=0,teachLectureTotal=0;
-const teachSynth=window.speechSynthesis;
-let teachVoice=null;
-
-function teachLoadVoice(){
-  const voices=teachSynth.getVoices();
-  if(!voices.length)return;
-  // Priority: Microsoft Neural (Edge) → Google (Chrome) → macOS Enhanced → any English
-  const priority=[
-    'microsoft aria online','microsoft jenny online','microsoft ana online',
-    'microsoft emma online','microsoft guy online','microsoft michelle online',
-    'microsoft zira online','microsoft david online',
-    'google us english','google uk english female',
-    'samantha','victoria','karen','moira','fiona',
-  ];
-  for(const p of priority){
-    const v=voices.find(v=>v.name.toLowerCase().includes(p)&&v.lang.startsWith('en'));
-    if(v){teachVoice=v;return;}
-  }
-  teachVoice=voices.find(v=>v.lang.startsWith('en-US'))||voices.find(v=>v.lang.startsWith('en'))||voices[0]||null;
-}
-if(teachSynth.onvoiceschanged!==undefined)teachSynth.onvoiceschanged=teachLoadVoice;
-teachLoadVoice();
+let teachVisitedSections=new Set(),teachIsPlaying=false,teachSpeechRate=1,teachQuizAnswered=false;
+const teachAudioCache={};
+let teachAudio=null;
 
 function renderTeachChapterGrid(){
   const grid=document.getElementById('teach-chapter-grid');
@@ -3785,84 +3764,99 @@ function teachRenderLecture(){
       <div class="teach-key-label">Key terms — ${lesson.title}</div>
       ${terms}
     </div>`;
-  teachSetupAudioBar(sec.text);
+  teachResetAudioBar();
 }
 
 function teachJumpSection(i){teachStopAudio();teachCurrentSection=i;teachRenderLecture();}
 
-function teachSetupAudioBar(text){
-  const words=text.split(' ').length;
-  teachLectureTotal=Math.max(5,Math.round(words/(180*teachSpeechRate/60)));
-  teachLectureElapsed=0;
+function teachResetAudioBar(){
   const pf=document.getElementById('teachProgressFill');
   const te=document.getElementById('teachTimeElapsed');
   const tt=document.getElementById('teachTimeTotal');
   const vs=document.getElementById('teachVoiceStatus');
   if(pf)pf.style.width='0%';
   if(te)te.textContent='0:00';
-  if(tt)tt.textContent=teachFmtTime(teachLectureTotal);
+  if(tt)tt.textContent='0:00';
   if(vs)vs.innerHTML='';
   teachSetPlayIcon(false);
 }
 
 function teachTogglePlay(){if(teachIsPlaying)teachStopAudio();else teachStartAudio();}
 
-function teachStartAudio(){
-  if(!teachSynth){const n=document.getElementById('teachTtsNote');if(n)n.textContent='Text-to-speech not available in your browser.';return;}
-  teachStopAudio();
-  const lesson=TEACH_CHAPTERS[teachCurrentChapter].lessons[teachCurrentLesson];
-  const sec=lesson.sections[teachCurrentSection];
-  teachUtterance=new SpeechSynthesisUtterance(sec.text);
-  if(!teachVoice)teachLoadVoice();
-  if(teachVoice)teachUtterance.voice=teachVoice;
-  teachUtterance.rate=teachSpeechRate;teachUtterance.pitch=1.0;
-  const words=sec.text.split(' ').length;
-  teachLectureTotal=Math.max(5,Math.round(words/(180*teachSpeechRate/60)));
-  teachLectureElapsed=0;
-  teachUtterance.onstart=()=>{
-    teachIsPlaying=true;teachSetPlayIcon(true);
-    const vs=document.getElementById('teachVoiceStatus');
+async function teachStartAudio(){
+  const cacheKey=`${teachCurrentChapter}-${teachCurrentLesson}-${teachCurrentSection}`;
+  const vs=document.getElementById('teachVoiceStatus');
+
+  // Show loading state
+  teachIsPlaying=true;
+  teachSetPlayIcon(true);
+  if(vs)vs.innerHTML='<span class="teach-speaking-dot"></span><span>Loading...</span>';
+
+  let audioUrl=teachAudioCache[cacheKey];
+  if(!audioUrl){
+    try{
+      const lesson=TEACH_CHAPTERS[teachCurrentChapter].lessons[teachCurrentLesson];
+      const sec=lesson.sections[teachCurrentSection];
+      const res=await fetch('/api/tts',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({text:sec.text}),
+      });
+      if(!res.ok)throw new Error('TTS request failed');
+      const blob=await res.blob();
+      audioUrl=URL.createObjectURL(blob);
+      teachAudioCache[cacheKey]=audioUrl;
+    }catch(err){
+      teachIsPlaying=false;teachSetPlayIcon(false);
+      if(vs)vs.innerHTML='';
+      const n=document.getElementById('teachTtsNote');
+      if(n){n.textContent='Audio unavailable — check your connection.';setTimeout(()=>{if(n)n.textContent='';},4000);}
+      return;
+    }
+  }
+
+  if(teachAudio){teachAudio.pause();teachAudio.src='';}
+  teachAudio=new Audio(audioUrl);
+  teachAudio.playbackRate=teachSpeechRate;
+
+  teachAudio.onloadedmetadata=()=>{
     const tt=document.getElementById('teachTimeTotal');
-    if(vs)vs.innerHTML='<span class="teach-speaking-dot"></span><span>Playing</span>';
-    if(tt)tt.textContent=teachFmtTime(teachLectureTotal);
-    teachLectureTimer=setInterval(()=>{
-      teachLectureElapsed=Math.min(teachLectureElapsed+1,teachLectureTotal);
-      const pct=teachLectureTotal>0?(teachLectureElapsed/teachLectureTotal)*100:0;
-      const pf=document.getElementById('teachProgressFill');
-      const te=document.getElementById('teachTimeElapsed');
-      if(pf)pf.style.width=pct+'%';
-      if(te)te.textContent=teachFmtTime(teachLectureElapsed);
-    },1000);
+    if(tt)tt.textContent=teachFmtTime(Math.round(teachAudio.duration));
   };
-  teachUtterance.onend=()=>{
-    teachIsPlaying=false;teachSetPlayIcon(false);clearInterval(teachLectureTimer);
+  teachAudio.ontimeupdate=()=>{
+    if(!teachAudio.duration)return;
+    const pct=(teachAudio.currentTime/teachAudio.duration)*100;
     const pf=document.getElementById('teachProgressFill');
     const te=document.getElementById('teachTimeElapsed');
-    const vs=document.getElementById('teachVoiceStatus');
+    if(pf)pf.style.width=pct+'%';
+    if(te)te.textContent=teachFmtTime(Math.round(teachAudio.currentTime));
+  };
+  teachAudio.onplaying=()=>{
+    teachIsPlaying=true;teachSetPlayIcon(true);
+    if(vs)vs.innerHTML='<span class="teach-speaking-dot"></span><span>Playing</span>';
+  };
+  teachAudio.onended=()=>{
+    teachIsPlaying=false;teachSetPlayIcon(false);
+    const pf=document.getElementById('teachProgressFill');
     if(pf)pf.style.width='100%';
-    if(te)te.textContent=teachFmtTime(teachLectureTotal);
     if(vs)vs.innerHTML='<span style="color:var(--correct);font-size:.58rem;font-family:\'DM Mono\',monospace">Done</span>';
   };
-  teachUtterance.onerror=()=>{teachIsPlaying=false;teachSetPlayIcon(false);clearInterval(teachLectureTimer);};
-  teachSynth.speak(teachUtterance);
+  teachAudio.onerror=()=>{teachIsPlaying=false;teachSetPlayIcon(false);if(vs)vs.innerHTML='';};
+  teachAudio.play();
 }
 
 function teachStopAudio(){
-  if(teachSynth)teachSynth.cancel();
-  teachIsPlaying=false;teachSetPlayIcon(false);clearInterval(teachLectureTimer);
+  if(teachAudio){teachAudio.pause();teachAudio.currentTime=0;}
+  teachIsPlaying=false;teachSetPlayIcon(false);
   const vs=document.getElementById('teachVoiceStatus');if(vs)vs.innerHTML='';
 }
 
 function teachSeekAudio(e){
+  if(!teachAudio||!teachAudio.duration)return;
   const track=document.getElementById('teachProgressTrack');
   const rect=track.getBoundingClientRect();
   const pct=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
-  teachLectureElapsed=Math.round(pct*teachLectureTotal);
-  const pf=document.getElementById('teachProgressFill');
-  const te=document.getElementById('teachTimeElapsed');
-  if(pf)pf.style.width=(pct*100)+'%';
-  if(te)te.textContent=teachFmtTime(teachLectureElapsed);
-  if(teachIsPlaying){teachStopAudio();teachStartAudio();}
+  teachAudio.currentTime=pct*teachAudio.duration;
 }
 
 function teachCycleSpeed(){
@@ -3870,7 +3864,7 @@ function teachCycleSpeed(){
   const cur=speeds.indexOf(teachSpeechRate),next=(cur+1)%speeds.length;
   teachSpeechRate=speeds[next];
   document.getElementById('teachSpeedBtn').textContent=labels[next];
-  if(teachIsPlaying){teachStopAudio();teachStartAudio();}
+  if(teachAudio)teachAudio.playbackRate=teachSpeechRate;
 }
 
 function teachSetPlayIcon(playing){
