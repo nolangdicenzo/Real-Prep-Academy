@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <!-- Background pill/rect for the R icon -->
+  <rect x="0" y="10" width="100" height="100" rx="18" ry="18" fill="#1a1a2e"/>
+  <!-- Gold R letter -->
+  <text x="50" y="82" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="700" fill="#c9a84c" text-anchor="middle">R</text>
+  <!-- RealPrep Academy text -->
+  <text x="125" y="55" font-family="Georgia, 'Times New Roman', serif" font-size="28" font-weight="700" fill="#1a1a2e" text-anchor="start">RealPrep</text>
+  <text x="125" y="85" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="400" fill="#c9a84c" letter-spacing="3" text-anchor="start">ACADEMY</text>
+</svg>
